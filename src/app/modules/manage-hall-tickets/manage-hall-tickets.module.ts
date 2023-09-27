@@ -13,8 +13,6 @@ import { MaterialModule } from 'src/material/material.module';
 import { SharedModule } from '../../shared/shared.module';
 //#endregion
 
-
-
 @NgModule({
   declarations: [
     ManageHallTicketsAdminListComponent,
