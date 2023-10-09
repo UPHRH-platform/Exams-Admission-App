@@ -1,39 +1,118 @@
-<!-- <div class="main-container"> -->
-  <div class="secondary-container">
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
     <mat-label class="title-header"> CCTV Management </mat-label>
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-top: 24px;
-      "
-    >
-    <form [formGroup]="examCycleForm">
-      <mat-form-field appearance="outline" >
-        <mat-label class="label">Exam cycle</mat-label>
-        <mat-select formControlName="course">
-          <mat-option *ngFor="let course of courses" [value]="course.value">
-            {{ course.viewValue }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="buttons">
-        <div>
-          <button class="btn-1">Cancel</button>
+    <div class="mt3">
+      <div class="clearfix">
+        <div class="sm-col md-col-6">
+            <div class="mb1">
+              <label class="examCycleLable">Exam cycle</label>
+            </div>
+            <mat-form-field appearance="outline" class="feeManagementForms">
+              <mat-select [formControl]="examCycleControl">
+                  <ng-container *ngFor="let examCycle of examCycleList">
+                      <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                  </ng-container>
+                  <mat-option style="display: none;" value="">Select here</mat-option>
+              </mat-select>
+          </mat-form-field>
+          </div>
+        <div class="sm-col md-col-6">
+          <div class="flex right">
+            <button class="cancel-btn ml2" (click)="cancel()">Cancel</button>
+          </div>
         </div>
       </div>
-    </form>
     </div>
- 
-    <div class="btn-tab">
-      <div class="tab">
-        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-          <mat-tab label="Pending">Pending</mat-tab>
-          <mat-tab label="Approved">Verified</mat-tab>
-          <mat-tab label="Rejected">Rejected</mat-tab>
-        </mat-tab-group>
-      </div>
-    </div>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start"
+    (selectedTabChange)="tabChange($event)">
+      <ng-container *ngFor="let tab of tabs">
+        <mat-tab [label]="tabs.name">
+          <ng-template mat-tab-label>{{ tab.name }}</ng-template>
+          <app-shared-skeleton-loading [isLoading]="isDataLoading">
+          </app-shared-skeleton-loading>
+          <ng-container *ngIf="!isDataLoading">
+            <div>
+              <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
+                <mat-icon matPrefix class="search-icon">search</mat-icon>
+                <input matInput [(ngModel)]="searcControl" placeholder="Search" >
+              </mat-form-field>
+            </div>
+            <div>
+              <ng-container *ngIf="instituteesTableColumns.length > 0">
+                <app-shared-table 
+                  [tableColumns]="instituteesTableColumns" 
+                  [tableData]="instituteesTableData" 
+                  [isHallTicket]="true" 
+                  [removeTbodyColor]="true" 
+                  [isPageable]="true" 
+                  [length]="instituteesTableData?.length"
+                  [hidePageSize]="false"
+                  [showPageSizeOptions]="true"
+                  [showFirstLastButtons]="true"
+                  [pageIndex]="pageIndex"
+                  [isServerSideSorting]="false"
+                  [isServerSidePagination]="false"
+                  (rowAction)="updateInstituteCCTVStatus($event)"
+                ></app-shared-table>
+              </ng-container>
+            </div>
+          </ng-container>
+        </mat-tab>
+      </ng-container>
+        <!-- <mat-tab label="Pending">
+          <div>
+            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
+              <mat-icon matPrefix class="search-icon">search</mat-icon>
+              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
+            </mat-form-field>
+          </div>
+          <div>
+            <app-shared-table 
+              [tableColumns]="instituteesCCTVpendingTableHeaders" 
+              [tableData]="instituteesCCTVpendingTableData" 
+              [isHallTicket]="true" 
+              [removeTbodyColor]="true" 
+              [isPageable]="true" 
+              (rowAction)="ApproveOrRejectInstituteCCTV($event)"
+            ></app-shared-table>
+          </div>
+        </mat-tab>
+        <mat-tab label="Verified">
+          <div>
+            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
+              <mat-icon matPrefix class="search-icon">search</mat-icon>
+              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
+            </mat-form-field>
+          </div>
+          <div>
+            <app-shared-table 
+              [tableColumns]="instituteesCCTVverifiedTableHeaders" 
+              [tableData]="instituteesCCTVverifiedTableData" 
+              [isHallTicket]="true" 
+              [removeTbodyColor]="true" 
+              [isPageable]="true" 
+              (rowAction)="RejectInstituteCCTV($event)"
+            ></app-shared-table>
+          </div>
+        </mat-tab>
+        <mat-tab label="Rejected">
+          <div>
+            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
+              <mat-icon matPrefix class="search-icon">search</mat-icon>
+              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
+            </mat-form-field>
+          </div>
+          <div>
+            <app-shared-table 
+              [tableColumns]="instituteesCCTVrejectedTableHeaders" 
+              [tableData]="instituteesCCTVrejectedTableData" 
+              [isHallTicket]="true" 
+              [removeTbodyColor]="true" 
+              [isPageable]="true" 
+              (rowAction)="assignAlternateInstitute($event)"
+            ></app-shared-table>
+          </div>
+        </mat-tab> -->
+    </mat-tab-group>
+
   </div>
-<!-- </div> -->

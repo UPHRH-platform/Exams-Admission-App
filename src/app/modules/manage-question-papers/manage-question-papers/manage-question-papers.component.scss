@@ -1,0 +1,127 @@
+
+
+.title-header {
+    font-size: 24px;
+    letter-spacing: 0.12px;
+    font-weight: 550;
+    line-height: 36px;
+    color: #000000;
+    margin-bottom: 24px;
+}
+
+.cards-boxes {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    height: fit-content;
+}
+
+.example-card {
+   width:90%;
+   background-color: white;
+   box-shadow: rgba(0, 0, 0, 0.20) 0px 1px 3px 0px !important;
+   border-radius: 6px;
+    height: fit-content;
+  }
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between ;
+    height: fit-content;
+}
+.selector{
+    display: flex;
+    flex-direction: column;
+}
+
+  .head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+ 
+ .title-section {
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.12px;
+    font-weight: 560;
+    color: RGBA(0, 0, 0, 0.87);
+    margin-top: 8px;
+    filter: brightness(1.5);
+    
+ }
+
+ .desc-section {
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0.12px;
+    font-weight: 560;
+    color: RGBA(0, 0, 0, 0.87);
+    margin-top: 8px;
+    filter: brightness(1.5);
+ }
+ .buttons{
+    display: flex;
+    flex-direction: row;
+    gap:16px;
+}
+.btn-1{
+    color: #045DAD;
+    background-color:#fff;
+    width: fit;
+    height: 80%;
+    padding: 4px;
+    border-width: 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1.5px solid rgba(4,93,173, 1);
+    opacity: 1;
+    cursor: pointer;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.btn-2{
+    background-color: #045DAD;
+    color:#fff;
+    width: fit;
+    height:80%;
+    padding:4px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: 1.5px solid rgba(4,93,173, 1);
+    opacity: 1;
+    cursor: pointer;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.data-container{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+width: 50%;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px; 
+}
+.upload-background{
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between ;
+    background-color: rgb(235, 235, 235);
+    padding: 12px;
+    border-radius: 4px;
+    }
+    ::ng-deep .exam-form {
+        margin-top: 5px;
+        width: 276px;
+        .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+        padding: 13px 0px;
+    }
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+        }
+    
+    }

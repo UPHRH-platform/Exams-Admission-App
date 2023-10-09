@@ -8,9 +8,15 @@ import { AuthServiceService } from '../core/services';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  loggedInUserRole: any;
+  loggedInUserRole: string;
   constructor(private router: Router, private authService: AuthServiceService){}
   cardList: any[] = [
+    {
+      title: 'User Management',
+      type: 'user-management',
+      url: '/user-management',
+      visibility: 'exams_superadmin'
+    },
     {
       title: 'Student Enrollment',
       type: 'student-enrollment-admin',
@@ -24,42 +30,16 @@ export class HomeComponent {
       visibility: 'exams_institute'
     },
     {
-      title: 'Student Registration',
-      type: 'student-registration',
-      url: '/student-registration',
-      visibility: 'exams_student',
-    },
-    {
       title: 'Manage Exam Cycles & Exams',
       type: 'manageCycle',
       url: '/manage-exam-cycle',
       visibility: 'exams_admin',
     },
-
     {
       title: 'Fee Management',
       type: 'feeManagementAdmin',
       url: '/fee-management/admin',
       visibility: 'exams_admin'
-    },
-
-    {
-      title: 'Register Student to Exam Cycles and Exams',
-      type: 'registerStudentInstitute',
-      url: '/register-student/institute',
-      visibility: 'exams_institute'
-    },
-    {
-      title: 'Download Question Papers',
-      type: 'downloadQuestionPapers',
-      url: 'manage-question-papers/institute',
-      visibility: 'exams_institute'
-    },
-    {
-      title: 'Fee Management',
-      type: 'feeManagementInstitute',
-      url: '/fee-management/institute',
-      visibility: 'exams_institute'
     },
     {
       title: 'Update CCTV Verification Status',
@@ -76,8 +56,8 @@ export class HomeComponent {
     {
       title: 'Manage Question Papers',
       type: 'manageQp',
-      url: '',
-      visibility: '' // has to be added for both admin and institute
+      url: 'manage-question-papers',
+      visibility: 'exams_admin' // has to be added for both admin and institute
     },
     {
       title: 'Track Dispatches',
@@ -86,17 +66,69 @@ export class HomeComponent {
       visibility: 'exams_admin'
     },
     {
+      title: 'Manage Result',
+      type: 'manage-Result-admin',
+      url: '/manage-result/admin',
+      visibility: 'exams_admin'       // has to be added for both admin and institute
+
+    },
+    {
+      title: 'Student Registration',
+      type: 'student-registration',
+      url: '/student-registration',
+      visibility: 'exams_student',
+    },
+    {
+      title: 'Register Student to Exam Cycles and Exams',
+      type: 'registerStudentInstitute',
+      url: '/student-registration/institute',
+      visibility: 'exams_institute'
+    },
+    
+    {
+      title: 'Fee Management',
+      type: 'feeManagementInstitute',
+      url: '/fee-management/institute',
+      visibility: 'exams_institute'
+    },
+    
+    {
+      title: 'Manage Attendance',
+      type: 'manageAttendance',
+      url: '/manage-attendance',
+      visibility: 'exams_institute' // has to be added for both admin and institute
+    },
+    {
+      title: 'Download Question Papers',
+      type: 'downloadQuestionPapers',
+      url: 'manage-question-papers/institute',
+      visibility: 'exams_institute'
+    },
+    
+    {
       title: 'Update Dispatches',
       type: 'updateDispatches',
       url: '/dispatches/update',
       visibility: 'exams_institute'
     },
+    
     {
       title: 'Manage Result',
-      type: 'manageResult',
-      url: '/manage-result',
-      visibility: '' // has to be added for both admin and institute
+      type: 'manage-Result-Institute',
+      url: '/manage-result/institute',
+      visibility: 'exams_institute' // has to be added for both admin and institute
     },
+    
+    {
+      title: 'Result Dashboard',
+      type: 'resultDashboard',
+      url: '/dashboard',
+      visibility: 'exams_admin'
+    },
+    
+   
+    
+    
   ];
 
   ngOnInit() {

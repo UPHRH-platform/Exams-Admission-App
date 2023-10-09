@@ -10,11 +10,11 @@
                     <ng-container *ngFor="let examCycle of examCycleList">
                         <mat-option [value]="examCycle.value">{{examCycle.examName}}</mat-option>
                     </ng-container>
-                    <mat-option style="display: none;" value="">Select here</mat-option>
+                    <mat-option style="display: none;"  value="">Select here</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="cards-boxes">
+        <div class="cards-boxes" >
             <mat-card class="card" *ngFor="let item of cardList">
                 <mat-card-content class="content-container">
                         <span class="title-section">{{item.title}}</span>
@@ -23,7 +23,7 @@
                             <span class="status">status: {{item.status}}</span>
                         </div>
                 </mat-card-content>
-                <button class="view-btn" (click)="navigateToView(item.navigateUrl)">View</button>
+                <button  class="view-btn" (click)="navigateToView(item.navigateUrl)">View</button>
             </mat-card>
         </div>
     </div>

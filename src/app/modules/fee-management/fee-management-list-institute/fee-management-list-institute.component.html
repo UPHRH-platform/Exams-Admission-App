@@ -1,0 +1,102 @@
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+  <div class="pt3 py0 secondary-container">
+    <div class="mb3">
+      <mat-label class="title-header"> {{tabHeader}} </mat-label>
+    </div>
+    <div>
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectTab($event)">
+        <!-- <mat-tab label="All">
+          <div class="container clearfix form-field mt3">
+            <form [formGroup]="filterForm" class="px1">
+              <div class="sm-col md-col-4 lg-col-5">
+                <mat-form-field appearance="outline" class="search">
+                  <mat-icon matPrefix class="search-icon">search</mat-icon>
+                  <input matInput formControlName="search" placeholder="Search">
+                </mat-form-field>
+              </div>
+              <div class="sm-col md-col-8 lg-col-7 container clearfix flex filters">
+                <div class="sm-col md-col-5 flex">
+                  <div class="lable" style="width: 260px;">
+                    <span>Student selected</span>
+                  </div>
+                  <mat-form-field appearance="outline" class="filterField">
+                    <input matInput formControlName="selectedStudent" placeholder="Type here">
+                  </mat-form-field>
+                </div>
+                <div class="sm-col md-col-5 flex">
+                  <div class="lable" style="width: 300px;">
+                    <span>Amount to be paid</span>
+                  </div>
+                  <mat-form-field appearance="outline" class="filterField">
+                    <input matInput formControlName="amount" placeholder="Type here">
+                  </mat-form-field>
+                </div>
+                <div class="sm-col md-col-2 flex pay-fee-div">
+                  <button class="btn-pay-fee" (click)="payFee()">Pay fee</button>
+                </div>
+              </div>
+              <div>
+                <app-shared-table [tableColumns]="allFeeTableHeader" [tableData]="allFeeTableData"
+                  [isHallTicket]="isHallTicket" [removeTbodyColor]="removeTbodyColor" [isPageable]="true"
+                  (checkBoxAction)="onSelectedRows($event)"></app-shared-table>
+              </div>
+            </form>
+          </div>
+        </mat-tab> -->
+        <mat-tab label="Pending">
+          <div class="container clearfix form-fields mt3">
+            <form [formGroup]="filterForm" class="px1">
+              <div class="sm-col md-col-4 lg-col-5">
+                <mat-form-field appearance="outline" class="search">
+                  <mat-icon matPrefix class="search-icon">search</mat-icon>
+                  <input matInput formControlName="search" placeholder="Search">
+                </mat-form-field>
+              </div>
+              <div class="sm-col md-col-8 lg-col-7 container clearfix flex filters">
+                <div class="sm-col md-col-5 flex">
+                  <div class="lable" style="width: 260px;">
+                    <span>Student selected</span>
+                  </div>
+                  <mat-form-field appearance="outline" class="filterField">
+                    <input matInput formControlName="selectedStudent" placeholder="Type here" readonly>
+                  </mat-form-field>
+                </div>
+                <div class="sm-col md-col-5 flex">
+                  <div class="lable" style="width: 300px;">
+                    <span>Amount to be paid</span>
+                  </div>
+                  <mat-form-field appearance="outline" class="filterField">
+                    <input matInput formControlName="amount" placeholder="Type here" readonly>
+                  </mat-form-field>
+                </div>
+                <div class="sm-col md-col-2 flex pay-fee-div">
+                  <button class="btn-pay-fee" (click)="payFee()">Pay fee</button>
+                </div>
+              </div>
+              <div>
+                <app-shared-table [tableColumns]="pendingFeeTableHeader" [tableData]="pendingFeeTableData"
+                  [isHallTicket]="isHallTicket" [removeTbodyColor]="removeTbodyColor" [isPageable]="true"
+                  (checkBoxAction)="onSelectedRows($event)"></app-shared-table>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+        <mat-tab label="Paid">
+          <div class="container clearfix form-field mt3">
+            <form [formGroup]="filterForm" class="px1">
+              <div class="sm-col md-col-5">
+                <mat-form-field appearance="outline" class="search">
+                  <mat-icon matPrefix class="search-icon">search</mat-icon>
+                  <input matInput formControlName="search" placeholder="Search">
+                </mat-form-field>
+              </div>
+              <div>
+                <app-shared-table [tableColumns]="paidFeeTableHeader" [tableData]="paidFeeTableData"
+                  [isHallTicket]="isHallTicket" [removeTbodyColor]="removeTbodyColor"></app-shared-table>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>

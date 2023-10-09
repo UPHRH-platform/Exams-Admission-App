@@ -13,9 +13,14 @@ export interface ServerResponse {
 }
 
 export interface Response {
-    status: number;
-    body?: any;
-    error?: string;
+    id: string,
+    ver: string,
+    ts?: string,
+    params?: any
+    code?: number,
+    responseCode: string,
+    result?: any
+    error?: any
 }
 
 export interface StatusInfo {

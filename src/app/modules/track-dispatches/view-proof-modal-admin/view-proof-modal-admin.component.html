@@ -1,0 +1,17 @@
+<div class = "track-container">
+<div class="header-section">
+   <h3 class="label-heading">Track Dispatch</h3> 
+   <p style="margin: 0px;">Attached track dispatch document by the institute</p>
+</div>
+<div class="body-container">
+    <img style="width: 26rem;" src="../../assets/images/sunbird_logo.png" alt="UPSMF logo">
+</div>
+<div class="footer">
+<div class="px2 clearfix footer">
+<ng-container *ngFor="let btn of dialogDetails?.buttons">
+    <div [ngClass]="btn.positionClass">
+        <button (click)="closeDialog(true)" class="btn-full"
+        >Ok</button>
+    </div>
+</ng-container>
+</div>

@@ -1,6 +1,60 @@
 {
     "URLS": {
         "LOGIN": "/v1/user/login",
-        "KEYCLOAK_LOGIN": "/api/v1/user/keycloak/usrlogin"
+        "KEYCLOAK_LOGIN": "/api/v1/user/keycloak/usrlogin",
+        "QUESTION_PAPER": {
+            "GET_ALL": "/v1/questionPaper/list",
+            "UPLOAD": "/questionPaper/upload",
+            "DOWNLOAD": "/v1/questionPaper/download",
+            "GET_BY_ID": "/v1/questionPaper",
+            "GET_PREVIEW_URL": "/v1/questionPaper/preview",
+            "DELETE": "/v1/questionPaper/delete"
+        },
+        "STUDENT_ENROLLMENT": {
+            "CREATE": "/v1/students/add",
+            "GET_DETAILS_BY_ID": "/v1/students",
+            "FIND_ENROLLMENT_BY_FILTER": "/v1/students/find",
+            "GET_INSTITUTE_BY_ID": "/v1/admin/institutes",
+            "GET_INTERMEDIATE_SUBJECT_LIST": "/v1/admin/subject/list", 
+            "VERIFY_STUDENT":"/v1/students"
+        }, 
+        "EXAM_MANAGEMENT": {
+            "GET_EXAM_CYCLE_LIST": "/v1/admin/examCycle/list", 
+            "CREATE_EXAM_CYCLE": "/v1/admin/examCycle/create",
+            "CREATE_EXAM": "/v1/admin/examCycle",
+            "EXAM_CYCLE_BULK_UPLOAD": "/v1/admin/examCycle/bulkUpload",
+            "GET_EXAM_CYCLE_BY_ID": "/v1/admin/examCycle",
+            "DELETE_EXAM_CYCLE": "/v1/admin/examCycle/delete",
+            "GET_EXAM_BY_EXAM_CYCLE_ID": "/v1/admin/exam/byExamCycle",
+            "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update"
+        },
+        "EXAM_STUDENT_REGISTRATION": {
+            "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
+        },
+        "COURSE": {
+            "GET_ALL": "/v1/admin/courses/list"
+        },
+        "INSTITUTE_COURSE_MAPPING": {
+            "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all"
+        },
+        "EXAM_CENTER": {
+            "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
+            "ALL_CENTERS": "/v1/admin/examCenters/all"
+        },
+        "HALL_TICKET": {
+            "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
+            "DOWNLOAD":"/v1/admin/hallticket/download?dateOfBirth=1995-12-15&id=45&type=Pdf",
+            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
+            "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
+            "APPROVE": "/v1/admin/hallticket/dataCorrection/",
+            "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
+        },
+        "TRACK_DISPATCHES": {
+            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+        }
     }
 }

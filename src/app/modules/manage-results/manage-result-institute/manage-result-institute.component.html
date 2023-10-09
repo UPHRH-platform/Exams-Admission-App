@@ -1,0 +1,33 @@
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+    <div class="secondary-container">
+        <h2 class="title-header">Manage Results</h2>
+        <div>
+            <div>
+                <span class="exam-lable">Exam Cycle</span>
+            </div>
+            <mat-form-field appearance="outline" class="exam-form">
+                <mat-select [formControl]="examCycle">
+                    <ng-container *ngFor="let examCycle of examCycleList">
+                        <mat-option [value]="examCycle.value">{{examCycle.examName}}</mat-option>
+                    </ng-container>
+                    <mat-option style="display: none;" value="">Select here</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="cards-boxes">
+            <mat-card class="card" *ngFor="let item of cardList">
+                <mat-card-content class="content-container">
+                        <span class="title-section">{{item.title}}</span>
+                        <span class="desc-section">{{item.lable}} : {{item.date}}</span>
+                        <div class="status-card">
+                            <span class="status" [ngStyle]="{'color': item.status == 'Pending' ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
+                        </div>
+                </mat-card-content>
+                <div style="display: flex; flex-direction: row; column-gap: 2px;">
+                <button class="view-btn" (click)="navigateToView(item.navigateUrlSecond)">{{ (item.status === "Uploaded" ? "Re-upload" : "Upload Internal Marks") }}</button>
+                <button class="btn-2" (click)="navigateToView(item.navigateUrl)" *ngIf="item.status !== 'Pending'">View</button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+

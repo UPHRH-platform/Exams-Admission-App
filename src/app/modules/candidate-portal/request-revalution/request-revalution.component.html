@@ -1,0 +1,48 @@
+<div class="main-container">
+    <div class="secondary-container">
+        <div class="body-header">
+            <h2 class="title-header">Result management</h2>
+        </div>
+        <mat-card class="container">
+            <mat-card-content>
+                <div>
+                    <app-exam-hall-ticket-student-details
+                        [hallTicketDetails]="hallTicketDetails"></app-exam-hall-ticket-student-details>
+                </div>
+                <div>
+                    <div class="w-full flex payment-details">
+                        <div class="flex exams-selected">
+                            <div class="lable" style="width: 260px;">
+                                <span>Exams Selected</span>
+                            </div>
+                            <mat-form-field appearance="outline" class="form-fields">
+                                <input readonly matInput [(ngModel)]="examsSelected">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex amount-to-pay">
+                            <div class="lable" style="width: 260px;">
+                                <span>Amount to be paid</span>
+                            </div>
+                            <mat-form-field appearance="outline" class="form-fields">
+                                <input readonly matInput  [(ngModel)]="amountToPay">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <button class="btn-pay-fee" (click)="payFee()">Pay fee</button>
+                        </div>
+                    </div>
+                    <app-shared-table [tableColumns]="examTableHeader" [tableData]="examTableData"
+                        [isHallTicket]="isHallTicket" (checkBoxAction)="onSelectedRows($event)"></app-shared-table>
+                    <p *ngIf="examsSelected === 0" class="examSelectNote">Please select exams where you want revaluation.</p>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <div class="footer">
+                    <button class="cancel-btn" (click)="redirectToViewResults()">Cancel</button>
+                    <button class="revalution-btn" (click)="requestRevalution()"
+                    [disabled]="paymentDone">Request revalution</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

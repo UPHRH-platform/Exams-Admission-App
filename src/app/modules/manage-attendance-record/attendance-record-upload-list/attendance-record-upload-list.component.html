@@ -1,0 +1,112 @@
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+  <div class="secondary-container">
+    <div
+      style="display: flex; flex-direction: row; justify-content: space-between"
+    >
+      <h2 class="title-header">{{ "Attendance Record" }}</h2>
+      <button class="btn-1" (click)="goToList()">Cancel</button>
+    </div>
+    <div class="body-section">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <mat-icon style="padding-bottom: 8px">info</mat-icon>
+          <span class="side-heading">Instructions</span>
+        </div>
+        <div style="border: 1.5px solid #f0f3f4; margin-bottom: 36px"></div>
+
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            column-gap: 16px;
+            height: 128px;
+            justify-content: space-evenly;
+          "
+        >
+          <span style="display: flex; flex-direction: row; gap: 16px;"
+            ><span style="font-weight: 550">Step 1:</span>  <span>Download CSV Template</span></span
+          >
+          <span style="display: flex; flex-direction: row; gap: 16px"
+            ><span style="font-weight: 550">Step 2:</span>  <span>Based on reference,create a CSV file</span></span
+          >
+          <span style="display: flex; flex-direction: row; gap: 16px"
+            ><span style="font-weight: 550">Step 3:</span>  <span>Upload CSV file</span></span
+          >
+        </div>
+        <div style="margin-top: 160px">
+          <button class="btn-3">Download template</button>
+        </div>
+      </div>
+
+      <div class="outer-container">
+        <div class="form-section">
+          <div class="side-heading">
+            Upload new list
+            <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Back</button>
+          </div>
+          <div
+            style="
+              justify-content: center;
+              width: 56%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-bottom: 40px;
+              display: flex;
+              flex-direction: column;
+              row-gap: 8px;
+            "
+            *ngIf="files.length == 0"
+          >
+            <label for="fileUpload1" class="custom-file-upload">
+              <a mat-button style="color: #fff" class="btn-2">Browse</a>
+            </label>
+
+            <mat-hint>.csv files accepted</mat-hint>
+            <span class="error" style="color: red;">{{ fileUploadError }}</span>
+
+            <input
+              id="fileUpload1"
+              type="file"
+              style="display: none"
+              enctype="multipart/form-data"
+              (change)="changeListener($event)"
+              multiple="true"
+              accept=".csv"
+            />
+          </div>
+
+          <div
+            style="
+              justify-content: center;
+              width: 80%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              display: flex;
+              flex-direction: column;
+            "
+            *ngIf="files.length > 0"
+          >
+            <mat-icon
+              style="color: green; font-size: 38px; width: 44px; height: 36px"
+              >check_circle</mat-icon
+            >
+            <h4 style="font-size: 20px">List upload completed</h4>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: row;
+              align-items: end;
+              justify-content: space-between;
+              column-gap: 8px;
+            "
+          >
+            <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Re-upload list</button>
+            <button class="btn-2" (click)="goToList()" *ngIf="files.length > 0">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

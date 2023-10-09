@@ -8,6 +8,11 @@ import { CommonModule } from '@angular/common';
 //#region (created modules && components)
 import { ManageResultsRoutingModule } from './manage-results-routing.module';
 import { MaterialModule } from 'src/material/material.module';
+import { ManageResultAdminComponent } from './manage-result-admin/manage-result-admin.component';
+import { SharedModule } from 'src/app/shared';
+import { ManageResultInstituteComponent } from './manage-result-institute/manage-result-institute.component';
+import { UploadResultsInstituteComponent } from './upload-results-institute/upload-results-institute.component';
+import { ManageResultInstituteListComponent } from './manage-result-institute-list/manage-result-institute-list.component';
 //#endregion
 
 //#endregion
@@ -15,11 +20,17 @@ import { MaterialModule } from 'src/material/material.module';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ManageResultAdminComponent,
+    ManageResultInstituteComponent,
+    UploadResultsInstituteComponent,
+    ManageResultInstituteListComponent
+  ],
   imports: [
     CommonModule,
     ManageResultsRoutingModule,
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ]
 })
 export class ManageResultsModule { }

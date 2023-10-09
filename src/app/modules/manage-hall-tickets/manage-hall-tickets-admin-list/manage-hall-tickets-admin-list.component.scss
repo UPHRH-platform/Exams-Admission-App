@@ -1,9 +1,10 @@
 
 .main-container {
     background-color: #F0F3F4;
-    height: 920px;
-    width: screen;
+    width: 100vw;
+    min-height: calc(100vh - 55px);
 }
+
 .title-header {
     font-size: 26px;
     letter-spacing: 0.16px;
@@ -12,6 +13,7 @@
     color: #000000;
     margin-bottom: 36px;
  }
+ 
 .selector{
     display: flex;
     flex-direction: row;
@@ -62,3 +64,34 @@
     padding-bottom: 15px;
 
 }
+// ::ng-deep .exam-form {
+//     margin-top: 5px;
+//     width: 276px;
+//     .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+//     padding: 13px 0px;
+// }
+// .mat-mdc-text-field-wrapper {
+//     background-color: white;
+//     }
+
+// }
+.examCycleLable {
+    font-weight: 600;
+ }
+    ::ng-deep .exam-form {
+        margin-top: 5px;
+        width: 300px;
+        .mat-mdc-text-field-wrapper {
+            background-color: white;
+            height: 40px;
+         }
+     
+         .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+             padding-top: 10px;
+         }
+    
+         .mat-mdc-form-field-icon-prefix>.mat-icon {
+            padding-top: 0px
+         }
+    
+    }

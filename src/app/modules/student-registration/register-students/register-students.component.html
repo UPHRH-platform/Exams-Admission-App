@@ -1,48 +1,19 @@
-
-<div class="secondary-container">
-    <h2 class="title-header">{{'Register student to Exam Cycles & Exams'}}</h2>
-    <div class="selector">
-        <mat-form-field appearance="outline">
-          <mat-label class="label" >Select Course</mat-label>
-          <mat-select >
-            <mat-option *ngFor="let course of courses" [value]="course.value">
-              {{ course.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="cards-boxes">
-            <mat-card class="example-card" *ngFor="let item of cardList">
-                <mat-card-content class="content-container">
-                    <div class="head">
-                        <div class="content">
-                            <span style="color: gray;">Name</span>
-                            <span class="title-section">{{item.Name}}</span>
-
-                        </div>
-                        <div class="buttons">
-                            <button class="btn-1">View regestered students</button>
-                            <button class="btn-2">Register new students</button>
-                        </div>
-                    </div>
-                    <div style="border: 0.5px solid rgb(205, 210, 210);"></div>
-                    <div class="data-container" >
-                        <div class="content" col>
-                            <span style="color: gray;">Course name</span>
-                            <span class="desc-section">{{item.Course_name}}</span>
-                        </div>
-                        <div class="content" col>
-                            <span style="color: gray;">Start data</span>
-                            <span class="desc-section">{{item.Start_date}}</span>
-                        </div>
-                        <div class="content" col>
-                            <span style="color: gray;">End date</span>
-                            <span class="desc-section">{{item.End_date}}</span>
-                        </div>
-                    </div>
-                        <!-- <span class="title-section">{{item.title}}</span>
-                        <span class="desc-section">{{item.description}}</span> -->
-                </mat-card-content>
-                </mat-card>
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="full-container">
+    <div class="certificate-container">
+        <div class="certificate-header">
+            <h2>Register Student to exam cycle and exams</h2>
         </div>
-    </div>      
+        <span>
+            Exam cycle
+
+        </span>
+        <app-shared-ques-paper [examCycleList]="examCycleList" [examCycleControl]="examCycleControl"
+            [questionPapersList]="questionPapersList" (addNewStdnts)="regNewStdnts($event)"
+            (viewRegdStdnts)="viewRegdStdnts($event)"
+            [showCardDetails]=false></app-shared-ques-paper>
+
+
     </div>
+
+</div>

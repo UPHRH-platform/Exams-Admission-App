@@ -1,0 +1,54 @@
+<div class="main-container">
+    <div class="secondary-container">
+      <div class="body-header">
+        <h2 class="title-header">Hall Ticket management</h2>
+      </div>
+      <form [formGroup]="studentDetails">
+        <mat-card class="container">
+            <mat-card-content>
+                <div>
+                    <h2 class="examName">{{hallTicketDetails?.exmaCycleName}}</h2>
+                    <app-edit-hallticket [examName]="hallTicketDetails.exmaCycleName"
+                    [studentDetails]="studentDetails"></app-edit-hallticket>
+                </div>
+                <div>
+                    <app-shared-table [tableColumns]="examTableHeader" 
+                    [tableData]="examTableData" [isHallTicket]="isHallTicket" ></app-shared-table>
+                </div>
+                <div class="attachments">
+                    <div class="attachment-header flex">
+                        <span>Attachment</span>
+                        <ng-container *ngIf="uplodedDocuments.length !== 0">
+                            <a class="view-delete-btn" (click)="browseFile()" >+ Add attachment</a>
+                        </ng-container>
+                    </div>
+                    <div class="attachment-file-card p2">
+                        <ng-container *ngIf="uplodedDocuments.length === 0; else attachments">
+                            <div class="attachment-btn-area">
+                                <button class="attachment-btn" (click)="browseFile()">Browse file</button>
+                            </div>
+                        </ng-container>
+                        <ng-template #attachments>
+                            <ng-container *ngFor="let document of uplodedDocuments; index as i">
+                                <div class="file-container mt1 p1">
+                                    <span>{{document.name}}</span>
+                                    <div>
+                                        <a class="mr2 view-delete-btn" (click)="viewDocument(i)" >View</a>
+                                        <a class="view-delete-btn" (click)="removeAttacment(i)">Delete</a>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-template>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <div class="footer">
+                    <button class="cancel-btn" (click)="cancel()">Cancel</button>
+                    <button class="request-modify-btn" type="submit" (click)="submitDetails()">Request modify</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+    </div>
+</div>

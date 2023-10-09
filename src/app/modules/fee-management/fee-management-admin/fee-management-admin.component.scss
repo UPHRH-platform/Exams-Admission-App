@@ -1,8 +1,8 @@
 
 .main-container {
     background-color: #F0F3F4;
-    height: 920px;
-    width: screen;
+    width: 100vw;
+    min-height: calc(100vh - 55px);
 }
 .title-header {
     font-size: 26px;
@@ -12,40 +12,17 @@
     color: #000000;
     margin-bottom: 36px;
  }
-.selector{
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-       
-}
-.tab{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-.btn-tab{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.buttons{
-    display: flex;
-    flex-direction: row;
-    gap:16px;
-}
-.btn-1{
-    color: gray;
-    background-color:#fff;
-    width: fit;
-    padding: 11px;
-    border-width: 16px;
-    border-radius: 4px;
+
+ .examCycleLable {
     font-weight: 600;
-    border: 1.5px solid gray;
-    opacity: 1;
-    cursor: pointer;
-}
-.btn-2{
+ }
+ 
+
+ .searchField {
+    margin-top: 25px !important;
+ }
+
+.search-btn {
     background-color: #045DAD;
     color:#fff;
     width: 100px;
@@ -56,5 +33,24 @@
     cursor: pointer;
     padding-top: 18px;
     padding-bottom: 18px;
+    margin-top: 20px;
+    height: 50px;
+
+}
+::ng-deep .feeManagementForms {
+    margin-top: 5px;
+    width: 300px;
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+        height: 40px;
+     }
+ 
+     .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+         padding-top: 10px;
+     }
+
+     .mat-mdc-form-field-icon-prefix>.mat-icon {
+        padding-top: 0px
+     }
 
 }

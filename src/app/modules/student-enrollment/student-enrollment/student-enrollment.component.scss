@@ -48,3 +48,33 @@
     opacity: 1;
     cursor: pointer;
 }
+::ng-deep .exam-form {
+    margin-top: 5px;
+    width: 276px;
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding: 13px 0px;
+}
+.mat-mdc-text-field-wrapper {
+    background-color: white;
+    }
+}
+.searchField {
+    width: 300px;
+ }
+
+::ng-deep .feeManagementForms {
+    width: 250px;
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+        height: 40px;
+     }
+ 
+     .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+         padding-top: 10px;
+     }
+
+     .mat-mdc-form-field-icon-prefix>.mat-icon {
+        padding-top: 0px
+     }
+
+}

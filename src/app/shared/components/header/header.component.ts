@@ -17,18 +17,13 @@ export class HeaderComponent {
  }
 
  ngOnInit() {
-  const token = this.getToken();
+  const token = this.authService.getUserData();
   if(token) {
     this.showProfileNavBar = true;
-    this.userData = this.authService.getUserData();
-    //console.log(this.userData);
+    this.userData = this.authService.getUserRepresentation();
     this.generateUserName();
   }
  }
-
- getToken(): string | null {
-  return localStorage.getItem(this.TOKEN_KEY);
-}
 
 logout(){
   this.authService.logout();
@@ -36,8 +31,9 @@ logout(){
  }
 
  generateUserName() {
-  const firstName = this.userData?.userRepresentation?.firstName;
-  const lastName = this.userData?.userRepresentation?.lastName;
+  console.log(this.userData);
+  const firstName = this.userData?.firstName;
+  const lastName = this.userData?.lastName;
   this.userName = firstName?.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 }
 

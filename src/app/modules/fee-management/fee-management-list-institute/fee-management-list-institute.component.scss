@@ -1,0 +1,72 @@
+
+.main-container {
+    background-color: #F0F3F4;
+    height: 920px;
+    width: screen;
+}
+.secondary-container{
+    margin: 0px 5%;
+}
+.title-header {
+    font-size: 26px;
+    letter-spacing: 0.16px;
+    font-weight: 550;
+    line-height: 36px;
+    color: #000000;
+    margin-bottom: 36px;
+ }
+
+ .search {
+    width: 350px;
+    max-width: 70%;
+ }
+
+.search-icon {
+    color: #00000099;
+    padding-top: 0px !important;
+}
+
+.filters {
+    gap: 8px;
+
+    .lable {
+        font-weight: 600;
+        font-size: 15px;
+        padding-top: 13px;
+        max-width: fit-content;
+        margin-right: 10px;
+    }
+}
+
+
+.pay-fee-div {
+    justify-content: end;
+
+    .btn-pay-fee {
+        min-width: 90px;
+        background-color: #045dad;
+        color: white;
+        height: 40px;
+        border-radius: 5px;
+        border: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
+}
+
+ ::ng-deep .form-fields {
+ 
+    .mat-mdc-text-field-wrapper {
+       background-color: white;
+       max-height: 40px;
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+        padding-top: 10px;
+    }
+ 
+}
+
+::ng-deep .mat-mdc-tab-header {
+    border-bottom: 1px solid #00000029;
+}

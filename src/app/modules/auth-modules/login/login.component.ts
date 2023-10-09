@@ -32,7 +32,12 @@ export class LoginComponent {
       // Check if the user is already logged in
       if (this.authService.isLoggedIn()) {
         // Redirect to the home page if logged in
-        this.router.navigate(['home']);
+        console.log("User is logged in !!")
+        if (this.authService.isStudent()) {
+          this.router.navigate(['/candidate-portal'])
+        } else {
+          this.router.navigate(['home']);
+        }
       }
     }
   
@@ -45,7 +50,11 @@ export class LoginComponent {
           this.authService.saveUserData(res.responseData);
           this.getAllRoles();
           // this.getUserDetails();
-         this.router.navigate(['home'])
+          if (this.authService.isStudent()) {
+            this.router.navigate(['/candidate-portal'])
+          } else {
+            this.router.navigate(['home']);
+          }
         },
         error: (err) => {
             this.toastrService.showToastr(err.error, 'Error', 'error', '');

@@ -56,3 +56,42 @@
 .mat-mdc-table {
     padding-left: 0px !important;
 }
+
+.hall-ticket-table,
+.mat-mdc-table {
+    box-shadow: none !important;
+}
+
+.hall-ticket-table,
+.mat-mdc-table .mdc-data-table__header-row {
+    height: 40px;
+}
+
+.hall-ticket-table,
+th.mdc-data-table__cell,
+.mdc-data-table__header-cell {
+    border-bottom: none !important;
+}
+
+.hall-ticket-table,
+.mdc-button {
+    font-weight: 600;
+    justify-content: start;
+    padding-left: 0px;
+}
+
+.hall-ticket-table,
+.mdc-data-table__row:last-child .mdc-data-table__cell {
+    border-bottom: 1px solid #0000001f !important;
+}
+
+.removeTbodyColor,
+.mdc-data-table__content {
+    // background-color: #f0f3f4;
+    background: unset;
+}
+
+.removeTbodyColor,
+.mat-mdc-paginator {
+    background: unset;
+}

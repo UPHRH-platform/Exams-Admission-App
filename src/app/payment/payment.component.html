@@ -1,0 +1,27 @@
+<div class="secondary-container">
+  <div>
+    <h2 class="title-header">Payment</h2>
+  </div>
+  <div class="result-container">
+    <div class="status-container">
+      <div class="status-results">
+
+        <mat-icon *ngIf="!isSuccess" class="icon-cls-fail" >cancel</mat-icon>
+        <mat-icon *ngIf="isSuccess" class="icon-cls">check_circle</mat-icon>
+        <h1 [ngStyle]="isSuccess ? { color: 'green' } : { color: 'red' }">
+          {{ isSuccess ? "Payment Success" : "Payment Failure" }}
+        </h1>
+        <h2>Transaction Amount: {{ transactionAmt }}</h2>
+        <h2>Transaction Id: {{ transactionId }}</h2>
+        <button
+          mat-button
+          color="primary"
+          mat-raised-button
+          (click)="navigateToHome()"
+        >
+          Back to home
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

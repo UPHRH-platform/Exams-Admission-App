@@ -1,0 +1,141 @@
+        <span>
+            Exam cycle
+
+        </span>
+        <div>
+           
+             <!--     <form 
+                [formGroup]="regStudentformGroup" >  -->
+                <p>
+                <mat-form-field appearance="outline">
+                    <mat-label>Select exam cycle</mat-label>
+                    <!--     <input matInput placeholder="" formControlName="state"> -->
+                    <mat-select (selectionChange)="examCycleSelected($event)" autofocus="true"
+                    [formControl]="examCycleControl">
+                        <span *ngFor='let examCycle of examCycleList;'>
+                            <mat-option [value]="examCycle?.id">{{examCycle?.examCycleName}}</mat-option>
+                        </span>
+                    </mat-select>
+                    <mat-error *ngIf="examCycleControl.invalid">
+                    </mat-error>
+                </mat-form-field>
+            </p>
+     <!--        </form> -->
+           
+        </div>
+
+        <mat-card style="margin-top: 38px;" *ngFor="let questionPpr of questionPapersList">
+           <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
+            <mat-card-content>
+                <ng-container *ngIf="loggedInUserRole ==='exams_admin' ; else instituteRole">
+                    <div class="button-group" style="display: flex;flex-direction: column; gap: 4px;">
+                        <button class="button" mat-raised-button color="primary">
+                            <label for="fileUpload1" class="custom-file-upload">
+                                <a>Upload Question Paper</a>
+                              </label>
+                        </button>
+                        
+              <input
+                id="fileUpload1"
+                type="file"
+                style="display: none"
+                enctype="multipart/form-data"
+                (change)="emitUploadQuesPaper($event)"
+                multiple="true"
+                accept=".pdf"
+              />
+              <span class="error" style="color: red;">{{ fileUploadError }}</span>
+                    </div>
+                </ng-container>
+                <ng-template #instituteRole>
+                    <div class="button-group">
+                        <button type="submit" class="button" mat-stroked-button color="primary"
+                            (click)="emitViewRegdStdnts(questionPpr)">View registered students</button>
+                        <button class="button" mat-raised-button color="primary" (click)="emitRegNewStdnts(questionPpr)"><mat-icon
+                                matSuffix>arrow_right_alt</mat-icon>Register New Students</button>
+                    </div>
+                </ng-template>
+            </mat-card-content> 
+            <p>
+                <mat-card-content>
+
+                    <mat-card-subtitle>Exam Name</mat-card-subtitle>
+
+                    <mat-card-title> {{ questionPpr.examName | uppercase }}</mat-card-title>
+
+                </mat-card-content>
+            </p>
+        </div>
+            <mat-divider></mat-divider>
+            <p>
+                <mat-grid-list cols="4" rowHeight="20px">
+                    <mat-grid-tile>
+
+                        <mat-card-subtitle> Course Name</mat-card-subtitle>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <mat-card-subtitle> Exam Date</mat-card-subtitle>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <mat-card-subtitle> Exam Start Time </mat-card-subtitle>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <mat-card-subtitle> Maximum Marks</mat-card-subtitle>
+                    </mat-grid-tile>
+                </mat-grid-list>
+
+                <mat-grid-list cols="4" rowHeight="20px">
+                    <mat-grid-tile>
+
+                        <div> {{questionPpr.courseName}}</div>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <div> {{questionPpr.examDate}} </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <div> {{questionPpr.examStartTime}} </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile>
+
+                        <div> {{questionPpr.marks}} Marks</div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </p>
+         
+            <mat-card-content *ngIf="showCardDetails">
+                <p>
+                    <mat-list role="list" *ngIf="questionPpr.examStartTime !== '12.00 A.M.'  ;  else notYetexamTime">
+                        <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
+                            *ngFor="let qp of questionPpr.questionPaperList" >
+                            <div style="display: flex; flex-direction:row; justify-content: space-between;"> 
+                                <span>{{qp.name}}</span>
+                                <span class="button-group" style="display: flex; flex-direction: row; gap: 4px;" >
+                                    <button type="button" class="cancel-button" mat-stroked-button
+                                        color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
+                                    <button class="next-button" mat-raised-button color="primary"
+                                        (click)="emitDownloadQuestionPaper(qp)">Download</button>
+                                </span>
+            
+                            </div>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                    </mat-list>
+                    <ng-template #notYetexamTime>
+                        <p>
+                            <mat-hint style="color: red;"> *Question Paper will appear 30 mins before exam for
+                                download</mat-hint>
+
+                        </p>
+
+                    </ng-template>
+                </p>
+            </mat-card-content>
+
+        </mat-card>
+
+

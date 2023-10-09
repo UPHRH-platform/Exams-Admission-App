@@ -12,49 +12,44 @@
     color: #000000;
     margin-bottom: 36px;
  }
-.selector{
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-       
-}
-.tab{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-.btn-tab{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.buttons{
-    display: flex;
-    flex-direction: row;
-    gap:16px;
-}
-.btn-1{
-    color: #045DAD;
-    background-color:#fff;
-    width: 88px;
-    padding: 14px;
-    border-width: 16px;
-    border-radius: 4px;
-    font-weight: 600;
-    border: 1.5px solid #045DAD;
-    opacity: 1;
-    cursor: pointer;
-}
-.btn-2{
-    background-color: #045DAD;
-    color:#fff;
-    width: 100px;
-    border-radius: 4px;
-    font-weight: 600;
-    border: 1.5px solid rgba(4,93,173, 1);
-    opacity: 1;
-    cursor: pointer;
-    padding-top: 18px;
-    padding-bottom: 18px;
 
+ .examCycleLable {
+    font-weight: 600;
+ }
+
+ .cancel-btn {
+    min-width: 90px;
+    background-color: white;
+    color: #0074B6;
+    border: 2px solid #0074B6;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 40px;
+ }
+
+ .searchField {
+    width: 300px;
+ }
+
+ ::ng-deep .feeManagementForms {
+    width: 250px;
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+        height: 40px;
+     }
+ 
+     .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+         padding-top: 10px;
+     }
+
+     .mat-mdc-form-field-icon-prefix>.mat-icon {
+        padding-top: 0px
+     }
+
+}
+
+::ng-deep .mat-mdc-tab-header {
+    border-bottom: 1px solid #00000029;
 }

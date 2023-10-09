@@ -1,0 +1,25 @@
+.footer {
+    justify-content: end;
+}
+
+.btn-full {
+    min-width: 80px;
+    border: none;
+    background-color: #045dad;
+    color: white;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn-outline {
+    min-width: 80px;
+    background-color: white;
+    color: #045dad;
+    border: 2px solid #045dad;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}

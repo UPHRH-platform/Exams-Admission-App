@@ -1,197 +1,192 @@
-<div class="secondary-container">
-    <div class="body-header">
-      <h2 class="title-header">Edit</h2>
-      <div class="button-group">
-        <button class="btn-1">Cancel</button>
-        <button class="btn-2">Save</button>
-      </div>
-    </div>
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 
-    <div class="body">
-      <form class="examcycleform" [formGroup]="createExamCycle" (ngSubmit)="onSubmit()">
-        <div class="outer-container">
-          <div class="form-section">
-            <div class="form-inputs">
-              <mat-label class="label"> Exam cycle </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Exam cycle</mat-label>
-                <mat-select formControlName="examcycle">
-                  <mat-option value="one">First option</mat-option>
-                  <mat-option value="two">Second option</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-label class="label"> Course name </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Course name</mat-label>
-                <mat-select formControlName="coursename">
-                  <mat-option value="one">First option</mat-option>
-                  <mat-option value="two">Second option</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="form-section">
-            <div class="form-inputs">
-              <mat-label class="label"> Start date </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Choose a date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker"
-                  formControlName="startdate"
-                  [min]="pickerMinDate"
-                />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-label class="label"> End date </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Choose a date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker1"
-                  formControlName="enddate"
-                  [min]="pickerMinDate"
-                />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker1"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="form-section" style="column-gap: 20px">
-            <div class="form-inputs">
-              <mat-label class="label"> Exam name </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Exam name</mat-label>
-                <input
-                  matInput
-                  placeholder="Exam name"
-                  formControlName="examname"
-                />
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-label class="label"> Exam date </mat-label>
-              <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>Choose a date</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="picker3"
-                  formControlName="examdate"
-                  [min]="pickerMinDate"
-                />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker3"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker3></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <div>
-              <!-- <mat-label class="label"> Start time </mat-label> -->
-              <!-- <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>hh:mm</mat-label>
-                <!-- <input
-                  class="custom-timepicker"
-                  style="border: none"
-                  matTimepicker
-                  #t="matTimepicker"
-                  [strict]="false"
-                  id="timepicker-example"
-                  mode="12h"
-                  formControlName="starttime"
-                /> -->
-                <!-- <mat-icon matSuffix (click)="t.showDialog()"
-                  >access_time</mat-icon
-                >
-              </mat-form-field> -->
-            </div>
-            <div>
-              <!-- <mat-label class="label"> End time </mat-label> -->
-              <!-- <mat-form-field appearance="outline" style="width: 16.5rem">
-                <mat-label>hh:mm</mat-label>
-                <!-- <input
-                  class="custom-timepicker"
-                  style="border: none"
-                  matTimepicker
-                  #t1="matTimepicker"
-                  [strict]="false"
-                  id="timepicker-example"
-                  mode="12h"
-                  formControlName="endtime"
-                  (mouseleave)="endTimeValidator()"
-                /> -->
-                <!-- <mat-icon
-                  matSuffix
-                  (click)="t1.showDialog()"
-                  (mouseleave)="endTimeValidator()"
-                  >access_time</mat-icon
-                >
-              </mat-form-field> -->
-              <div
-                class="sb-color-red pt-0"
-                style="color: red"
-                tabindex="0"
-                *ngIf="
-                  createExamCycle.controls['endtime'].touched &&
-                  createExamCycle.controls['endtime'].errors
-                "
-              >
-                Enter a valid End time
+  <div class="secondary-container">
+    <form
+        [formGroup]="createExamCycle"
+        (ngSubmit)="onSubmit(createExamCycle.value)"
+      >
+      <div class="body-header">
+        <h2 class="title-header">{{examcycleId !== undefined ? 'View' : 'Add'}}</h2>
+        <div class="button-group">
+          <button class="btn-1" (click)="goBack()">Cancel</button>
+          <button class="btn-2" type="submit" [disabled]="!createExamCycle.valid">Save</button>
+        </div>
+      </div>
+
+      <div class="body examcycleform">
+          <div class="outer-container px2 py2">
+            <!-- <div class="form-section"> -->
+            <div class="clearfix">
+              <div class="sm-col sm-col-12 md-col-12 lg-col-8">
+                <div class="sm-col sm-col-12 md-col-12 lg-col-5">
+                  <h4 class="label w-full">Exam cycle</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Exam cycle</mat-label>
+                    <input
+                      matInput
+                      placeholder="Exam name"
+                      formControlName="examCycleName"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="sm-col sm-col-12 md-col-12 lg-col-5 ml2">
+                  <h4 class="label w-full">Course name</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Course name</mat-label>
+                    <mat-select formControlName="courseId">
+                      <ng-container *ngFor="let course of courses">
+                        <mat-option [value]="course.id">{{course.courseName}}</mat-option>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="flex flex-row" style="gap: 1.5rem">
-            <div class="flex flex-column">
+            <div class="clearfix">
+              <div class="sm-col sm-col-12 md-col-12 lg-col-8">
+                <div class="sm-col sm-col-12 md-col-12 lg-col-5">
+                  <h4 class="label w-full">Start date</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Choose a date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker"
+                      formControlName="startDate"
+                      (dateInput)="startDateChangeEvent('input', $event)" 
+                      (dateChange)="startDateChangeEvent('change', $event)"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="picker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="sm-col sm-col-12 md-col-12 lg-col-5 ml2">
+                  <h4 class="label w-full">End date</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Choose a date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      formControlName="endDate"
+                      (dateInput)="endDateChangeEvent('input', $event)"
+                       (dateChange)="endDateChangeEvent('change', $event)"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                  <mat-error *ngIf="endDateError">End date cannot be before start date</mat-error>
+                </div>
+              </div>
+            </div>
+
+            <!-- exam input -->
+            <form [formGroup]="createExamForm">
+            <div class="clearfix">
+              <div class="sm-col sm-col-12 md-col-12 lg-col-12">
+                <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
+                  <h4 class="label w-full">Exam name</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Exam name</mat-label>
+                    <input
+                      matInput
+                      placeholder="Exam name"
+                      formControlName="examName"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
+                  <h4 class="label w-full">Exam date</h4>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Choose a date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="picker2"
+                      formControlName="examDate"
+                      [min]="pickerMinDate"
+                    />
+                    <mat-datepicker-toggle
+                      matIconSuffix
+                      [for]="picker2"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
+                  <h4 class="label w-full">Start Time</h4>
+                    <input
+                    id="starttime"
+                    type="time"
+                    name="starttime"
+                    class="w-full time-input"
+                    formControlName="startTime"
+                    min="startMinTime"
+                    max="startMaxTime"
+                    pattern="[0-9]{2}:[0-9]{2}" 
+                    (change)="startTimeChangeEvent($event)"
+                    />
+                </div>
+              </div>
+              <div class="sm-col sm-col-12 md-col-12 lg-col-3 mb2">
+                <h4 class="label w-full" for="endtime">End Time</h4>
+                    <input class="w-full time-input"  id="endtime"
+                    type="time"
+                    min="startMinTime"
+                    max="startMaxTime"
+                    name="endtime" pattern="[0-9]{2}:[0-9]{2}" formControlName="endTime"
+                    (change)="endTimeChangeEvent($event)"
+                    >
+                    <mat-error *ngIf="endTimeError">End time cannot be before start time</mat-error>
+              </div>
+            </div>
+            <div>
               <button
-                class="btn-3 btn-primary"
-                type="submit"
-                style="margin-top: 1rem; cursor: pointer;"
-                (click)="addExamCycle()"
+                class="text-class action-btns"
+                [disabled]="!createExamForm.valid || endDateError || endTimeError"
+                type="button"
+                mat-raised-button
+                color="primary"
+                (click)="addNewExam()"
               >
                 Add Exam
               </button>
             </div>
-          </div>
-          <div style="display: flex; flex-wrap: wrap; column-gap: 24px">
-            <div class="flex flex-column">
-              <div class="cards-boxes">
-                <mat-card class="example-card">
-                  <mat-card-content class="content-container">
-                    <span class="label" style="font-size: 20px">Exam 1</span>
-                    <span class="desc-section">Exam date: dd/mm/yyyy</span>
-                    <mat-chip-option
-                      >Exam time : 10:00AM - 1:00 PM</mat-chip-option
-                    >
-                  </mat-card-content>
-                </mat-card>
+            </form>
+            <!-- div to view exams -->
+            <div class="clearfix" style="padding-top: 20px">
+              <div class="sm-col sm-col-12">
+                <div
+                  class="sm-col sm-col-12 md-col-12 lg-col-3"
+                  *ngFor="let exam of exams; let i = index"
+                >
+                  <div class="cards-boxes">
+                    <mat-card class="example-card">
+                      <mat-icon class="close-icon" (click)="remove(exam)">close</mat-icon>
+                      <mat-card-content class="content-container">
+                        <span class="label" style="font-size: 20px">{{
+                          exam.examName
+                        }}</span>
+                        <span class="desc-section"
+                          >Exam date: {{ exam.examDate }}</span
+                        >
+                        <mat-chip-option
+                          >Exam time : {{ exam.startTime }} -
+                          {{ exam.endTime }}</mat-chip-option
+                        >
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="flex flex-column">
-              <div class="cards-boxes">
-                <mat-card class="example-card">
-                  <mat-card-content class="content-container">
-                    <span class="label" style="font-size: 20px">Exam 2</span>
-                    <span class="desc-section">Exam date: dd/mm/yyyy</span>
-                    <mat-chip-option
-                      >Exam time : 10:00AM - 1:00 PM</mat-chip-option
-                    >
-                  </mat-card-content>
-                </mat-card>
-              </div>
-            </div>
           </div>
-        </div>
-      </form>
-    </div>
+      
+      </div>
+    </form>
   </div>

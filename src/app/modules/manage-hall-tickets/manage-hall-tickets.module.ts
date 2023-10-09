@@ -10,7 +10,7 @@ import { ManageHallTicketsRoutingModule } from './manage-hall-tickets-routing.mo
 import { ManageHallTicketsAdminListComponent } from './manage-hall-tickets-admin-list/manage-hall-tickets-admin-list.component';
 import { MaterialModule } from 'src/material/material.module';
 //#endregion
-
+import { SharedModule } from '../../shared/shared.module';
 //#endregion
 
 
@@ -22,7 +22,8 @@ import { MaterialModule } from 'src/material/material.module';
   imports: [
     CommonModule,
     ManageHallTicketsRoutingModule,
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ]
 })
 export class ManageHallTicketsModule { }

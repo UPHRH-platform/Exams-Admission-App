@@ -1,25 +1,18 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
+import { BaseService } from '../../../service/base.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
   styleUrls: ['./hall-ticket.component.scss']
 })
-export class HallTicketComponent {
+export class HallTicketComponent implements OnInit {
+  loggedInUserRole: string;
 
-  hallTicketDetails = {
-    exmaCycleName: 'Exam Cycle 1',
-    studentDetails: {
-      firstName: 'Rajash',
-      lastName: 'Kumaravel',
-      roolNumber: '12345 89078',
-      DOB: '24-01-1998',
-    }, 
-    hallTicketDetqails: {
-      courseName: 'M. Sc. Nursing',
-      courseYear: '2022 - 2023'
-    }
-  }
+  //#region (global variables)
+
+  hallTicketDetails: any
 
   examTableHeader = [
     {
@@ -38,41 +31,84 @@ export class HallTicketComponent {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },{
-      header: 'Exam time',
-      columnDef: 'examTime',
-      cell: (element: Record<string, any>) => `${element['examTime']}`,
+      header: 'Exam start time',
+      columnDef: 'startTime',
+      cell: (element: Record<string, any>) => `${element['startTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },{
-      header: 'Duration',
-      columnDef: 'examDuration',
-      cell: (element: Record<string, any>) => `${element['examDuration']}`,
+      header: 'Exam end time',
+      columnDef: 'endTime',
+      cell: (element: Record<string, any>) => `${element['endTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },
   ]
 
-  examTableData= [
-    {
-      examName: 'Exam 1', 
-      examDate: '23-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },{
-      examName: 'Exam 2', 
-      examDate: '24-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },{
-      examName: 'Exam 3', 
-      examDate: '25-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },
-  ]
+  examTableData= []
 
   isHallTicket = true
+  //#endregion
+
+  //#region (constructor)
+  constructor(
+    private router: Router,
+    private baseService: BaseService,
+    private authService: AuthServiceService
+  ) {
+    this.loggedInUserRole = this.authService.getUserRoles()[0];
+  }
+  //#endregion
+
+  ngOnInit(): void {
+    this.intialisation()
+  }
+
+  //#region (intialisation)
+  intialisation() {
+
+    this.baseService.getHallTicketData$(1).subscribe({
+      next: (res: any) => {
+      
+        this.hallTicketDetails = res[0];
+
+        this.examTableData  = res[0].examCycle.exams;
+
+        
+      },
+      error: (error: any) => {
+        console.log(error.message)
+      }
+    })
+ 
+  }
+
+  getHallTicketDetails() {
+    //this.candidatePortalService.getHallTicketDetails()
+    // .pipe(mergeMap((res: any) => {
+    //   return this.formateExamDetails(res)
+    // })).subscribe((examDetails: any)) {
+
+    // }
+  }
+
+  // formateExamDetails(examData: any) {
+  //   let formatedData = examData
+  //   return formatedData;
+  // }
+
+  //#endregion
+
+  //#region (navigate to modify)
+  redirectToModifyHallticket() {
+    this.router.navigateByUrl('/candidate-portal/modify-hallticket')
+  }
+
+  cancel() {
+    this.router.navigateByUrl('/hall-ticket-management')
+  }
+  //#endregion
 
 }

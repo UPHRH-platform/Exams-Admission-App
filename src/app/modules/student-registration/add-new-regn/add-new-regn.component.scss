@@ -1,0 +1,48 @@
+.main-container {
+  // padding: 4rem;
+  background-color: #F0F3F4;
+  height: 892px;
+  // padding-left: 10rem;
+  // padding-right: 10rem;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.head-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.registerBtn {
+  border: none;
+  background-color: #045dad;
+  color: white;
+  height: 35px;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+::ng-deep .search-field {
+  width: 350px;
+
+  .mat-mdc-text-field-wrapper {
+    background-color: white;
+    height: 40px;
+  }
+
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 10px;
+  }
+
+  .search-icon {
+    color: #00000099;
+    padding-top: 0px !important;
+  }
+
+}

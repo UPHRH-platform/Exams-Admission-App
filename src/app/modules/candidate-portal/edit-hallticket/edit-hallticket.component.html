@@ -1,0 +1,62 @@
+<form [formGroup]="studentDetails" >
+    <div class="details-row ">
+        <div class="">
+            <div class="lable">
+                <span>First name</span>
+            </div>
+            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+                <input matInput formControlName="firstName" >
+            </mat-form-field>
+        </div>
+        <div>
+            <div class="lable">
+                <span>Last name</span>
+            </div>
+            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+                <input matInput formControlName="lastName"  >
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="details-row">
+        <div class="">
+            <div class="roolNumberLable hall-ticket-form-field">
+                <span>Roll Number</span>
+            </div>
+            <div class="roolNumber">
+                <span>{{studentDetails.value.roolNumber}}</span>
+            </div>
+        </div>
+        <div>
+            <div class="lable">
+                <span>DOB</span>
+            </div>
+            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+                <input matInput formControlName="DOB" 
+                [matDatepicker]="DOBpicker">
+                <mat-datepicker-toggle matIconSuffix [for]="DOBpicker"></mat-datepicker-toggle>
+                <mat-datepicker #DOBpicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="details-row">
+        <div class="">
+            <div class="lable">
+                <span>Course name</span>
+            </div>
+            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+                <input matInput formControlName="courseName"  >
+            </mat-form-field>
+        </div>
+        <div>
+            <div class="lable">
+                <span>Course Year</span>
+            </div>
+            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+                <input matInput formControlName="courseYear"
+                [matDatepicker]="courseYearPicker" >
+                <mat-datepicker-toggle matIconSuffix [for]="courseYearPicker"></mat-datepicker-toggle>
+                <mat-datepicker #courseYearPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+</form>

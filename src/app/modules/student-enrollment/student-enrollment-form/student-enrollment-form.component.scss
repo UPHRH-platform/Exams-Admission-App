@@ -1,0 +1,196 @@
+.full-container{
+    width:100%;
+    height:fit-content;
+    background-color:#F0F3F4;
+  }
+  .certificate-container{
+    padding: 4rem;
+    margin-left: 4rem;
+  }
+  .certificate-header{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .edit-btn{
+    height: 3rem;
+    width: 6rem;
+  }
+  mat-drawer, .mat-drawer-container{
+    background-color:#F0F3F4 !important;
+    border-right: 0 !important;
+  }
+
+  .outer-bg {
+    background-color: #fff;
+  }
+  
+  .content{
+    border-radius: 4px;
+    height  : fit-content;
+    background-color: #F0F3F4; 
+  }
+
+  .content-container {
+    padding: 0 !important; 
+    min-height: 98vh;
+  }
+
+  .fileUpload-container {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.5rem;
+  }
+
+  .fileupload-bg {
+    background-color: rgba(0, 0, 0, 0.04);
+    padding: 0.5rem;
+  }
+
+  .file-preview {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  
+  .applicant-details{
+    margin-left: 2rem;
+  }
+  .slc {
+    width: 20% !important;
+  }
+  h4{
+    margin-top: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .place-details{
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+  }
+  .address-details{
+    margin-right: 2rem;
+    
+  }
+  .upload-column{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 43rem;
+    height: 20rem;
+    border: 1px solid rgba(0,0,0,.36);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+  }
+  .buttons{
+    display: flex;
+    justify-content: space-between;
+    background-color: #F0F3F4;
+    height: 4rem;
+    padding-top: 2rem;
+  }
+  .button{
+    padding:1.5rem;
+    margin-left: 1.5rem;
+  }
+  .payment-details{
+    display: flex;
+    flex-direction: column;
+   
+  }
+  .user-info{
+    display: flex;
+    flex-direction: row;
+    padding: 2rem ;
+    margin-left: 4rem;
+  }
+  .details{
+    margin-right: 3rem;
+  }
+  .cer-name{
+    padding: 2rem;
+    margin-left: 4rem;
+  }
+  .drawer {
+      min-width: 25%;
+      padding-right: 24px;
+    }
+    .drawer .contents {
+      padding: 16px;
+    }
+    .active-list-item { 
+      color: yellow !important; /* Note: You could also use a custom theme */
+    }
+    
+    .active-link {
+      border-left: 4px solid #0074B6;
+      background-color:rgba(201, 197, 197, 0.305);
+     
+      /* Add more styles as needed */
+    }
+  .status-bar{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background-color: #fafafa;
+  }
+  .full-details{
+    background-color: #fafafa;
+  }
+
+  .attachment-label {
+    cursor: pointer; 
+    color: rgb(0, 116, 182);
+  }
+  
+  
+    .status{
+      margin: 0.5rem;
+    }
+    .status-reason{
+      margin: 0.5rem;
+      color: grey;
+    }
+    
+    .status-data{
+    width:75rem;
+    align-items:center;
+    border-radius:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top: 2rem;
+    border: 1px solid grey;
+  
+    
+    }
+    .open {
+      color: orange;
+    }
+    
+    .closed {
+      color: green;
+    }
+    
+    .rejected {
+      color: red;
+    }
+
+    .statusBackground {
+    background-color: rgba(0, 0, 0, 0.08);
+    padding: 4px;
+    text-align: center;
+    p {
+      background-color: rgba(0, 0, 0, 0.08); margin: 4px; padding-top:4px; padding-bottom: 5px
+    }
+    .span {
+      margin-top: 5px; 
+      margin-bottom: 5px
+    }
+    }
+    

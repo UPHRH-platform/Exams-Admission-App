@@ -1,8 +1,10 @@
- <div class="secondary-container">
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+ <div class="main-container">
+  <div class="secondary-container">
     <div class="body-header">
       <h2 class="title-header">View</h2>
       <div class="button-group">
-        <button class="btn-1">Cancel</button>
+        <button class="btn-1" (click)="onCancel()">Cancel</button>
         <button class="btn-2">Edit</button>
       </div>
     </div>
@@ -45,3 +47,5 @@
       </form>
     </div>
   </div>
+ </div>
+

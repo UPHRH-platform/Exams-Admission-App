@@ -1,37 +1,52 @@
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 <div class="full-container">
     <div class="certificate-container">
         <div class="certificate-header">
             <h2>Download Question Papers</h2>
         </div>
-        <span>
+
+        <mat-card  class="w-full cctv-verification-card flex py1 mb2">
+            <span [ngClass]="{'verified': cctvVerificationStatus === 'Verified'}">CCTV Verification Status: {{cctvVerificationStatus}}</span>
+        </mat-card >
+
+        <app-shared-ques-paper
+        [examCycleControl]="examCycleControl"
+         [examCycleList]="examCycleList" 
+        [questionPapersList]="examDetails" 
+        (viewQuestionPaper)="viewQuestionPapers($event)"
+        (downloadQuestionPaper)="downloadQuestionPaper($event)"
+        [showCardDetails]=true
+        >
+        
+      </app-shared-ques-paper>
+
+     <!--    <span>
             Exam cycle
 
         </span>
         <div>
             <mat-form-field appearance="outline">
                 <mat-label>Select here</mat-label>
-                <!--     <input matInput placeholder="" formControlName="state"> -->
                 <mat-select (selectionChange)="examCycleSelected($event)">
                     <span *ngFor='let examCycle of examCycleList;'>
                         <mat-option [value]="examCycle">{{examCycle}}</mat-option>
                     </span>
                 </mat-select>
-                <!--   <mat-error *ngIf="newRegCertDetailsformGroup.controls['credType'].invalid">
-        </mat-error> -->
+              
             </mat-form-field>
         </div>
 
-        <mat-card style="margin-top: 38px;" class="example-card " *ngFor="let exam of examDetails">
-            <mat-card-header>
+        <mat-card style="margin-top: 38px;" *ngFor="let exam of examDetails">
+            <p>
+                <mat-card-content>
 
-                <mat-card-subtitle>Exam Name</mat-card-subtitle>
-
-
-                <mat-card-title> {{ exam.examName | uppercase }}</mat-card-title>
+                    <mat-card-subtitle>Exam Name</mat-card-subtitle>
 
 
+                    <mat-card-title> {{ exam.examName | uppercase }}</mat-card-title>
 
-            </mat-card-header>
+                </mat-card-content>
+            </p>
             <mat-divider></mat-divider>
             <p>
                 <mat-grid-list cols="4" rowHeight="20px">
@@ -75,33 +90,34 @@
             </p>
             <mat-card-content>
                 <p>
-                    <mat-list role="list" *ngIf="exam.examStartTime !=='12.00 A.M.';  else notYetexamTime">
-                        <mat-list-item style="background-color: lightgray;" role="listitem"
-                            *ngFor="let qp of exam.questionPaperList">
+                    <mat-list role="list"  *ngIf="exam.examStartTime !== '12.00 A.M.'  ;  else notYetexamTime">
+                        <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
+                            *ngFor="let qp of exam.questionPaperList" >
+                            <div class="question-paper-item-container"> 
+                                <span>{{qp.name}}</span>
+                                <span class="button-group" >
+                                    <button type="button" class="cancel-button" mat-stroked-button
+                                        color="primary" (click)="viewQuestionPaper(qp.id)">View</button>
+                                    <button class="next-button" mat-raised-button color="primary"
+                                        (click)="downloadQuestionPaper(qp.id)">Download</button>
+                                </span>
 
-                            {{qp.name}}
-                            <mat-divider></mat-divider>
-                            <span class="button-group ">
-                                <button type="button" class="cancel-button" mat-stroked-button
-                                    color="primary">View</button>
-                                <button class="next-button" mat-raised-button color="primary"
-                                    (click)="downloadQuesPpr(qp.id)">Download</button>
-                            </span>
-
+                            </div>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                     </mat-list>
                     <ng-template #notYetexamTime>
                         <p>
-                            <mat-hint style="color: red;"> *Question Paper will appear 30 mins before exam for download</mat-hint>
-                           
+                            <mat-hint style="color: red;"> *Question Paper will appear 30 mins before exam for
+                                download</mat-hint>
+
                         </p>
 
                     </ng-template>
                 </p>
             </mat-card-content>
 
-        </mat-card>
+        </mat-card> -->
 
 
     </div>

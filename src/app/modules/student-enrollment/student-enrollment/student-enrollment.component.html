@@ -1,44 +1,86 @@
-<div class="secondary-container">
-<div class="selector">
-  <mat-form-field appearance="outline" >
-    <mat-label class="label" >Select Course</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let course of courses" [value]="course.value">
-        {{ course.viewValue }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Select Academic Year</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let year of years" [value]="year.value">
-        {{ year.viewValue }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-<div>
-  <mat-form-field appearance="outline">
-      <input matInput placeholder="Search">
-  </mat-form-field>
-</div>
-<div class="btn-tab">
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container" id="enrollment">
+  <div class="selector">
+    <mat-form-field
+      class="exam-form"
+      appearance="outline"
+      *ngIf="this.loggedInUserRole === 'exams_admin'"
+    >
+      <mat-label>Select Institute</mat-label>
+      <mat-select (selectionChange)="getSelectedInstitute($event)">
+        <mat-option *ngFor="let institute of instituteList" [value]="institute.id">
+          {{ institute.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="exam-form" appearance="outline">
+      <mat-label class="label">Select Course</mat-label>
+      <mat-select (selectionChange)="getSelectedCourse($event)">
+        <mat-option *ngFor="let course of courses" [value]="course.id">
+          {{ course.courseName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="exam-form" appearance="outline">
+      <mat-label>Select Academic Year</mat-label>
+      <mat-select (selectionChange)="getSelectedAcademicYear($event)">
+        <mat-option *ngFor="let year of years" [value]="year.value">
+          {{ year.viewValue }}
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
+  </div>
+<div class="buttons flex" style="justify-content: end;" *ngIf="loggedInUserRole === 'exams_institute'">
+    <div >
+      <button class="btn-1">Download List</button>
+    </div>
+    <div>
+      <button class="btn-2" (click)="addNewEnrollment()">New Student Enrolment</button>
+    </div>
+  </div>
   <div class="tab">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-      <mat-tab label="Pending">Pending</mat-tab>
-      <mat-tab label="Approved">Approved</mat-tab>
-      <mat-tab label="Rejected">Rejected</mat-tab>
-      <mat-tab label="Closed">Closed</mat-tab>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
+      <mat-tab *ngFor="let tab of tabs">
+        <ng-template mat-tab-label>{{ tab.name }}</ng-template>
+        <app-shared-skeleton-loading [isLoading]="isDataLoading">
+        </app-shared-skeleton-loading>
+        <div style="display: flex; flex-direction: row;" *ngIf="!isDataLoading">
+            <div>
+            <form [formGroup]="searchForm">
+            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
+              <mat-icon matPrefix class="search-icon">search</mat-icon>
+              <input
+                matInput
+                formControlName="searchData"
+                (keyup)="applySearch($event.target.value)"
+                placeholder="Search"
+              />
+            </mat-form-field>          
+          </form>
+          
+        </div>
+        <!-- <app-common-filter *ngIf="!isDataLoading && userRole === 'Secretary'" (filteredvalue)="onClickApplyFilter($event)" (resetFilterValue)="resetFilterValueData($event)"></app-common-filter> -->
+        </div>
+        <app-shared-table
+          *ngIf="!isDataLoading"
+          [tableColumns]="enrollmentTableColumns"
+          [tableData]="enrollmentTableData"
+          [isPageable]="true"
+          [length]="enrollmentTableData?.length"
+          [pageSize]="pageSize"
+          [isHallTicket]="isHallTicket"
+          [hidePageSize]="false"
+          [showPageSizeOptions]="true"
+          [showFirstLastButtons]="true"
+          [pageIndex]="pageIndex"
+          (rowAction)="onClickItem($event)"
+          [isServerSideSorting]="false"
+          [isServerSidePagination]="false"
+          (pageChange)="handlePageChange($event)"
+          (searchParmas)="getSearchParams($event)"
+        >
+        </app-shared-table>
+      </mat-tab>
     </mat-tab-group>
-    
   </div>
-  <div class="buttons">
-  <div >
-    <button class="btn-1">Download List</button>
-  </div>
-  <div >
-    <button class="btn-2">New Student Enrolment</button>
-  </div>
-</div>
-</div>
 </div>

@@ -1,0 +1,54 @@
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+  <div class="secondary-container">
+    <mat-label class="title-header"> Manage Track Dispatches </mat-label>
+    <div
+      style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
+    >
+      <div>
+        <div class="mb1">
+          <label class="examCycleLable">Exam cycle</label>
+        </div>
+        <mat-form-field class="exam-form" appearance="outline">
+          <mat-select [formControl]="examCycleControl" (ngModelChange)="getExams($event)">
+            <ng-container *ngFor="let examCycle of examCycleList">
+              <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+          </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="mb1">
+          <label class="examCycleLable">Exam </label>
+        </div>
+        <mat-form-field class="exam-form" appearance="outline">
+          <mat-select [formControl]="examControl">
+            <mat-option *ngFor="let course of courses" [value]="course.value">
+              {{ course.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
+      <div>
+        <app-shared-table 
+          [tableColumns]="instituteTableHeader" 
+          [tableData]="instituteTableData" 
+          [isHallTicket]="true" 
+          [removeTbodyColor]="true" 
+          [isPageable]="true" 
+          (cellClickAction)="viewProof($event)"
+        ></app-shared-table>
+      </div>
+    </ng-container>
+    <ng-template #istitueExamsFeeDetails>
+      <div>
+        <app-shared-table 
+          [tableColumns]="studentExamsTableHeader" 
+          [tableData]="studentExamsTableData" 
+          [isHallTicket]="true" 
+          [removeTbodyColor]="true" 
+          [isPageable]="true"
+        ></app-shared-table>
+      </div>
+    </ng-template>  </div>

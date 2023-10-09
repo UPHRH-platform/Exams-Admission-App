@@ -1,0 +1,34 @@
+.details-row {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    gap: 10px;
+
+    .roolNumberLable {
+        margin-bottom: 10px;
+        color: #00000075;
+        font-size: 13px;
+    }
+
+    .lable {
+        margin-bottom: 2px;
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 15px;
+    }
+
+    .roolNumber {
+        width: 100%;
+    }
+}
+
+
+::ng-deep .hall-ticket-form-field {
+    margin-top: 5px;
+    width: 276px;
+ 
+    .mat-mdc-text-field-wrapper {
+       background-color: white;
+       height: 50px;
+    }
+ }

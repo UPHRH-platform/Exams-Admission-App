@@ -1,0 +1,88 @@
+.container {
+    background-color: white;
+    width: 100%;
+    height: fit-content;
+    padding: 15px;
+}
+
+.payment-details {
+    gap: 8px;
+    justify-content: flex-end;
+
+    .lable {
+        font-weight: 600;
+        font-size: 15px;
+        padding-top: 13px;
+        max-width: fit-content;
+        margin-right: 10px;
+    }
+}
+
+.btn-pay-fee {
+    min-width: 90px;
+    background-color: #045dad;
+    color: white;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 35px;
+}
+
+.cancel-btn {
+    border: 2px solid rgb(4, 93, 173);
+    color: rgb(4, 93, 173);
+    width: 80px;
+    background-color: white;
+    height: 35px;
+    border-radius: 5px;
+    margin-right: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.revalution-btn {
+    background-color: rgb(4, 93, 173);
+    color: white;
+    width: 160px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.examSelectNote {
+    margin-top: 20px;
+    color: #00000075;
+    font-size: 13px;
+}
+
+.exams-selected {
+    width: 230px;
+}
+
+.amount-to-pay {
+    width: 250px;
+}
+
+::ng-deep .form-fields {
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+        max-height: 40px;
+    }
+
+    .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+        padding-top: 10px;
+    }
+}

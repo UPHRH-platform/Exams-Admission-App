@@ -1,0 +1,32 @@
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+    <div class="secondary-container">
+    <div class="header-container">
+        <div class="head-details">
+            <h2>{{this.stateData?.examName | uppercase}}</h2>
+
+        </div>
+    </div>
+    <div class="container clearfix mt3">
+        <div class="sm-col md-col-7 lg-col-6">
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix class="search-icon">search</mat-icon>
+                <input matInput [(ngModel)]="searcKey" placeholder="Search">
+            </mat-form-field>
+        </div>
+        <div class="sm-col md-col-5 lg-col-6">
+            <div class="w-full">
+                <button class="registerBtn right px2" (click)="openRegistrationPopup()">Register</button>
+            </div>
+        </div>
+    </div>
+    <app-shared-skeleton-loading [isLoading]="isDataLoading">
+    </app-shared-skeleton-loading>
+    <app-shared-table *ngIf="!isDataLoading" 
+    [tableColumns]="viewStudentsTableColumns" 
+
+    [tableData]="regdStudents"
+    [examList] = "examList"
+    [isPageable]="true" 
+    (checkBoxAction)="onSelectedRows($event)">
+    </app-shared-table>
+</div>

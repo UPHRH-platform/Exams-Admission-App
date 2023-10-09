@@ -1,0 +1,110 @@
+.main-container {
+    background-color: #F0F3F4;
+    height: fit-content;
+    width: 100%;
+}
+
+.secondary-container{
+    padding: 3%;
+    margin: 0px 8%;
+}
+
+.body-header{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.examName {
+    margin-top: 0px
+}
+
+.container {
+    background-color: white;
+    width: 100%;
+    height: fit-content;
+    padding: 15px;
+}
+
+.footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 35px;
+}
+
+.cancel-btn {
+    border: 2px solid rgb(4, 93, 173);
+    color: rgb(4, 93, 173);
+    width: 80px;
+    background-color: white;
+    height: 35px;
+    border-radius: 5px;
+    margin-right: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.request-modify-btn {
+    background-color: rgb(4, 93, 173);
+    color: white;
+    width: 140px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.attachments {
+    margin-top: 40px;
+
+    .attachment-header {
+        font-size: 15px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+        margin-bottom: 15px;
+        justify-content: space-between;
+    }
+
+    .attachment-file-card {
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        height: 100px;
+    }
+    .attachment-btn-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100px;
+    }
+    .attachment-btn {
+        background-color: rgb(4, 93, 173);
+        color: white;
+        width: 100px;
+        height: 35px;
+        border-radius: 5px;
+        border: none;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+}
+
+.file-container{
+    background-color: rgb(245, 245, 245) ;
+    width: calc(100% - 1rem);
+    min-height: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
+.view-delete-btn {
+    color: #0074B6;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}

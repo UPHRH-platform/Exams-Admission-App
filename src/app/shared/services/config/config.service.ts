@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as urlConfig from "./url.config.json";
 import * as rolesConfig from './roles.config.json';
+import * as tabsConfig from './tabs.config.json';
 /**
  * Service to fetch config details.
  *
@@ -17,5 +18,10 @@ export class ConfigService {
    *
    */
   rolesConfig = (<any>rolesConfig);
+   /**
+   * property containing tabs config
+   *
+   */
+   tabsConfig = (<any>tabsConfig);
 }
 

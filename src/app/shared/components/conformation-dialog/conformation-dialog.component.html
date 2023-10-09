@@ -1,0 +1,33 @@
+<div class="dialog-container">
+        <ng-container [ngSwitch]="dialogDetails.dialogType">
+            <ng-container *ngSwitchCase="'success'">
+                <div class="circule mb2 success">
+                    <mat-icon aria-hidden="false" class="success-icon">done</mat-icon>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'fail'">
+                <div class="circule mb2 fail">
+                    <mat-icon aria-hidden="false" class="fail-icon">priority_high</mat-icon>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'confirmation'">
+                <div class="px2">
+                <p class="w-full">{{dialogDetails?.header}}</p>
+                <p class="">{{dialogDetails?.description}}</p>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="dialogDetails.dialogType !== 'confirmation'">
+        <div *ngFor="let description of dialogDetails?.description" class="description">
+            <span>{{description}}</span>
+        </div>
+        </ng-container>
+</div>
+<div class="px2 clearfix footer">
+    <ng-container *ngFor="let btn of dialogDetails?.buttons">
+        <div [ngClass]="btn.positionClass">
+            <button (click)="closeDialog(btn.response)" [ngClass]="btn.btnClass"
+            >{{btn.btnText}}</button>
+        </div>
+    </ng-container>
+</div>

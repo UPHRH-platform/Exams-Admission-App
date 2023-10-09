@@ -1,0 +1,103 @@
+.input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 12px;
+    height: 394px;
+    padding: 16px;
+
+    .inner-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 218px;
+    }
+
+    .label{
+    font-weight: 600; 
+    font-size: 14px;
+    letter-spacing: 0.16px;    
+}
+ .label-heading{
+    font-weight: 600; 
+    font-size: 16px;
+    letter-spacing: 0.16px; 
+    margin-top: 20px;
+
+}
+
+.file-upload{
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+.selectInput{
+    width: 476px;
+    height:40px
+}
+.outline{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 468px;
+    height: 104px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 2px solid rgb(194, 191, 191);
+}
+.file-container{
+    background-color: rgb(245, 245, 245) ;
+    width: 458px;
+    height: 40px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+   
+
+    
+
+    
+
+    .fail-icon {
+        position: absolute;
+        color: white;
+        top: 9px;
+        left: 7.4px;
+    }
+
+    .description {
+        font-size: 20px;
+    }
+}
+
+.footer {
+    height: 32px;
+    padding:0;
+    margin-top: 16px;
+
+    .btn-full {
+        min-width: 80px;
+        background-color: #045dad;
+        color: white;
+        height: 35px;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .btn-outline {
+        min-width: 80px;
+        background-color: white;
+        color: #045dad;
+        border: 2px solid #045dad;
+        height: 35px;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+}

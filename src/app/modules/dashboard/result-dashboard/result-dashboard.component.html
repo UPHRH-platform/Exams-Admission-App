@@ -1,0 +1,40 @@
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
+    <mat-label class="title-header"> Result Dashboard </mat-label>
+    <div class="selector">
+        <div style="display: flex;flex-direction: column;">
+            <div class="mb1">
+                <label class="examCycleLable">Exam cycle</label>
+            </div>
+            <mat-form-field class="exam-form" appearance="outline">
+                <mat-select>
+                <mat-option *ngFor="let year of years" [value]="year.value">
+                    {{ year.viewValue }}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div style="display: flex;flex-direction: column;">
+            <div class="mb1">
+            <label class="examCycleLable">Institute</label>
+            </div>
+            <mat-form-field class="exam-form" appearance="outline">
+                <mat-select>
+                <mat-option
+                    *ngFor="let institute of institutes"
+                    [value]="institute.value"
+                >
+                    {{ institute.viewValue }}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div> 
+    </div>
+    <app-shared-table *ngIf="!isDataLoading" 
+        [tableColumns]="marksTableColumns" 
+
+        [tableData]="marksData"
+        >
+    </app-shared-table>
+
+  </div>

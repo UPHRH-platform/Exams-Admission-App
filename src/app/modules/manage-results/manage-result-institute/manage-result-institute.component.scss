@@ -1,0 +1,137 @@
+.main-container {
+    background-color: #F0F3F4;
+    height: 920px;
+    width: 100%;
+}
+.secondary-container{
+    padding: 3%;
+    margin-left: 8%;
+}
+.title-header {
+   font-size: 24px;
+   letter-spacing: 0.12px;
+   font-weight: 550;
+   line-height: 36px;
+   color: #000000;
+   margin-bottom: 24px;
+}
+.cards-boxes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 16px;
+    column-gap: 16px;
+    height: fit-content;
+}
+
+.card {
+   width:276px;
+   background-color: white;
+   box-shadow: rgba(0, 0, 0, 0.20) 0px 1px 3px 0px !important;
+   border-radius: 6px;
+   cursor: pointer;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   padding: 10px;
+  }
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+ .icon-container {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: lightgray;
+ }
+
+ .title-section {
+    display: flex;
+    align-items: flex-start;
+    font-size: 17px;
+    letter-spacing: 0.12px;
+    font-weight: 600;
+    color: RGBA(0, 0, 0, 0.87);
+    margin-top: 8px;
+    filter: brightness(1.5);
+    }
+
+ .desc-section {
+    margin-top: 7px;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(0,0,0,0.6);
+    letter-spacing: 0.25px;
+ }
+
+ .status-card {
+    margin-top: 10px;
+    border: 0.5px solid #00000036;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #0000000f;
+    color: #1D8923;
+    font-size: 15px;
+    padding: 3px 10px;
+ }
+
+ .view-btn{
+   color: #045DAD;
+   background-color: #fff;
+   width: fit-content;
+   margin: 16px;
+   padding: 12px;
+   border-width: 0px;
+   border: 1.5px solid #045DAD;
+   border-radius: 4px;
+   font-weight: 600;
+   font-size: 16px;
+   cursor: pointer;
+   margin-top: 16px;
+}
+.btn-2{
+   background-color: #045DAD;
+   color:#fff;
+   margin: 16px;
+   padding:12px;
+   width: 80px;
+   border-radius: 4px;
+   font-weight: 600;
+   border: 1.5px solid rgba(4,93,173, 1);
+   opacity: 1;
+   cursor: pointer;
+   display: flex;
+   justify-content: center;
+  
+   // margin-left: 320px;
+}
+
+.exam-lable {
+   font-weight: 600;
+   font-size: 15px;
+   margin-bottom: 10px;
+   width: 277px;
+}
+
+::ng-deep .exam-form {
+   margin-top: 5px;
+   width: 276px;
+
+   .mat-mdc-text-field-wrapper {
+      background-color: white;
+   }
+
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+   color: red !important;
+ }
+
+::ng-deep .mat-pseudo-checkbox {
+     display: none !important;
+   }

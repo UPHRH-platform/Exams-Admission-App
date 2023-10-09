@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { mergeMap, of } from 'rxjs';
+import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss']
 })
-export class ResultsComponent {
+export class ResultsComponent implements OnInit {
+
+  //#region (global variables)
   hallTicketDetails = {
     exmaCycleName: 'Exam Cycle 1',
     studentDetails: {
@@ -60,46 +65,82 @@ export class ResultsComponent {
     },
   ]
 
-  examTableData= [
-    {
-      examName: 'Exam 1', 
-      internalMarks: '45', 
-      externalMarks: '45',
-      totalMarks: '90',
-      status: 'Pass',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'green'
-        },
-      }
-    },{
-      examName: 'Exam 2', 
-      internalMarks: '45', 
-      externalMarks: '45',
-      totalMarks: '95',
-      status: 'Pass',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'green'
-        },
-      }
-    },{
-      examName: 'Exam 3', 
-      internalMarks: '25', 
-      externalMarks: '5',
-      totalMarks: '30',
-      status: 'Fail',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'red'
-        },
-      }
-    },
-  ]
+  examTableData= []
 
   isHallTicket = true
+  //#endregion
+
+  //#region (constructor)
+  constructor(
+    private router: Router,
+    private baseService: BaseService
+  ) {}
+  //#endregion
+
+  ngOnInit(): void {
+    this.intialisation()
+  }
+
+  //#region (intialisation)
+  intialisation() {
+    this.getExamResults()
+  }
+
+  getExamResults() {
+    this.baseService.getResults()
+    .pipe(mergeMap((res: any) => {
+      return this.formateResultDetails(res)
+    })).subscribe((results: any) => {
+      this.examTableData = results.examResults
+    })
+  }
+
+  formateResultDetails(results: any) {
+    const exams: {
+      examResults: {
+        examName: string,
+        internalMarks: string,
+        externalMarks: string,
+        totalMarks: string,
+        status: string,
+        hasStyle: boolean,
+        cellStyle: {
+          status: {
+            color: string
+          }
+        },
+      }[]
+    } = {
+      examResults: []
+    }
+
+    if (results) {
+      results.forEach((result: any) => {
+        const examResult = {
+          examName: result.examName,
+          internalMarks: result.internalMarks,
+          externalMarks: result.externalMarks,
+          totalMarks: result.totalMarks,
+          status: result.status,
+          hasStyle: true,
+          cellStyle: {
+            status: {
+              color: result.status === 'Fail' ? 'red' : 'green'
+            }
+          },
+        }
+        exams.examResults.push(examResult)
+      })
+    }
+    return of(exams);
+  }
+
+  //#endregion
+
+  //#region (navigate to modify)
+  redirectToRequestRevalution() {
+    this.router.navigateByUrl('/candidate-portal/request-revalution')
+  }
+  //#endregion
 
 }

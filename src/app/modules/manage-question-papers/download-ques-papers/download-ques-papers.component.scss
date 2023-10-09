@@ -3,6 +3,18 @@
     height:fit-content;
     background-color:#F0F3F4;
   }
+
+.cctv-verification-card {
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+
+  .verified {
+    color: green;
+  }
+}
+
   .certificate-container{
     padding: 4rem;
     margin-left: 4rem;
@@ -10,7 +22,7 @@
   .certificate-header{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
   .buttons{
     display: flex;
@@ -23,3 +35,11 @@
     justify-content: end;
     align-items: end !important;
 }
+
+ .question-paper-item-container {
+   button.next-button {
+    margin-left: 2rem;
+  }
+  display: flex;
+  justify-content: space-between;
+ }

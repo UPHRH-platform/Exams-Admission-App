@@ -1,4 +1,5 @@
 <mat-card class="container">
+    <div class="secondary-container">
     <mat-card-content>
         <div>
             <app-exam-hall-ticket-student-details
@@ -11,8 +12,11 @@
     </mat-card-content>
     <mat-card-actions>
         <div class="footer">
-            <button class="cancel-btn" (click)="cancel()">Cancel</button>
-            <button class="download-btn">Download</button>
+            <button *ngIf="loggedInUserRole === 'exams_student'" class="cancel-btn" (click)="cancel()">Cancel</button>
+            <button *ngIf="loggedInUserRole === 'exams_student'" class="download-btn" (click)="downloadHallTicket()">Download</button>
+            <button *ngIf="loggedInUserRole === 'exams_admin'" class="cancel-btn" (click)="onReject()">Reject</button>
+            <button *ngIf="loggedInUserRole === 'exams_admin'" class="download-btn" (click)="onApprove()">Approve</button>
         </div>
     </mat-card-actions>
+</div>
 </mat-card>

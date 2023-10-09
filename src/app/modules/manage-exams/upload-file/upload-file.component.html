@@ -1,0 +1,59 @@
+<div class="input-container" [ngStyle]="files.length > 0 ? {'justify-content': 'initial'}: {'justify-content': 'space-between'}">
+    <div class="w-full link-class">
+    <a href="../../../../../assets/templates/Exam_cycle_template.csv" target="_blank">
+        Download template
+    </a>
+    </div>
+  <div class="" [ngClass]="files.length === 0? 'inner-container': ''">
+    <div *ngIf="files.length == 0">
+      <label for="fileUpload1" class="custom-file-upload">
+        <a mat-button style="color: #fff" class="btn-2">Browse</a>
+      </label>
+
+      <input
+        id="fileUpload1"
+        type="file"
+        style="display: none"
+        enctype="multipart/form-data"
+        (change)="changeListener($event)"
+        multiple="true"
+        accept=".csv"
+      />
+      <mat-hint>.csv files accepted</mat-hint>
+      <span class="error" style="color: red">{{ fileUploadError }}</span>
+    </div>
+
+    <div *ngIf="examCycleData.length > 0">
+    <app-shared-table 
+    [tableColumns]="examCycleColumns" 
+    [tableData]="examCycleData"
+    [length]="examCycleData.length"
+    [pageSizeOptions]="[5,10,20]"
+    [isPageable]="true"></app-shared-table>
+    </div>
+    <!-- <div
+      style="
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+        justify-content: space-between;
+        column-gap: 8px;
+      "
+    >
+       <button class="btn-4" *ngIf="files.length > 0" (click)="files.length = 0">
+        Re-upload list
+      </button>
+      <button class="btn-2" (click)="goToList()" *ngIf="files.length > 0">
+        Ok
+      </button> 
+    </div> -->
+  </div>
+</div>
+<div class="btn footer">
+    <div>
+    <button class="btn-1 mx1" (click)="goToList()">Cancel</button>
+  </div>
+  <div>
+    <button class="btn-1" (click)="uploadExamCycle()">Create</button>
+  </div>
+</div>

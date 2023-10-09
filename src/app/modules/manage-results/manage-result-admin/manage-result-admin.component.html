@@ -1,0 +1,70 @@
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+    <div class="secondary-container">
+      <mat-label class="title-header"> Manage Results </mat-label>
+      <div style="display: flex; justify-content: space-between;">
+        <div
+        style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
+        >
+          <div>
+            <div class="mb1">
+              <label class="examCycleLable">Exam cycle</label>
+            </div>
+            <mat-form-field class="exam-form" appearance="outline">
+              <mat-select [formControl]="examCycleControl">
+                <mat-option *ngFor="let course of courses" [value]="course.value">
+                  {{ course.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <div class="mb1">
+              <label class="examCycleLable">Exam</label>
+            </div>
+            <mat-form-field class="exam-form" appearance="outline">
+              <mat-select [formControl]="examControl">
+                <mat-option *ngFor="let course of courses" [value]="course.value">
+                  {{ course.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+          <div
+            style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
+            *ngIf="!showInstitutesTable"
+          >
+            <div>
+              <button *ngIf="selectedCellDetails.columnDef === 'internalMarks'" mat-raised-button color="primary" (click)="downloadMarksHandler()">Downoad</button>
+            </div>
+            <div>
+              <button *ngIf="selectedCellDetails.columnDef === 'finalMarks'" mat-raised-button color="primary" (click)="deleteMarksHander()">Delete</button>
+            </div>
+          </div>
+      </div>
+      
+      <ng-container *ngIf="showInstitutesTable; else institueExamsFeeDetails">
+        <div>
+          <app-shared-table 
+            [tableColumns]="instituteTableHeader" 
+            [tableData]="instituteTableData" 
+            [isHallTicket]="true" 
+            [removeTbodyColor]="true" 
+            [isPageable]="true"
+            (cellClickAction)="onCellClick($event)"
+          ></app-shared-table>
+        </div>
+      </ng-container>
+      <ng-template #institueExamsFeeDetails>
+        <div>
+          <app-shared-table 
+            [tableColumns]="studentExamsTableHeader" 
+            [tableData]="studentExamsTableData" 
+            [isHallTicket]="true" 
+            [removeTbodyColor]="true" 
+            [isPageable]="true"
+          ></app-shared-table>
+        </div>
+      </ng-template>    
+     </div>
+  

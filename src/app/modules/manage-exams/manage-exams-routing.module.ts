@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'form', component: ManageExamCycleFormComponent
   },
   {
-    path: 'details', component: ManageExamCycleViewComponent
+    path: 'form/:id', component: ManageExamCycleFormComponent
   }
 ];
 

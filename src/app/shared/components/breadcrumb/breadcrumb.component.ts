@@ -7,5 +7,13 @@ import { BreadcrumbItem } from '../../interfaces';
   styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent {
-  // @Input() breadcrumbItems: BreadcrumbItem[];
+  commonBreadcrumb = { label: 'Exam Management', url: '/home' };
+  breadcrumbs: any = [];
+  @Input() breadcrumbItems: BreadcrumbItem[];
+
+  ngOnInit() {
+   this.breadcrumbs.push(this.commonBreadcrumb, ...this.breadcrumbItems);
+  }
 }
+
+

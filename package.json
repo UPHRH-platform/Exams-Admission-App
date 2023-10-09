@@ -20,12 +20,13 @@
     "@angular/platform-browser": "^15.1.0",
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
-    "rxjs": "~7.5.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.12.0",
     "basscss": "^8.1.0",
     "material-icons": "^1.13.10",
-    "ngx-toastr": "^15.2.2"
+    "ngx-cookie-service": "^15.0.0",
+    "ngx-toastr": "^15.2.2",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.1.6",
@@ -33,6 +34,7 @@
     "@angular/compiler-cli": "^15.1.0",
     "@angular/localize": "^15.2.9",
     "@types/jasmine": "~4.3.0",
+    "@types/luxon": "^3.3.2",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

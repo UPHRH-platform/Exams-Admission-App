@@ -3,7 +3,8 @@
       <div class="body-header">
         <h2 class="title-header">Hall Ticket management</h2>
         <div class="header-buttons">
-          <button class="modify-btn">Modify</button>
+          <button *ngIf="loggedInUserRole === 'exams_student'" class="modify-btn" (click)="redirectToModifyHallticket()">Modify</button>
+          <button *ngIf="loggedInUserRole === 'exams_admin'" class="modify-btn" (click)="cancel()">Cancel</button>
         </div>
       </div>
       <app-exam-cycle [hallTicketDetails]="hallTicketDetails" 

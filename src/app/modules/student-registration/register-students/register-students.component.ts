@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
+import { QuestionPaper } from 'src/app/interfaces/interfaces';
+import { Router } from '@angular/router';
+import { FormControl,  Validators } from '@angular/forms';
 
-
-interface Course {
-  value: string;
-  viewValue: string;
-}
+import { BaseService } from 'src/app/service/base.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register-students',
@@ -12,30 +12,60 @@ interface Course {
   styleUrls: ['./register-students.component.scss']
 })
 export class RegisterStudentsComponent {
-  courses: Course[] = [
-    {value: 'bsc', viewValue: 'BSc'},
-    {value: 'msc', viewValue: 'MSc'},
-  ];
-  cardList: any[] = [
-    {
-      "Name": 'M.Sc.(NURSING)-SEMESTER 1',
-      "Course_name" : 'xxxx xxxx',
-      "Start_date" : "29-06-2023",
-      "End_date" : "31-07-2023",
-    },
-    {
-       "Name" : 'B.Sc.(NURSING)-SEMESTER 2',
-      "Course_name" : 'xxxx xxxx',
-      "Start_date" : "29-06-2023",
-      "End_date" : "31-07-2023",
-    },
+  examCycle: string;
+  breadcrumbItems = [
+    { label: 'Register Students to Exam cycles and Exams', url: '' }
+  ]
+  questionPapersList: QuestionPaper[]=[];
+  examCycleList: string[] = ['examCycle1', 'examCycle2', 'examCycle3'];
+  examCycleControl: any;
 
-    {
-      "Name": 'M.Sc.(NURSING)-SEMESTER 1',
-      "Course_name" : 'xxxx xxxx',
-      "Start_date" : "29-06-2023",
-      "End_date" : "31-07-2023",
+
+  constructor(
+    private router: Router,
+    private baseService: BaseService
+  ) { }
+
+
+
+  ngOnInit(): void {
+    this.examCycleControl = new FormControl('', [Validators.required]);
+    this.getQuestionPapersList();
+  }
+
+  getQuestionPapersList() {
+    this.baseService.getExamsAndQuestionPapersList$().subscribe({
+      next:(res:any)=>{
+        this.questionPapersList = res;
+        setTimeout(() => {
+        }, 1000);
+
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+      }
+
+    })  
+  } 
+
+  examCycleSelected(e: any) {
+    console.log(e.value)
+    this.examCycle = e.value;
+  }
+
+
+  viewRegdStdnts(exam: QuestionPaper) {
+
+    if (this.examCycleControl.valid) {
+      this.router.navigate(['student-registration/view-regd-students'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
     }
-  ];
+
+  }
+
+  regNewStdnts(exam: QuestionPaper) {
+    if (this.examCycleControl.valid) {
+    this.router.navigate(['student-registration/add-new-students-regn'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
+    }
+  }
 
 }

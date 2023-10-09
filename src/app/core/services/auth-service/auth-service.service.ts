@@ -5,6 +5,7 @@ import { RequestParam, ServerResponse } from 'src/app/shared';
 import { ConfigService } from 'src/app/shared/services/config/config.service';
 import { environment } from 'src/environments/environment';
 import { HttpService } from '../http-service/http.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,13 @@ export class AuthServiceService extends HttpService {
   userManagementURL: string;
   private readonly TOKEN_KEY = 'access_token';
   private readonly USER_DATA = "user_data";
+  private readonly USER_REPRESENTATION = "user_representation";
   private readonly ALL_ROLES = "all_roles";
 
-  constructor(http: HttpClient, private configService: ConfigService) {
-    super(http);
+  constructor(http: HttpClient, private configService: ConfigService,
+    cookieService: CookieService
+   ) {
+    super(http, cookieService);
     this.baseUrl = environment.apiUrl;
     this.userManagementURL = environment.userManagementURL;
   }
@@ -41,8 +45,7 @@ export class AuthServiceService extends HttpService {
     let role = '';
     if (token) {
       const userData= this.getUserData();
-      console.log("userData =>", userData);
-      const userRole = userData.userRepresentation?.attributes?.Role[0];
+      const userRole = userData.Role[0];
       switch(userRole) {
         case 'exams_superadmin':
           role= this.configService.rolesConfig.ROLES.SUPERADMIN;
@@ -97,7 +100,8 @@ export class AuthServiceService extends HttpService {
 
   saveUserData(userData: any):void {
     this.saveToken(userData?.accessToken);
-    localStorage.setItem(this.USER_DATA,JSON.stringify(userData));
+    localStorage.setItem(this.USER_DATA,JSON.stringify(userData.userRepresentation?.attributes));
+    localStorage.setItem(this.USER_REPRESENTATION, JSON.stringify(userData.userRepresentation));
   }
 
   getUserData() {
@@ -105,18 +109,35 @@ export class AuthServiceService extends HttpService {
     return userData ? JSON.parse(userData) : null;
   }
 
+  getUserRepresentation() {
+    const userRepresentation = localStorage.getItem(this.USER_REPRESENTATION);
+    return userRepresentation ? JSON.parse(userRepresentation) : null;
+  }
+
   saveToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    const cookieOptions: any = {
+      expires: new Date(Date.now() + 3600000), // Example: Cookie expires in 1 hour
+      path: '/', // Set the path as needed
+      secure: true, // Only send the cookie over HTTPS (recommended)
+      httpOnly: true, // Set the HttpOnly flag
+    };
+    this.cookieService.set('access_token', token, undefined, undefined, undefined, undefined, cookieOptions);
+
+    //this.cookieService.set('access_token', token);
+   // localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    let tokenFromCookie = this.cookieService.get('access_token')
+    return this.cookieService.get('access_token');
+   // return localStorage.getItem(this.TOKEN_KEY);
   }
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_DATA);
     localStorage.removeItem(this.ALL_ROLES);
+    this.cookieService.delete('access_token');
   }
 
   isLoggedIn(): boolean{

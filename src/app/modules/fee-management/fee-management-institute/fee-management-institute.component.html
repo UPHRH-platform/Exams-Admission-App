@@ -1,4 +1,5 @@
-    <div class="secondary-container">
+<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
     <h2 class="title-header">{{'Fee Management'}}</h2>
     <div class="cards-boxes">
         <mat-card class="example-card" *ngFor="let item of cardList">
@@ -6,7 +7,7 @@
                     <span class="title-section">{{item.title}}</span>
                     <span class="desc-section">{{item.type}}</span>
             </mat-card-content>
-            <button class="btn-1" >Pay exam fee</button>
+            <button class="btn-1" (click)="reDirectToFeemanagement(item.examId)">Pay exam fee</button>
             </mat-card>
     </div>
 </div>
