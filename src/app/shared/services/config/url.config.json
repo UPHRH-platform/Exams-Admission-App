@@ -26,7 +26,9 @@
             "GET_EXAM_CYCLE_BY_ID": "/v1/admin/examCycle",
             "DELETE_EXAM_CYCLE": "/v1/admin/examCycle/delete",
             "GET_EXAM_BY_EXAM_CYCLE_ID": "/v1/admin/exam/byExamCycle",
-            "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update"
+            "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update",
+            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle"
+            
         },
         "EXAM_STUDENT_REGISTRATION": {
             "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
@@ -35,7 +37,8 @@
             "GET_ALL": "/v1/admin/courses/list"
         },
         "INSTITUTE_COURSE_MAPPING": {
-            "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all"
+            "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all",
+            "GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID": "/v1/admin/instituteCourseMap/list"
         },
         "EXAM_CENTER": {
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
@@ -44,13 +47,17 @@
             "ALL_CENTERS": "/v1/admin/examCenters/all"
         },
         "HALL_TICKET": {
-            "HALL_TICKET_DOWNLOAD":"/api/v1/admin/hallticket/download?dateOfBirth=1995-12-15&id=45&type=Pdf",
-            "HALL_TICKET_MODIFICATION": "/api/v1/admin/hallticket/dataCorrection/request",
-            "HALL_TICKET_REJECT": "/api/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
-            "HALL_TICKET_APPROVE": "/api/v1/admin/hallticket/dataCorrection/6/approve",
+            "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
+            "DOWNLOAD":"/v1/admin/hallticket/download?dateOfBirth=1995-12-15&id=45&type=Pdf",
+            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
+            "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
+            "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
+        },
+        "USER_INSTITUTE_MAPPING": {
+            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
             "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",

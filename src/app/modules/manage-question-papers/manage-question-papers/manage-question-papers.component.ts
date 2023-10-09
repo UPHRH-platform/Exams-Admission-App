@@ -17,8 +17,15 @@ export class ManageQuestionPapersComponent {
 
   examCycleList: string[] = ['examCycle1', 'examCycle2', 'examCycle3'];
   examCycleControl = new FormControl();
+  examCycleData: any[] = [];
+  examCycleDetails: any[] = [];
   loggedInUserRole = "";
   userData: any;
+  examCycleValue:any;
+  file:any;
+  fileUploadError: string;
+  listOfFiles: any[] = [];
+  files: any[] = [];
   
 
    isDataLoading: boolean = false;
@@ -27,13 +34,17 @@ export class ManageQuestionPapersComponent {
   constructor(
     private baseService: BaseService,
     private authService: AuthServiceService, 
+    private dialog: MatDialog,
+
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.userData = this.authService.getUserRepresentation();
   }
 
   ngOnInit(): void {
-    this.getQuestionPapersList()
+    this.getQuestionPapersList();
+    this.getExamCycleData();
+
   }
 
   getQuestionPapersList() {
@@ -59,21 +70,40 @@ export class ManageQuestionPapersComponent {
     { label: 'Manage Question Paper', url: '' },
   ]
 
- 
+  getExamCycleData() {
+    this.isDataLoading = true;
+  this.baseService.getExamCycleList().subscribe({
+    next: (res) => {
+      this.isDataLoading = false;
+      this.examCycleData = res.responseData;
+      // this.examCycleData.map((obj, index) => {
+      //   obj.id = obj?.id;
+      //   obj.examCycleName = obj?.examCycleName
+      //   console.log("exam cycle data",this.examCycleData)
+      // })
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.isDataLoading = false;
+    }
+  })
+  }
+  getExamCycleSelection(value:any){
+    this.examCycleValue = value
+  }
 
   onUploadQuesPaper(files:any){
-    const formData = new FormData()
-    formData.append('files', files)
-    console.log("formData",formData)
-    console.log("file",files)
-
+    console.log(files);
     const request ={
-      file: files,
+      file: files.name,
       userId: this.userData?.id,
-      examCycleId: "2"
+      examCycleId: this.examCycleValue
     }
-    console.log("onUploadQuesPaperonUploadQuesPaper", files.name)
-    this.baseService.uploadQuestionPaper(request).subscribe({
+    const formData = new FormData();
+        for (let [key, value] of Object.entries(request)) {
+          formData.append(`${key}`, `${value}`)
+      }
+    this.baseService.uploadQuestionPaper(formData).subscribe({
       next: (response) => {
         console.log("Download question paper response", response);
       },
@@ -81,7 +111,37 @@ export class ManageQuestionPapersComponent {
         console.log("Download question paper error", error);
       }
     });
-  }
+    // if(response.status === 200){
+          const dialogRef = this.dialog.open(ConformationDialogComponent, {
+            data: {
+              dialogType: 'success',
+              description: ['Internal marks uploaded successfully'],
+              buttons: [
+                {
+                  btnText: 'Ok',
+                  positionClass: 'center',
+                  btnClass: 'btn-full',
+                  response: true,
+                  // click:this.router.navigateByUrl('/manage-result/institute'),
+    
+                },
+              ],
+            },
+            width: '700px',
+            height: '400px',
+            maxWidth: '90vw',
+            maxHeight: '90vh'
+          })
+          dialogRef.afterClosed().subscribe(files => {
+            if (files) {
+            //  this.router.navigateByUrl('/manage-result/institute')
+            // console.log("hello")
+            // console.log(selectedFile)
+            }
+          })
+        // }
+      }
+    
 
   downloadQuestionPaper(questionPaperId: any) {
     this.baseService.downloadQuestionPaper(questionPaperId).subscribe({

@@ -51,7 +51,7 @@ import { PaymentComponent } from './payment/payment.component';
     StudentEnrollmentModule,
     TrackDispatchesModule,
     ManageAttendanceRecordModule,
-    CandidatePortalModule,
+   // CandidatePortalModule,
     HttpClientModule,
     // UserModulesModule,
     UserModuleModule,

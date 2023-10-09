@@ -106,21 +106,22 @@
                     <mat-label>Select your date</mat-label>
                     <input
                       matInput
-                      [matDatepicker]="picker"
+                      [matDatepicker]="picker10"
                       formControlName="dateOfBirth"
                       [readonly]="!iseditable"
                     />
                     <mat-datepicker-toggle
                       matIconSuffix
-                      [for]="picker"
+                      [for]="picker10"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker #picker [disabled]="!iseditable"></mat-datepicker>
+                    <mat-datepicker #picker10 [disabled]="!iseditable"></mat-datepicker>
                     <mat-error
-                      *ngIf="basicDetailsForm.controls['dateOfBirth'].invalid"
-                    >
-                      Date of birth is required
-                    </mat-error>
+                  *ngIf="basicDetailsForm.controls['dateOfBirth'].invalid"
+                >
+                  Date of birth is required
+                </mat-error>
                   </mat-form-field>
+                 
                 </div>
               </div>
               <div class="clearfix">
@@ -408,10 +409,11 @@
                       formControlName="courseCode"
                       placeholder="Select here"
                       [readonly]="!iseditable"
+                      (selectionChange)="getSelectedCourse($event)"
                     >
                       <span *ngFor="let course of courseList; let i = index">
                         <mat-option [value]="course">{{
-                          course.name
+                          course.courseName
                         }}</mat-option>
                       </span>
                     </mat-select>
@@ -426,6 +428,7 @@
                     formControlName="sessionOfAdmission"
                     placeholder="Select here"
                     [readonly]="!iseditable"
+                    (selectionChange)="getSessionOfAdmission($event)"
                   >
                     <span *ngFor="let session of admissionSessionList; let i = index">
                       <mat-option [value]="session">{{
@@ -472,16 +475,16 @@
                     <mat-label>Select your date</mat-label>
                     <input
                       matInput
-                      [matDatepicker]="picker"
+                      [matDatepicker]="picker11"
                       formControlName="admissionDate"
                       [readonly]="!iseditable"
                     />
                     <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
                     <mat-datepicker-toggle
                       matIconSuffix
-                      [for]="picker"
+                      [for]="picker11"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker #picker [disabled]="!iseditable"></mat-datepicker>
+                    <mat-datepicker #picker11 [disabled]="!iseditable"></mat-datepicker>
                     <mat-error
                       *ngIf="
                         educationalDetailsForm.controls['admissionDate'].invalid

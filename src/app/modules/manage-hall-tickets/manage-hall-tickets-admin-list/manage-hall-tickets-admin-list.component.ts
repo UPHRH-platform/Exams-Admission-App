@@ -63,10 +63,10 @@ export class ManageHallTicketsAdminListComponent {
         },
       },
       {
-        columnDef: 'studentName',
+        columnDef: 'firstName',
         header: 'Student Name',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['studentName']}`,
+        cell: (element: Record<string, any>) => `${element['firstName']}`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
         },
@@ -89,10 +89,10 @@ export class ManageHallTicketsAdminListComponent {
           } */
       },
       {
-        columnDef: 'rollNo',
+        columnDef: 'studentEnrollmentNumber',
         header: 'Roll Number',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`,
+        cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
         },
@@ -100,7 +100,7 @@ export class ManageHallTicketsAdminListComponent {
       },
       {
         columnDef: 'attendancePercentage',
-        header: 'Attendance(%)',
+        header: 'Attendance (%)',
         isSortable: false,
         isLink: true,
         cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
@@ -109,11 +109,17 @@ export class ManageHallTicketsAdminListComponent {
         },
       },
       {
-        columnDef: 'paymentStatus',
+        columnDef: 'feesPaid',
         header: '',
         isSortable: false,
         isLink: true,
-        cell: (element: Record<string, any>) => `Paid`,
+        cell: (element: Record<string, any>) => {
+          if (element['feesPaid']) {
+            return 'PAID'
+          } else {
+            return 'NOT PAID'
+          }
+        },
         cellStyle: {
           'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
         },
@@ -198,19 +204,20 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getHallTickets() {
+    let unformattedResponse : HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTickets$()
     .pipe((mergeMap((response: any) => {
-      return this.formateHallTicketsData(response)
+      unformattedResponse = response.responseData;
+      return this.formateHallTicketsData(response.responseData)
     })))
     .subscribe({
       next: (res: any) => {
         console.log(res)
-        this.hallTicketsData = res.hallTicketsDetailsList
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
+        this.hallTicketsData = res.hallTicketsDetailsList;
+        this.isDataLoading = false;
 
+        this.baseService.setHallTicketData$(unformattedResponse)
       },
       error: (error: HttpErrorResponse) => {
         this.isDataLoading = false;
@@ -232,9 +239,10 @@ export class ManageHallTicketsAdminListComponent {
       response.forEach((hallTicketsDetails: any) => {
         const formatedHallTicketDetails = {
           id: hallTicketsDetails.id,
-          studentName: hallTicketsDetails.studentName,
+          firstName: hallTicketsDetails.firstName + hallTicketsDetails.lastName,
           courseName: hallTicketsDetails.courseName,
-          rollNo: hallTicketsDetails.rollNo,
+          studentEnrollmentNumber: hallTicketsDetails.studentEnrollmentNumber,
+          feesPaid: hallTicketsDetails.feesPaid,
           attendancePercentage: hallTicketsDetails.attendancePercentage,
           hasStyle: true,
           cellStyle: {
@@ -269,15 +277,34 @@ export class ManageHallTicketsAdminListComponent {
 
       }
     ]
-    this.courses = [
-      { value: 'bsc', viewValue: 'BSc' },
-      { value: 'msc', viewValue: 'MSc' },
-    ];
-    this.years = [
-      { value: 'sem-1', viewValue: '2020' },
-      { value: 'sem-2', viewValue: '2021' },
-      { value: 'sem-3', viewValue: '2022' },
-    ];
+
+ this.getCoursesList();
+ this.getExamCycleList();
+  
+  }
+
+  getExamCycleList(){
+    this.baseService.getExamCycleList$().subscribe({
+      next: (res: any) => {
+          this.isDataLoading = false;
+        this.years = res.responseData
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  getCoursesList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+          this.isDataLoading = false;
+        this.courses = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
   }
 
   onSelectedRows(value: any) {
@@ -286,7 +313,8 @@ export class ManageHallTicketsAdminListComponent {
 
   generateHallTkt() {
     this.isDataLoading = true;
-
+    let a = this.courseControl?.value;
+    let b = this.examCycleControl?.value;
     this.baseService.generateHallTkt$().subscribe({
       next: (res: any) => {
         setTimeout(() => {
@@ -306,7 +334,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onViewClick(event: any)  {
-    console.log(event);
-    this.router.navigateByUrl('/hall-ticket-management/ticket-details')
+    let r = event.row
+    this.router.navigate(['/hall-ticket-management/ticket-details', r.id]);
   }
 }

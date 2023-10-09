@@ -86,49 +86,6 @@ export class BaseService extends HttpService {
   //#endregion
 
 
-  getHallTickets$(): Observable<any> {
-    // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
-
-    return of(
-      [
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3"
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3"
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3"
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3"
-        },
-      ]
-    )
-  }
-
-  generateHallTkt$(): Observable<any> {
-    // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
-
-    return of([])
-  }
-
   getInstitutesResultData$(): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
 
@@ -587,7 +544,59 @@ export class BaseService extends HttpService {
     ])
   }
 
+  /**************************** hall ticket services start ****************************/
 
+
+  generateHallTkt$(): Observable<any> {
+
+    return of([])
+  }
+
+  getHallTickets$(): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS,
+      data: {},
+    }
+    return this.get(requestParam);
+
+  }
+
+  private hallTktData = new BehaviorSubject<any>([]);
+
+  setHallTicketData$(newData: any) {
+    this.hallTktData.next(newData);
+    console.log(newData)
+  }
+
+  getHallTicketData$(id: number) {
+    return this.hallTktData.asObservable();
+  }
+
+  
+
+  approveHallTicket$(id: number): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.APPROVE+id+'/approve',
+      data: {}
+    }
+    return this.post(requestParam);
+
+  }
+ 
+
+
+  rejectHallTicket$(id: number, rejectReason: string): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.REJECT+id+'/reject',
+      data: {rejectionReason : rejectReason},
+    }
+    return this.post(requestParam);
+
+  }
+    /**************************** hall ticket services ends ****************************/
 
   
 
@@ -624,12 +633,13 @@ export class BaseService extends HttpService {
   }
 
 /*********************************** enrollment service *****************************/
-enrollStudent(formData: FormData): Observable<ServerResponse> {
+enrollStudent(formData: any): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.CREATE,
     data: formData, 
     header: {
-      'Accept': '*/*',
+        'Accept': '*/*',
+        'x-authenticated-user-token': this.token
     }
   }
   return this.multipartPost(requestParam);
@@ -721,13 +731,8 @@ uploadQuestionPaper(fileData: any):  Observable<ServerResponse> {
   const reqParam: RequestParam = {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.UPLOAD}`,
     data: fileData,
-    header: {
-      Accept: "*/*",
-      "Content-Type": "multipart/form-data",
-    }
-
   }
- return this.post(reqParam);
+ return this.multipartPost(reqParam);
 }
 
 downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
@@ -943,6 +948,29 @@ updateExamCycleDetails(request: object, id: string | number): Observable<ServerR
   return this.put(requestParam);
 }
 
+getCoursesBasedOnInstitute(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTE_COURSE_MAPPING.GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID + `?instituteId=${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+getInstituteDetailsByUser(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.GET_INSTITUTE_BY_USER+ `/${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+updateExamsForExamCycle(id: string | number, request: any): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAMS_FOR_EXAM_CYCLE + `/${id}/updateExams`,
+    data: request
+  }
+  return this.put(requestParam);
+}
   //#region (dispatches)
   getDispatchesList$(formBody: any) {
     // const requestParam: RequestParam = {

@@ -119,12 +119,54 @@ export interface attendanceTableData {
     value: string;
     viewValue: string;
   }
-  export interface Course {
-    value: string;
-    viewValue: string;
-  }
+export interface Course {
+  courseCode: string;
+  courseName: string;
+  courseYear: string;
+  description: string;
+  id: number
+}
   export interface Year {
     value: string;
     viewValue: string;
   }
 
+  export interface HallTicket {
+          id: number,
+          firstName:  string,
+          lastName:  string,
+          dob: string,
+          courseName:  string,
+          courseYear: string,
+          studentEnrollmentNumber: string,
+          registrationDate: string,
+          status: string,
+          remarks: string,
+          examCenterName: string,
+          feesPaid: boolean,
+          attendancePercentage: number,
+          examCycle: ExamCycle 
+  }
+
+  export interface ExamCycle {
+    id: number,
+    name: string,
+    startDate: string,
+    endDate: string,
+    createdBy: string,
+    modifiedBy: string,
+    status: string,
+    obsolete: string,
+    exams: Exam []
+  }
+
+  export interface Exam {
+    examName: string,
+    examDate: string,
+    startTime:string,
+    endTime: string,
+    createdBy: string,
+    modifiedBy: string,
+    isResultsPublished: string,
+    obsolete: string
+  }

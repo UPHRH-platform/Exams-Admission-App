@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CandidatePortalService } from '../services/candidate-portal.service';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
-
+import { BaseService } from '../../../service/base.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -10,20 +9,10 @@ import { AuthServiceService } from 'src/app/core/services/auth-service/auth-serv
 })
 export class HallTicketComponent implements OnInit {
   loggedInUserRole: string;
+
   //#region (global variables)
-  hallTicketDetails = {
-    exmaCycleName: 'Exam Cycle 1',
-    studentDetails: {
-      firstName: 'Rajash',
-      lastName: 'Kumaravel',
-      roolNumber: '12345 89078',
-      DOB: '24-01-1998',
-    }, 
-    hallTicketDetqails: {
-      courseName: 'M. Sc. Nursing',
-      courseYear: '2022 - 2023'
-    }
-  }
+
+  hallTicketDetails: any
 
   examTableHeader = [
     {
@@ -42,40 +31,23 @@ export class HallTicketComponent implements OnInit {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },{
-      header: 'Exam time',
-      columnDef: 'examTime',
-      cell: (element: Record<string, any>) => `${element['examTime']}`,
+      header: 'Exam start time',
+      columnDef: 'startTime',
+      cell: (element: Record<string, any>) => `${element['startTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },{
-      header: 'Duration',
-      columnDef: 'examDuration',
-      cell: (element: Record<string, any>) => `${element['examDuration']}`,
+      header: 'Exam end time',
+      columnDef: 'endTime',
+      cell: (element: Record<string, any>) => `${element['endTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },
   ]
 
-  examTableData= [
-    {
-      examName: 'Exam 1', 
-      examDate: '23-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },{
-      examName: 'Exam 2', 
-      examDate: '24-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },{
-      examName: 'Exam 3', 
-      examDate: '25-03-2024', 
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },
-  ]
+  examTableData= []
 
   isHallTicket = true
   //#endregion
@@ -83,7 +55,7 @@ export class HallTicketComponent implements OnInit {
   //#region (constructor)
   constructor(
     private router: Router,
-    private candidatePortalService: CandidatePortalService,
+    private baseService: BaseService,
     private authService: AuthServiceService
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -96,11 +68,25 @@ export class HallTicketComponent implements OnInit {
 
   //#region (intialisation)
   intialisation() {
-    this.getHallTicketDetails()
+
+    this.baseService.getHallTicketData$(1).subscribe({
+      next: (res: any) => {
+      
+        this.hallTicketDetails = res[0];
+
+        this.examTableData  = res[0].examCycle.exams;
+
+        
+      },
+      error: (error: any) => {
+        console.log(error.message)
+      }
+    })
+ 
   }
 
   getHallTicketDetails() {
-    this.candidatePortalService.getHallTicketDetails()
+    //this.candidatePortalService.getHallTicketDetails()
     // .pipe(mergeMap((res: any) => {
     //   return this.formateExamDetails(res)
     // })).subscribe((examDetails: any)) {

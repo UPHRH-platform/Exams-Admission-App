@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '', component: ManageHallTicketsAdminListComponent,
     
   },
-  { path: 'ticket-details', component: HallTicketComponent },
+  { path: 'ticket-details/:id', component: HallTicketComponent },
 ];
 
 @NgModule({

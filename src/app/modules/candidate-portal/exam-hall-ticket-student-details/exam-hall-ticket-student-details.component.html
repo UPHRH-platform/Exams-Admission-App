@@ -1,5 +1,5 @@
 <div>
-    <h2 class="hallticket-details-header">{{hallTicketDetails?.exmaCycleName}}</h2>
+    <h2 class="hallticket-details-header">{{hallTicketDetails?.examCycle?.name|| "-" }}</h2>
     <div>
         <div class="details-row ">
             <div class="w-full">
@@ -7,7 +7,7 @@
                     <span>First name</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.studentDetails?.firstName}}</span>
+                    <span>{{hallTicketDetails?.firstName|| "-" }}</span>
                 </div>
             </div>
             <div>
@@ -15,17 +15,17 @@
                     <span>Last name</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.studentDetails?.lastName}}</span>
+                    <span>{{hallTicketDetails?.lastName|| "-" }}</span>
                 </div>
             </div>
         </div>
         <div class="details-row">
             <div class="w-full">
                 <div class="lable">
-                    <span>Rool Number</span>
+                    <span>Roll Number</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.studentDetails?.roolNumber}}</span>
+                    <span>{{hallTicketDetails?.studentEnrollmentNumber || "-" }}  </span>
                 </div>
             </div>
             <div>
@@ -33,7 +33,7 @@
                     <span>DOB</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.studentDetails?.DOB}}</span>
+                    <span>{{hallTicketDetails?.dob|| "-" }}</span>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     <span>Course name</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.hallTicketDetqails?.courseName}}</span>
+                    <span>{{hallTicketDetails?.courseName|| "-" }}</span>
                 </div>
             </div>
             <div>
@@ -51,7 +51,7 @@
                     <span>Course Year</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.hallTicketDetqails?.courseYear}}</span>
+                    <span>{{hallTicketDetails?.courseYear|| "-" }}</span>
                 </div>
             </div>
         </div>
