@@ -82,9 +82,13 @@ export class ManageExamCycleFormComponent {
  getExamsByExamCycle() {
   this.baseService.getExamsByExamCycleId(this.examcycleId).subscribe({
     next: (res) => {
+      console.log(res);
       this.exams = res.responseData;
-      console.log(res.responseData);
       this.initializeFormValues();
+    },
+    error: (err: HttpErrorResponse) => {
+      this.exams = [];
+      this.toasterService.showToastr(err, 'Error', 'error', '');
     }
   })
  }
@@ -304,6 +308,13 @@ export class ManageExamCycleFormComponent {
     this.baseService.updateExamCycleDetails(request, this.examcycleId).subscribe({
       next: (res) => {
         this.toasterService.showToastr('Exam cycle details updated successfully', 'Success', 'success', '');
+        if(this.exams.length > 0) {
+          this.baseService.updateExamsForExamCycle(this.examcycleId, this.exams).subscribe({
+            next: (res) => {
+              console.log(res);
+            }
+          });
+        }
         this.router.navigate(['/manage-exam-cycle']);
       },
       error: (err: HttpErrorResponse) => {

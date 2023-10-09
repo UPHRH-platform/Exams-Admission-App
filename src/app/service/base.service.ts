@@ -603,12 +603,13 @@ export class BaseService extends HttpService {
   }
 
 /*********************************** enrollment service *****************************/
-enrollStudent(formData: FormData): Observable<ServerResponse> {
+enrollStudent(formData: any): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.CREATE,
     data: formData, 
     header: {
-      'Accept': '*/*',
+        'Accept': '*/*',
+        'x-authenticated-user-token': this.token
     }
   }
   return this.multipartPost(requestParam);
@@ -875,6 +876,29 @@ updateExamCycleDetails(request: object, id: string | number): Observable<ServerR
   return this.put(requestParam);
 }
 
+getCoursesBasedOnInstitute(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTE_COURSE_MAPPING.GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID + `?instituteId=${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+getInstituteDetailsByUser(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.GET_INSTITUTE_BY_USER+ `/${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+updateExamsForExamCycle(id: string | number, request: any): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAMS_FOR_EXAM_CYCLE + `/${id}/updateExams`,
+    data: request
+  }
+  return this.put(requestParam);
+}
   //#region (dispatches)
   getDispatchesList$() {
     const requestParam: RequestParam = {

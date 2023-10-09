@@ -26,7 +26,9 @@
             "GET_EXAM_CYCLE_BY_ID": "/v1/admin/examCycle",
             "DELETE_EXAM_CYCLE": "/v1/admin/examCycle/delete",
             "GET_EXAM_BY_EXAM_CYCLE_ID": "/v1/admin/exam/byExamCycle",
-            "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update"
+            "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update",
+            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle"
+            
         },
         "EXAM_STUDENT_REGISTRATION": {
             "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
@@ -35,7 +37,8 @@
             "GET_ALL": "/v1/admin/courses/list"
         },
         "INSTITUTE_COURSE_MAPPING": {
-            "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all"
+            "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all",
+            "GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID": "/v1/admin/instituteCourseMap/list"
         },
         "EXAM_CENTER": {
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
@@ -52,6 +55,9 @@
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
+        },
+        "USER_INSTITUTE_MAPPING": {
+            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
             "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
