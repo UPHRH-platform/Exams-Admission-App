@@ -119,10 +119,13 @@ export interface attendanceTableData {
     value: string;
     viewValue: string;
   }
-  export interface Course {
-    value: string;
-    viewValue: string;
-  }
+export interface Course {
+  courseCode: string;
+  courseName: string;
+  courseYear: string;
+  description: string;
+  id: number
+}
   export interface Year {
     value: string;
     viewValue: string;

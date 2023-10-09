@@ -545,23 +545,22 @@ export class BaseService extends HttpService {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.APPROVE+id+'/approve',
       data: {}
-    //  data: paramsBody
     }
     return this.post(requestParam);
 
   }
  
 
-/*   rejectHallTicket$(rejectReason: any): Observable<any> {
+
+  rejectHallTicket$(id: number, rejectReason: string): Observable<any> {
 
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.REJECT?rejectionReason=${rejectReason},
-      data: {},
-    //  data: paramsBody
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.REJECT+id+'/reject',
+      data: {rejectionReason : rejectReason},
     }
-    return this.get(requestParam);
+    return this.post(requestParam);
 
-  } */
+  }
     /**************************** hall ticket services ends ****************************/
 
   
