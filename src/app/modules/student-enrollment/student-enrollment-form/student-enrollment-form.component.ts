@@ -5,15 +5,19 @@ import { AuthServiceService } from 'src/app/core/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from 'src/app/service/base.service';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
 import { CctvApprovalPopupComponent } from '../../../shared/components/cctv-approval-popup/cctv-approval-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 
+interface InstituteDetail {
+  id: number | string,
+  instituteName: string,
+  instituteCode: string,
+  address: string,
+  email: string,
+  allowedForExamCentre: boolean,
+  district: string,
+}
 @Component({
   selector: 'app-student-enrollment-form',
   templateUrl: './student-enrollment-form.component.html',
@@ -25,8 +29,8 @@ export class StudentEnrollmentFormComponent {
   casteList = ['General', 'SC', 'ST', 'OBC', 'None'];
   categoryList = ['Freedom Fighter Dependant', 'Handicapped'];
   centersList = [{id: 434, name: 'Lucknow Centre'}];
-  courseList = [{id: 31, name: 'AUXILIARY NURSE AND MIDWIFE'}];
-  examBatchList: [] = [];
+  courseList:any = [];
+  examBatchList: any[] = [];
   intermediateStreamList: [] = [];
   intermediatePassedBoardList: [] = [];
   intermediateSubjectsList:any = [];
@@ -48,6 +52,9 @@ export class StudentEnrollmentFormComponent {
   currentFY:string;
   centerDetails="INS-301 - Institute Name";
   isCreateView: boolean = true;
+  loggedInUserId: string;
+  instituteDetail: InstituteDetail;
+  filteredExamCycleList: any = [];
   constructor(private formBuilder: FormBuilder, private baseService: BaseService, private authService: AuthServiceService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
     this.route.params.subscribe((param) => {
       if(param['id']) {
@@ -58,6 +65,8 @@ export class StudentEnrollmentFormComponent {
   iseditable: boolean = true;
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
+    console.log(this.loggedInUserId);
     this.getAdmissionSessionList();
     this.getExamCycleList();
     this.getIntermediateSubjects();
@@ -65,11 +74,50 @@ export class StudentEnrollmentFormComponent {
     this.getIntermediatePassedBoard();
     this.initBasicDetailsForm();
     this.initEducationalDetailsForm();
+    this.getInstituteByuserId();
     if(this.enrollmentId !== undefined) {
       this.isCreateView = false;
       this.getEnrollmentDetails();
     }
     
+  }
+
+  getInstituteByuserId() {
+    console.log("check =>", this.loggedInUserRole);
+    if(this.loggedInUserRole === 'exams_institute') {
+      console.log(this.loggedInUserRole);
+      this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+        next: (res) => {
+          this.instituteDetail = res.responseData[0];
+          this.educationalDetailsForm.patchValue({
+            centerCode: `${this.instituteDetail.instituteCode} - ${this.instituteDetail.instituteName}`
+          })
+          this.getCoursesByInstitute();
+        }
+      })
+    }
+  }
+
+  getCoursesByInstitute() {
+    const instituteId = this.instituteDetail.id;
+    this.baseService.getCoursesBasedOnInstitute(instituteId).subscribe({
+      next: (res)=> {
+        this.courseList = res.responseData[0].institute.courses;
+        console.log(this.courseList);
+      }
+    })
+  }
+
+  getSelectedCourse(event: Event) {
+    const courseBasedBatch: any = [];
+    // this.examBatchList.map((obj: any) => {
+    //   if(obj.course !== null) {
+    //     if(obj.course.id === this.educationalDetailsForm.value.courseCode) {
+    //       courseBasedBatch.push(obj);
+    //     }
+    //   }
+    // })
+    // this.examBatchList = courseBasedBatch;
   }
 
   initBasicDetailsForm() {
@@ -97,7 +145,7 @@ export class StudentEnrollmentFormComponent {
 
   initEducationalDetailsForm() {
     this.educationalDetailsForm = this.formBuilder.group({
-      centerCode: new FormControl('INS-301'),
+      centerCode: new FormControl(''),
       courseCode: new FormControl(''),
       sessionOfAdmission: new FormControl(this.currentFY, Validators.required), //yearpicker
       examBatch: new FormControl('', Validators.required),// month and year picker
@@ -307,10 +355,8 @@ export class StudentEnrollmentFormComponent {
     createEnrollment() {
       if(this.basicDetailsForm.valid && this.educationalDetailsForm.valid) {
         const request = {
-          centerCode: this.educationalDetailsForm.value.centerCode,
-          centerName: this.educationalDetailsForm.value.centerCode.name,
-          courseCode: this.educationalDetailsForm.value.courseCode.id,
-          courseName: this.educationalDetailsForm.value.courseCode.name,
+          courseCode: this.educationalDetailsForm.value.courseCode.courseCode,
+          courseName: this.educationalDetailsForm.value.courseCode.courseName,
           session: this.educationalDetailsForm.value.sessionOfAdmission,
           examBatch: this.educationalDetailsForm.value.examBatch,
           admissionDate: this.convertDateFormat(this.educationalDetailsForm.value.admissionDate),
@@ -342,9 +388,13 @@ export class StudentEnrollmentFormComponent {
           highSchoolCertificate: this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate,
           intermediateMarksheet:this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet,
           intermediateCertificate: this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate,
+          instituteCode: this.instituteDetail.instituteCode,
+          enrollmentDate: this.convertDateFormat(new Date()),
+          academicYear: '2023'
         }
         const formData = new FormData();
         for (let [key, value] of Object.entries(request)) {
+          console.log(key, value);
           formData.append(`${key}`, `${value}`)
           }
         this.baseService.enrollStudent(formData).subscribe({
@@ -495,9 +545,42 @@ export class StudentEnrollmentFormComponent {
       this.baseService.getExamCycleList().subscribe({
         next: (res) => {
           this.examBatchList = res.responseData;
-          console.log("test =>", this.examBatchList);
+          if(this.examBatchList.length > 0) {
+            let sessionOfAdmission: any = [];
+             sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
+            let startSession = sessionOfAdmission[0];
+            let endSession = sessionOfAdmission[1];
+            this.examBatchList.map((obj: any) => {
+              const startDate = new Date(obj.startDate).getFullYear();
+              const endDate = new Date(obj.endDate).getFullYear();
+              if(startDate >= startSession && endDate <= endSession) {
+                this.filteredExamCycleList.push(obj);
+              }
+            })
+            this.examBatchList = this.filteredExamCycleList;
+          }
         }
       })
+    }
+
+
+    getSessionOfAdmission(event: Event) {
+      const filteredExamCycleList: any = [];
+      // if(this.examBatchList.length > 0) {
+      //   let sessionOfAdmission: any = [];
+      //    sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
+      //   let startSession = sessionOfAdmission[0];
+      //   let endSession = sessionOfAdmission[1];
+      //   console.log(startSession, endSession);
+      //   this.filteredExamCycleList.map((obj: any) => {
+      //     const startDate = new Date(obj.startDate).getFullYear();
+      //     const endDate = new Date(obj.endDate).getFullYear();
+      //     console.log(startDate, endDate);
+      //     if(startDate.toString() >= startSession && endDate.toString() <= endSession) {
+      //       this.examBatchList.push(obj);
+      //     }
+      //   })
+      // }
     }
 
     getIntermediateStreams() {
@@ -520,9 +603,7 @@ export class StudentEnrollmentFormComponent {
     updateEnrollment() {
       if(this.basicDetailsForm.valid && this.educationalDetailsForm.valid) {
         const request = {
-          centerCode: this.educationalDetailsForm.value.centerCode,
-          centerName: this.educationalDetailsForm.value.centerCode.name,
-          courseCode: this.educationalDetailsForm.value.courseCode.id,
+          courseCode: this.educationalDetailsForm.value.courseCode,
           courseName: this.educationalDetailsForm.value.courseCode.name,
           session: this.educationalDetailsForm.value.sessionOfAdmission,
           examBatch: this.educationalDetailsForm.value.examBatch,
@@ -554,6 +635,9 @@ export class StudentEnrollmentFormComponent {
           highSchoolCertificate: this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate,
           intermediateMarksheet:this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet,
           intermediateCertificate: this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate,
+          instituteCode: this.instituteDetail.instituteCode,
+          enrollmentDate: this.convertDateFormat(new Date()),
+          academicYear: '2023'
         }
         const formData = new FormData();
         for (let [key, value] of Object.entries(request)) {

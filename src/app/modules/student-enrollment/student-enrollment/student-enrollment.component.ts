@@ -20,11 +20,22 @@ interface Year {
   value: string;
   viewValue: string;
 }
+
+interface InstituteDetail {
+  id: number | string,
+  instituteName: string,
+  instituteCode: string,
+  address: string,
+  email: string,
+  allowedForExamCentre: boolean,
+  district: string,
+}
 @Component({
   selector: 'app-student-enrollment',
   templateUrl: './student-enrollment.component.html',
   styleUrls: ['./student-enrollment.component.scss'],
 })
+
 export class StudentEnrollmentComponent {
   isDataLoading:boolean = false;
   loggedInUserRole: string;
@@ -42,6 +53,7 @@ export class StudentEnrollmentComponent {
   searchParams: string;
   instituteList: any[] = [];
   courses: any[] = []
+  loggedInUserId: string | number;
   years: Year[] = [
     {value: '2020-2021', viewValue: '2020-2021'},
     {value: '2021-2022', viewValue: '2021-2022'},
@@ -50,15 +62,23 @@ export class StudentEnrollmentComponent {
     {value: '2024-2025', viewValue: '2024-2025'},
   ];
   isHallTicket: boolean = true;
+  instituteDetail: InstituteDetail;
 constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService){}
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
     this.initializeTabs();
     this.initializeSearchForm();
-    this.getAllInstitutes();
     // courses to be fetched based on institute
-    this.getAllCourses();
+    if(this.loggedInUserRole === 'exams_institute') {
+      this.getInstituteByuserId();
+    }
+    else {
+      this.getAllCourses();
+      this.getAllInstitutes();
+      this.getEnrollmentData();
+    }
   }
 
   initializeSearchForm() {
@@ -71,6 +91,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     this.baseService.getAllCourses$().subscribe({
       next: (res) => {
         console.log(res.responseData);
+        console.log("courses =>", res.responseData);
         this.courses = res.responseData;
       },
       error: (err: HttpErrorResponse) => {
@@ -83,6 +104,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     this.baseService.getAllInstitutes().subscribe({
       next: (res) => {
         console.log("res");
+        console.log("Res =>", res.responseData);
         this.instituteList = res.responseData;
       }
     })
@@ -97,22 +119,23 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     this.tabs = Tabs['student_enrollment'];
     this.selectedTab = this.tabs[0];
     this.initializeColumns();
-    this.getEnrollmentData();
   }
 
   getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
-  const request = {
+  let request = {
     instituteId: instituteId !== undefined? instituteId : '',
     courseId: courseId !== undefined? courseId : '',
     academicYear: academicYear !== undefined? academicYear: '',
     verificationStatus: this.selectedTab.name === 'Approved'? 'VERIFIED' : this.selectedTab.name.toUpperCase()
   }
-  console.log(request);
+ if(this.loggedInUserRole === 'exams_institute') {
+    request['instituteId']= this.instituteDetail?.id.toString();
+ } 
   this.isDataLoading = true;
   this.baseService.getEnrollmentList(request).subscribe({
     next: (res) => {
       this.isDataLoading = false;
-      res.responseData.map((obj: any) => {
+      res.responseData.students.map((obj: any) => {
         obj.courseName = obj.course.courseName;
       })
       this.enrollmentTableData = res.responseData;
@@ -243,5 +266,28 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     const selectedIndex = event.index;
     this.selectedTab = this.tabs[selectedIndex];
     this.getEnrollmentData();
+  }
+
+  getInstituteByuserId() {
+    if(this.loggedInUserRole === 'exams_institute') {
+      console.log(this.loggedInUserRole);
+      this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+        next: (res) => {
+          console.log(res.responseData);
+          this.instituteDetail = res.responseData[0];
+          this.getEnrollmentData();
+          this.getCoursesByInstitute(this.instituteDetail.id);
+        }
+      })
+    }
+  }
+
+  getCoursesByInstitute(id: string | number) {
+    const instituteId = id;
+    this.baseService.getCoursesBasedOnInstitute(instituteId).subscribe({
+      next: (res)=> {
+        this.courses = res.responseData[0].institute.courses;
+      }
+    })
   }
 }
