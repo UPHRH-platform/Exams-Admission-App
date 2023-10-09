@@ -701,13 +701,8 @@ uploadQuestionPaper(fileData: any):  Observable<ServerResponse> {
   const reqParam: RequestParam = {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.UPLOAD}`,
     data: fileData,
-    header: {
-      Accept: "*/*",
-      "Content-Type": "multipart/form-data",
-    }
-
   }
- return this.post(reqParam);
+ return this.multipartPost(reqParam);
 }
 
 downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {

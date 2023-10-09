@@ -14,8 +14,6 @@ export class SharedQuestionPaperComponent {
   examCycle: string;
   constructor(
     private authService: AuthServiceService,
-    private dialog: MatDialog,
-
   ) { }
   file:any;
    fileUploadError: string;
@@ -32,6 +30,7 @@ export class SharedQuestionPaperComponent {
   @Output() uploadQuesPaper: EventEmitter<any> = new EventEmitter<any>();//upload ques paper
   @Output() viewQuestionPaper: EventEmitter<any> = new EventEmitter<any>();//view ques paper
   @Output() downloadQuestionPaper: EventEmitter<any> = new EventEmitter<any>();//download ques paper
+  @Output() examCycleSelection: EventEmitter<any> = new EventEmitter<any>();
   
   loggedInUserRole: string;
   ngOnInit(): void {
@@ -43,6 +42,7 @@ export class SharedQuestionPaperComponent {
   examCycleSelected(e: any) {
     console.log(e.value)
     this.examCycle = e.value;
+    this.examCycleSelection.emit(e.value);
   }
 
 
@@ -102,36 +102,7 @@ export class SharedQuestionPaperComponent {
          this.uploadQuesPaper.emit(selectedFile);
     // }
     }
-  //     if(this.files.length > 0){
-  //     const dialogRef = this.dialog.open(ConformationDialogComponent, {
-  //       data: {
-  //         dialogType: 'success',
-  //         description: ['Internal marks uploaded successfully'],
-  //         buttons: [
-  //           {
-  //             btnText: 'Ok',
-  //             positionClass: 'center',
-  //             btnClass: 'btn-full',
-  //             response: true,
-  //             // click:this.router.navigateByUrl('/manage-result/institute'),
-
-  //           },
-  //         ],
-  //       },
-  //       width: '700px',
-  //       height: '400px',
-  //       maxWidth: '90vw',
-  //       maxHeight: '90vh'
-  //     })
-  //     dialogRef.afterClosed().subscribe(files => {
-  //       if (files) {
-  //       //  this.router.navigateByUrl('/manage-result/institute')
-  //       console.log("hello")
-  //       console.log(selectedFile)
-  //       }
-  //     })
-  //   }
-  // }
+  //     
 
   emitViewQuestionPaper(event: QuestionPaper) {
     this.viewQuestionPaper.emit(event);

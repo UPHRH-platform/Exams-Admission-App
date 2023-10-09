@@ -13,7 +13,7 @@
                     <mat-select (selectionChange)="examCycleSelected($event)" autofocus="true"
                     [formControl]="examCycleControl">
                         <span *ngFor='let examCycle of examCycleList;'>
-                            <mat-option [value]="examCycle">{{examCycle}}</mat-option>
+                            <mat-option [value]="examCycle?.id">{{examCycle?.examCycleName}}</mat-option>
                         </span>
                     </mat-select>
                     <mat-error *ngIf="examCycleControl.invalid">
