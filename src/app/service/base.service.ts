@@ -42,166 +42,14 @@ export class BaseService extends HttpService {
   }
 
   getAllInstitutesList$() {
-    const response = {
-      "result": {
-        "response": [
-            {
-                "institute": {
-                    "allowedForExamCentre": false,
-                    "courses": [
-                        {
-                            "course_id": 3,
-                            "courseName": "MSc in Nursing",
-                            "seatCapacity": 30,
-                            "courseCode": "GNM102",
-                            "description": "MSc in Nursing"
-                        },
-                        {
-                            "course_id": 2,
-                            "courseName": "GNM",
-                            "seatCapacity": 10,
-                            "courseCode": "GNM101",
-                            "description": "General Nursing and Midwifery"
-                        }
-                    ],
-                    "address": "abc",
-                    "district": "Bhopal",
-                    "instituteCode": "121",
-                    "ipAddress": "2654789",
-                    "instituteId": 1,
-                    "cctvVerified": false,
-                    "email": "abc@gmail.com",
-                    "remarks": "abcd",
-                    "instituteName": "RGPV"
-                }
-            },
-            {
-                "institute": {
-                    "allowedForExamCentre": true,
-                    "courses": [
-                        {
-                            "course_id": 3,
-                            "courseName": "MSc in Nursing",
-                            "seatCapacity": 20,
-                            "courseCode": "GNM102",
-                            "description": "MSc in Nursing"
-                        },
-                        {
-                            "course_id": 2,
-                            "courseName": "GNM",
-                            "seatCapacity": 10,
-                            "courseCode": "GNM101",
-                            "description": "General Nursing and Midwifery"
-                        }
-                    ],
-                    "address": "Victoria Hospital Campus, Thyagi M Palanivelu Rd, Bengaluru, Karnataka 560002",
-                    "district": "Bengaluru",
-                    "instituteCode": "122",
-                    "ipAddress": "26704342",
-                    "instituteId": 2,
-                    "cctvVerified": true,
-                    "email": "abcd@gmail.com",
-                    "remarks": "abc",
-                    "instituteName": "Bangalore Medical College and Research Institute"
-                }
-            },
-            {
-                "institute": {
-                    "allowedForExamCentre": false,
-                    "courses": [
-                        {
-                            "course_id": 2,
-                            "courseName": "GNM",
-                            "seatCapacity": 50,
-                            "courseCode": "GNM101",
-                            "description": "General Nursing and Midwifery"
-                        }
-                    ],
-                    "address": "XHHG+3W5, 5th Main Rd, Gandhi Nagar, Bengaluru, Karnataka 560009",
-                    "district": "lucknow",
-                    "instituteCode": "123",
-                    "ipAddress": "560009",
-                    "instituteId": 3,
-                    "cctvVerified": true,
-                    "email": "abcde@gmail.com",
-                    "remarks": "abcde",
-                    "instituteName": "Sri Laxmi gnm Nursing College"
-                }
-            }
-        ],
-      }
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.ALL_CENTERS,
+      data: {},
     }
-    return response
+    return this.get(requestParam);
   }
   //#endregion
 
-
-  getHallTickets$(): Observable<any> {
-    // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
-
-    return of(
-      [
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3",
-          hasStyle: true,
-          cellStyle: {
-            viewHallTicket: {
-              'color': '#0074B6'
-            }
-          }
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3",
-          hasStyle: true,
-          cellStyle: {
-            viewHallTicket: {
-              'color': '#0074B6'
-            }
-          }
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3",
-          hasStyle: true,
-          cellStyle: {
-            viewHallTicket: {
-              'color': '#0074B6'
-            }
-          }
-        },
-        {
-          id: 0,
-          studentName: "Vidhu",
-          courseName: "BSC GNM",
-          rollNo: "2020",
-          attendancePercentage: "3",
-          hasStyle: true,
-          cellStyle: {
-            viewHallTicket: {
-              'color': '#0074B6'
-            }
-          }
-        },
-      ]
-    )
-  }
-
-  generateHallTkt$(): Observable<any> {
-    // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
-
-    return of([])
-  }
 
   getInstitutesResultData$(): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
@@ -273,21 +121,21 @@ export class BaseService extends HttpService {
           studentName: 'Arun',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '49',
+          internalMarks: '49'
           
         },
         {
           studentName: 'Aman',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '45',
+          internalMarks: '45'
           
         },
         {
           studentName: 'Devaprathap N.',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '44',
+          internalMarks: '44'
           
         },
     
@@ -302,26 +150,14 @@ export class BaseService extends HttpService {
         email: 'name@gmail.com',
         phoneNumber: '9765454333',
         role: 'Institute',
-        accountStatus: 'Active',
-        hasStyle: true,
-        cellStyle: {
-          viewExamCycle: {
-            'color': '#0074B6'
-          }
-        }
+        accountStatus: 'Active'
       },
       {
         fullName: 'D. Nagendra',
         email: 'name@gmail.com',
         phoneNumber: '9765454333',
         role: 'Admin',
-        accountStatus: 'Active',
-        hasStyle: true,
-        cellStyle: {
-          viewExamCycle: {
-            'color': '#0074B6'
-          }
-        }
+        accountStatus: 'Active'
       },
   ])
   }
@@ -335,13 +171,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '10',
         paidStudentsCount: '10',
         totalFeePaid: '10000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -350,13 +180,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '25',
         paidStudentsCount: '25',
         totalFeePaid: '25000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -365,13 +189,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '30',
         paidStudentsCount: '28',
         totalFeePaid: '28000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -380,13 +198,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '50',
         paidStudentsCount: '40',
         totalFeePaid: '40000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -395,13 +207,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '30',
         paidStudentsCount: '20',
         totalFeePaid: '28000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -410,13 +216,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '25',
         paidStudentsCount: '25',
         totalFeePaid: '25000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -425,13 +225,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '10',
         paidStudentsCount: '10',
         totalFeePaid: '10000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       },
       {
         instituteName: 'NEW COLLEGE OF NURSING',
@@ -440,13 +234,7 @@ export class BaseService extends HttpService {
         registerStudentsCount: '25',
         paidStudentsCount: '25',
         totalFeePaid: '25000',
-        viewList: 'View list',
-        hasStyle: true,
-        cellStyle: {
-          viewList: {
-            'color': '#0074B6'
-          },
-        }
+        viewList: 'View list'
       }
     ])
   }
@@ -459,13 +247,7 @@ export class BaseService extends HttpService {
         exams: 'Exam ',
         numberOfExams: '',
         fee: '000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
+        status: 'Paid'
       },
       {
         studentName: 'Madison Tran',
@@ -474,13 +256,7 @@ export class BaseService extends HttpService {
         exams: 'Exam 1,Exam 2,Exam 3 ',
         numberOfExams: '3',
         fee: '3000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
+        status: 'Paid'
       },
       {
         studentName: 'Raci Verma',
@@ -489,13 +265,7 @@ export class BaseService extends HttpService {
         exams: 'Exam 2',
         numberOfExams: '1',
         fee: '1000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
+        status: 'Paid'
       },
       {
         studentName: 'Sumalatha Krishna',
@@ -504,13 +274,7 @@ export class BaseService extends HttpService {
         exams: 'Exam 3',
         numberOfExams: '1',
         fee: '1000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
+        status: 'Paid'
       },
       {
         studentName: 'Kanaka Rao',
@@ -519,13 +283,7 @@ export class BaseService extends HttpService {
         exams: 'Exam 1,Exam 2',
         numberOfExams: '2',
         fee: '2000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
+        status: 'Paid'
       },
       {
         studentName: 'Ravi Verma',
@@ -534,14 +292,35 @@ export class BaseService extends HttpService {
         exams: 'Exam 2',
         numberOfExams: '1',
         fee: '1000',
-        status: 'Paid',
-        hasStyle: true,
-        cellStyle: {
-          status: {
-            'color': '#1D8923'
-          },
-        }
-      }
+        status: 'Paid'
+      },
+
+
+      {
+        studentName: 'Nancy Kurian',
+        enrolementNumber: 'XXXX',
+        courseName: 'XXXX',
+        exams: 'Exam 1',
+        numberOfExams: '1',
+        fee: '1000',
+        status: 'Pending',
+      },{
+        studentName: 'Jordan Allen',
+        enrolementNumber: 'XXXX',
+        courseName: 'XXXX',
+        exams: 'Exam 1, Exam 2',
+        numberOfExams: '2',
+        fee: '2000',
+        status: 'Pending'
+      },{
+        studentName: 'Purandara Das',
+        enrolementNumber: 'XXXX',
+        courseName: 'XXXX',
+        exams: 'Exam 1, Exam 2',
+        numberOfExams: '2',
+        fee: '2000',
+        status: 'Pending'
+      },
     ])
   }
   getMarksForDashboard$(): Observable<any>{
@@ -730,7 +509,59 @@ export class BaseService extends HttpService {
     ])
   }
 
+  /**************************** hall ticket services start ****************************/
 
+
+  generateHallTkt$(): Observable<any> {
+
+    return of([])
+  }
+
+  getHallTickets$(): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS,
+      data: {},
+    }
+    return this.get(requestParam);
+
+  }
+
+  private hallTktData = new BehaviorSubject<any>([]);
+
+  setHallTicketData$(newData: any) {
+    this.hallTktData.next(newData);
+    console.log(newData)
+  }
+
+  getHallTicketData$(id: number) {
+    return this.hallTktData.asObservable();
+  }
+
+  
+
+  approveHallTicket$(id: number): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.APPROVE+id+'/approve',
+      data: {}
+    }
+    return this.post(requestParam);
+
+  }
+ 
+
+
+  rejectHallTicket$(id: number, rejectReason: string): Observable<any> {
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.REJECT+id+'/reject',
+      data: {rejectionReason : rejectReason},
+    }
+    return this.post(requestParam);
+
+  }
+    /**************************** hall ticket services ends ****************************/
 
   
 
@@ -830,12 +661,6 @@ getEnrollmentList(request: any) {
   }
   //#endregion
 
-  //#region (track dispatches)
-  getExams$() {}
-  //#endregion
-
-  
-
 getInstituteById(id: string | number) {
   const requestParam: RequestParam = {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INSTITUTE_BY_ID}/${id}`,
@@ -876,13 +701,8 @@ uploadQuestionPaper(fileData: any):  Observable<ServerResponse> {
   const reqParam: RequestParam = {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.UPLOAD}`,
     data: fileData,
-    header: {
-      Accept: "*/*",
-      "Content-Type": "multipart/form-data",
-    }
-
   }
- return this.post(reqParam);
+ return this.multipartPost(reqParam);
 }
 
 downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
@@ -949,8 +769,7 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
       internalMarks: '45', 
       externalMarks: '45',
       totalMarks: '90',
-      status: 'Pass',
-      hasStyle: true
+      status: 'Pass'
     },{
       examName: 'Exam 2', 
       internalMarks: '45', 
@@ -1080,6 +899,15 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
   }
   return this.put(requestParam);
 }
+  //#region (dispatches)
+  getDispatchesList$() {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
+      data: {}
+    }
+    return this.get(requestParam)
+  }
+  //#endregion
 
 
 }

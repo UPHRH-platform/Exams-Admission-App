@@ -185,7 +185,6 @@ export class CctvManagementAdminComponent {
       }))
       .subscribe({
         next: (res: any) => {
-          // this.examCycleList = this.formatExamCycles(res.responseData);
           this.examCycleList = res.examCyclesList;
         },
         error: (error: HttpErrorResponse) => {
@@ -222,15 +221,13 @@ export class CctvManagementAdminComponent {
 
   getInstitutesCCTVtableData(searchKey: string = '') {
     this.baseService.getAllInstitutesList$()
-    // .pipe(mergeMap((response: any) => {
-    //   return this.getformatInstitutesTablesData(response)
-    // }))
-    // .subscribe((InstituteesCCTVtableData: any) => {
-    //   this.getTablesData(InstituteesCCTVtableData)
-    // })
-    const response = this.baseService.getAllInstitutesList$()
-    const InstituteesCCTVtableData = this.getformatInstitutesTablesData(response.result.response)
-    this.getTablesData(InstituteesCCTVtableData)
+    .pipe(mergeMap((response: any) => {
+      return this.getformatInstitutesTablesData(response.responseData)
+      // return this.getformatInstitutesTablesData(response.result.response)
+    }))
+    .subscribe((InstituteesCCTVtableData: any) => {
+      this.getTablesData(InstituteesCCTVtableData)
+    })
   }
 
   getformatInstitutesTablesData(instituteesList: any) {
@@ -247,7 +244,7 @@ export class CctvManagementAdminComponent {
       instituteesList.forEach((institute: any) => {
         institute = institute.institute
         const formattedInstitute = {
-          instituteId: institute.instituteId,
+          instituteId: institute.id,
           instituteName: institute.instituteName,
           instituteCode: institute.instituteCode,
           district: institute.district,
@@ -258,7 +255,7 @@ export class CctvManagementAdminComponent {
         formattedInstitutesList.push(formattedInstitute)
       })
     }
-    return formattedInstitutesList
+    return of(formattedInstitutesList)
   }
 
   getTablesData(InstituteesCCTVtableData: any) {
@@ -360,6 +357,7 @@ export class CctvManagementAdminComponent {
       }
     }
   }
+
   ApproveOrRejectInstituteCCTV(event: any) {
     const dialogData = {
       controls: [
@@ -392,13 +390,13 @@ export class CctvManagementAdminComponent {
           btnText: 'Approve',
           positionClass: 'right',
           btnClass: 'btn-full',
-          type: 'approve'
+          type: 'Approved'
         },
         {
           btnText: 'Reject',
           positionClass: 'right',
           btnClass: 'btn-outline mr2',
-          type: 'reject'
+          type: 'Rejected'
         },
       ],
     }
@@ -437,7 +435,7 @@ export class CctvManagementAdminComponent {
           btnText: 'Reject',
           positionClass: 'right',
           btnClass: 'btn-full',
-          type: 'reject'
+          type: 'Rejected'
         },
       ],
     }
@@ -481,83 +479,18 @@ export class CctvManagementAdminComponent {
   assignAlternateInstitute(event: any) {
 
     this.getNearestInstitutesList(event)
-
-    // let nearestInstitutesList = [
-    //   {
-    //     displayName: 'ABC Nursing College',
-    //     id: '1'
-    //   }, {
-    //     displayName: 'Agra Paramedical Collgege',
-    //     id: '2'
-    //   }, {
-    //     displayName: 'Agra Nursing College',
-    //     id: '3'
-    //   }, {
-    //     displayName: 'XYZ Agra',
-    //     id: '4'
-    //   },
-    // ]
-    // const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
-    //   data: {
-    //     controls: [
-    //       {
-    //         controlLable: 'Institute District',
-    //         controlName: 'instituteDistrict',
-    //         controlType: 'input',
-    //         placeholder: 'Type here',
-    //         value: 'Agra',
-    //         validators: ['required'],
-    //         readonly: true
-    //       }, {
-    //         controlLable: 'Near Institute List',
-    //         controlName: 'institute',
-    //         controlType: 'select',
-    //         optionsList: nearestInstitutesList,
-    //         value: null,
-    //         placeholder: 'Select the Institute',
-    //         validators: ['required'],
-    //       },
-    //     ],
-    //     instituteId: event.instituteId,
-    //     buttons: [
-    //       {
-    //         btnText: 'Cancel',
-    //         positionClass: 'left',
-    //         btnClass: 'btn-outline',
-    //         type: 'close'
-    //       },
-    //       {
-    //         btnText: 'Assign',
-    //         positionClass: 'right',
-    //         btnClass: 'btn-full',
-    //         type: 'assign'
-    //       },
-    //     ],
-    //   },
-    //   width: '700px',
-    //   maxWidth: '90vw',
-    //   maxHeight: '90vh'
-    // })
-    // dialogRef.afterClosed().subscribe((response: any) => {
-    //   if (response) {
-    //   }
-    // })
   }
 
   getNearestInstitutesList(event: any) {
-    console.log(event)
     const formBody = {
       district: event.district,
     }
     this.baseService.getNearestInstitutesList(formBody)
-      // .pipe(mergeMap((res: any) => {
-      //   const institute = {
-      //     institutesList: this.formatNearestInstitutesList(res.responseData)
-      //   }
-      //   return institute
-      // }))
+      .pipe(mergeMap((res: any) => {
+        return this.formatNearestInstitutesList(res.responseData)
+      }))
       .subscribe((response: any) => {
-        const institutesList = this.formatNearestInstitutesList(response.responseData)
+        const institutesList = response
         if (institutesList) {
           let nearestInstitutesList = institutesList
           const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
@@ -630,7 +563,7 @@ export class CctvManagementAdminComponent {
         formattedInstitutesList.push(formattedInstitute)
       })
     }
-    return formattedInstitutesList
+    return of(formattedInstitutesList)
   }
 
   assignAlternateExamCenter(formBody: any) {

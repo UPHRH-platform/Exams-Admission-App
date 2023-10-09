@@ -13,7 +13,7 @@
                     <mat-select (selectionChange)="examCycleSelected($event)" autofocus="true"
                     [formControl]="examCycleControl">
                         <span *ngFor='let examCycle of examCycleList;'>
-                            <mat-option [value]="examCycle">{{examCycle}}</mat-option>
+                            <mat-option [value]="examCycle?.id">{{examCycle?.examCycleName}}</mat-option>
                         </span>
                     </mat-select>
                     <mat-error *ngIf="examCycleControl.invalid">
@@ -28,23 +28,23 @@
            <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
             <mat-card-content>
                 <ng-container *ngIf="loggedInUserRole ==='exams_admin' ; else instituteRole">
-                    <div class="button-group">
+                    <div class="button-group" style="display: flex;flex-direction: column; gap: 4px;">
                         <button class="button" mat-raised-button color="primary">
                             <label for="fileUpload1" class="custom-file-upload">
                                 <a>Upload Question Paper</a>
                               </label>
                         </button>
-                        <span class="error" style="color: red;">{{ fileUploadError }}</span>
-  
+                        
               <input
                 id="fileUpload1"
                 type="file"
                 style="display: none"
                 enctype="multipart/form-data"
-                (change)="emitUploadQuesPaper(questionPpr)"
+                (change)="emitUploadQuesPaper($event)"
                 multiple="true"
                 accept=".pdf"
               />
+              <span class="error" style="color: red;">{{ fileUploadError }}</span>
                     </div>
                 </ng-container>
                 <ng-template #instituteRole>
@@ -112,9 +112,9 @@
                     <mat-list role="list" *ngIf="questionPpr.examStartTime !== '12.00 A.M.'  ;  else notYetexamTime">
                         <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
                             *ngFor="let qp of questionPpr.questionPaperList" >
-                            <div class=""> 
+                            <div style="display: flex; flex-direction:row; justify-content: space-between;"> 
                                 <span>{{qp.name}}</span>
-                                <span class="button-group" >
+                                <span class="button-group" style="display: flex; flex-direction: row; gap: 4px;" >
                                     <button type="button" class="cancel-button" mat-stroked-button
                                         color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
                                     <button class="next-button" mat-raised-button color="primary"

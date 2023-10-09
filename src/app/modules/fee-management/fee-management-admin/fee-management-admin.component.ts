@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TableColumn } from 'src/app/interfaces/interfaces';
+import { mergeMap, of } from 'rxjs';
 
 
 interface Course {
@@ -55,7 +56,7 @@ export class FeeManagementAdminComponent implements OnInit {
     this.initializeColumns();
     this.instituteTableData();
     this.initializeStudentColumns();
-    this.studentExamsTableData();
+    // this.studentExamsTableData();
   }
 
   initializeColumns():void{
@@ -124,9 +125,13 @@ export class FeeManagementAdminComponent implements OnInit {
 }
   instituteTableData() {
     this.isDataLoading = true;
-    this.baseService.getInstituteFeeTableData$().subscribe({
+    this.baseService.getInstituteFeeTableData$()
+    .pipe((mergeMap((response: any) => {
+      return this.formateInstituteTableData(response)
+    })))
+    .subscribe({
       next:(res:any)=>{
-        this.instituteData = res
+        this.instituteData = res.formatedInstituteTableDataList
         setTimeout(() => {
           this.isDataLoading = false;
         }, 1000);
@@ -139,6 +144,38 @@ export class FeeManagementAdminComponent implements OnInit {
 
     })
 
+  }
+
+  formateInstituteTableData(response: any) {
+    const formatedInstituteTableData: {
+      formatedInstituteTableDataList: any[]
+    } = {
+      formatedInstituteTableDataList: []
+    }
+
+    if (response) {
+      response.forEach((instituteData: any) => {
+        const formatedInstitutesData = {
+          instituteName: instituteData.instituteName,
+          courseName: instituteData.courseName,
+          instituteCode: instituteData.instituteCode,
+          registerStudentsCount: instituteData.registerStudentsCount,
+          paidStudentsCount: instituteData.paidStudentsCount,
+          totalFeePaid: instituteData.totalFeePaid,
+          viewList: instituteData.viewList,
+          hasStyle: true,
+          cellStyle: {
+            viewList: {
+              'color': '#0074B6'
+            },
+          }
+        }
+
+        formatedInstituteTableData.formatedInstituteTableDataList.push(formatedInstitutesData)
+      })
+    }
+
+    return of(formatedInstituteTableData);
   }
 
  initializeStudentColumns():void{
@@ -200,9 +237,13 @@ export class FeeManagementAdminComponent implements OnInit {
  }
   studentExamsTableData(){
     this.isDataLoading = true;
-    this.baseService.getStudentFeeTableData$().subscribe({
+    this.baseService.getStudentFeeTableData$()
+    .pipe(mergeMap((response: any)=> {
+      return this.formateStudentData(response)
+    }))
+    .subscribe({
       next:(res:any)=>{
-        this.studentData = res
+        this.studentData = res.studentsExamDetailsList;
         setTimeout(() => {
           this.isDataLoading = false;
         }, 1000);
@@ -216,6 +257,39 @@ export class FeeManagementAdminComponent implements OnInit {
     })
 
   } 
+
+  formateStudentData(response: any) {
+    const studentsExamDetails: {
+      studentsExamDetailsList: any[]
+    } = {
+      studentsExamDetailsList: []
+    }
+
+    if (response) {
+      response.forEach((examDetails: any) => {
+        const studentExamDetial = {
+          studentName: examDetails.studentName,
+          enrolementNumber: examDetails.enrolementNumber,
+          courseName: examDetails.courseName,
+          exams: examDetails.exams,
+          numberOfExams: examDetails.numberOfExams,
+          fee: examDetails.fee,
+          status: examDetails.status,
+          hasStyle: true,
+          cellStyle: {
+            status: {
+              'color': '#1D8923'
+            },
+          }
+        }
+
+        studentsExamDetails.studentsExamDetailsList.push(studentExamDetial)
+      })
+    }
+
+    return of(studentsExamDetails);
+
+  }
   
  
   
@@ -253,6 +327,7 @@ export class FeeManagementAdminComponent implements OnInit {
       //   this.instituteTableData = exams
       // })
     }
+    this.studentExamsTableData()
     this.showInstitutesTable = false
 
   }

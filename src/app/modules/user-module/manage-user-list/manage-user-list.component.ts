@@ -5,6 +5,7 @@ import { TableColumn } from 'src/app/interfaces/interfaces';
 import { Tabs } from 'src/app/shared/config/tabs.config';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mergeMap, of } from 'rxjs';
 
 
 
@@ -46,9 +47,13 @@ export class ManageUserListComponent {
 
   getEnrollmentData() {
     this.isDataLoading = true;
-    this.baseService.getUserData$().subscribe({
+    this.baseService.getUserData$()
+    .pipe((mergeMap((response: any) => {
+      return this.formateEnrollmentData(response)
+    })))
+    .subscribe({
       next:(res:any)=>{
-        this.examCycleData = res
+        this.examCycleData = res.examCycleTableData
         setTimeout(() => {
           this.isDataLoading = false;
         }, 1000);
@@ -61,6 +66,36 @@ export class ManageUserListComponent {
 
     })
 
+  }
+
+  formateEnrollmentData(enrollmentData: any) {
+    const examCyclesData: {
+      examCycleTableData: any[]
+    } = {
+      examCycleTableData: []
+    }
+
+    if (enrollmentData) {
+      enrollmentData.forEach((userData: any) => {
+        const examCycleData = {
+          fullName: userData.fullName,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+          role: userData.role,
+          accountStatus: userData.accountStatus,
+          hasStyle: true,
+          cellStyle: {
+            viewExamCycle: {
+              'color': '#0074B6'
+            }
+          }
+        }
+
+        examCyclesData.examCycleTableData.push(examCycleData)
+      })
+    }
+
+    return of(examCyclesData)
   }
 
   initializeColumns(): void {

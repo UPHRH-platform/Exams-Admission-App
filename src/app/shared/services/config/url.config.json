@@ -4,7 +4,7 @@
         "KEYCLOAK_LOGIN": "/api/v1/user/keycloak/usrlogin",
         "QUESTION_PAPER": {
             "GET_ALL": "/v1/questionPaper/list",
-            "UPLOAD": "/v1/questionPaper/upload",
+            "UPLOAD": "/questionPaper/upload",
             "DOWNLOAD": "/v1/questionPaper/download",
             "GET_BY_ID": "/v1/questionPaper",
             "GET_PREVIEW_URL": "/v1/questionPaper/preview",
@@ -41,21 +41,26 @@
             "GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID": "/v1/admin/instituteCourseMap/list"
         },
         "EXAM_CENTER": {
-            "UPDATE_CCTV_STATUS": "/api/v1/admin/updateCctvStatus",
-            "ASSIGN_ALTERNATE_EXAM_CENTER": "/api/v1/admin/assignAlternate",
-            "VERIFIED_EXAM_CENTERS": "/api/v1/admin/verifiedExamCenters"
+            "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
+            "ALL_CENTERS": "/v1/admin/examCenters/all"
         },
         "HALL_TICKET": {
-            "HALL_TICKET_DOWNLOAD":"/api/v1/admin/hallticket/download?dateOfBirth=1995-12-15&id=45&type=Pdf",
-            "HALL_TICKET_MODIFICATION": "/api/v1/admin/hallticket/dataCorrection/request",
-            "HALL_TICKET_REJECT": "/api/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
-            "HALL_TICKET_APPROVE": "/api/v1/admin/hallticket/dataCorrection/6/approve",
+            "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
+            "DOWNLOAD":"/v1/admin/hallticket/download?dateOfBirth=1995-12-15&id=45&type=Pdf",
+            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
+            "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
+            "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
         },
         "USER_INSTITUTE_MAPPING": {
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
+        },
+        "TRACK_DISPATCHES": {
+            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
         }
     }
 }

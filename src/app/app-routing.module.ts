@@ -6,6 +6,7 @@ import { AuthGuard } from './core/guards/auth-guard/auth.guard';
 import { AdminGuard, InstituteGuard, StudentGuard } from './core/guards/role-guard/role.guard';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ManageUserListComponent } from './modules/user-module/manage-user-list/manage-user-list.component';
+import { PaymentComponent } from './payment/payment.component';
 
 
 const routes: Routes = [
@@ -97,6 +98,15 @@ const routes: Routes = [
       {
         path: 'user-management', 
         component:  ManageUserListComponent, 
+        // canActivate: [AuthGuard],
+        // data: {
+        //   allowedRoles: [Roles.ADMIN, Roles.GRIEVANCE_NODAL, Roles.NODAL_OFFICER, Roles.SECRETARY],
+        // },
+        pathMatch: 'full',
+      },
+      {
+        path: 'payment-response', 
+        component: PaymentComponent, 
         // canActivate: [AuthGuard],
         // data: {
         //   allowedRoles: [Roles.ADMIN, Roles.GRIEVANCE_NODAL, Roles.NODAL_OFFICER, Roles.SECRETARY],

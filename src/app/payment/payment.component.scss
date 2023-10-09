@@ -1,0 +1,40 @@
+main-container{
+    padding: 4rem;
+    background-color: #F0F3F4;
+    height: 100%;
+    padding-left: 10rem;
+    padding-right: 10rem;
+  }
+  .result-container {
+    background-color: white;
+    height: 80vh;
+  }
+  .status-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .status-container{
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  h1 {
+    font-size: 32px;
+    color: green;
+  }
+  .icon-cls {
+    width: 54px;
+    height: 60px;
+    /* size: 43px; */
+    font-size: 57px;
+    color: green
+  }
+  .icon-cls-fail {
+    width: 54px;
+    height: 60px;
+    /* size: 43px; */
+    font-size: 57px;
+    color: red
+  }

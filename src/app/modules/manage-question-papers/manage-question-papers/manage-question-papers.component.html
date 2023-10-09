@@ -4,18 +4,15 @@
   <h2 class="title-header">Manage Question Papers</h2>
 
 
-  <app-shared-ques-paper [examCycleList]="examCycleList" [examCycleControl]="examCycleControl"
+  <app-shared-ques-paper [examCycleList]="examCycleData" [examCycleControl]="examCycleControl"
   [questionPapersList]="questionPapersList" [showCardDetails]=true
   (viewQuestionPaper)="viewQuestionPapers($event)"
   (downloadQuestionPaper)="downloadQuestionPaper($event)"
   [showCardDetails]=true
-  (uploadQuesPaper)="onUploadQuesPaper($event)">
+  (uploadQuesPaper)="onUploadQuesPaper($event)"
+   (examCycleSelection)="getExamCycleSelection($event)">
   
 </app-shared-ques-paper>
-  <span class="error" style="color: red;">{{ fileUploadError }}</span>
-
-
-
 
 </div>
 <!-- </div> -->

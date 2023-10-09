@@ -24,11 +24,13 @@ import { CandidatePortalModule } from './modules/candidate-portal/candidate-port
 import { UserProfileComponent } from './user-profile/user-profile.component';
 // import { UserModulesModule } from './modules/user-modules/user-modules.module';
 import { UserModuleModule } from './modules/user-module/user-module.module';
+import { PaymentComponent } from './payment/payment.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     UserProfileComponent,
+    PaymentComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,7 @@ import { UserModuleModule } from './modules/user-module/user-module.module';
     StudentEnrollmentModule,
     TrackDispatchesModule,
     ManageAttendanceRecordModule,
-    CandidatePortalModule,
+   // CandidatePortalModule,
     HttpClientModule,
     // UserModulesModule,
     UserModuleModule,

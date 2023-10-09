@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LoadingDialogComponent } from '../loading-dialog/loading-dialog.component';
 import { BaseService } from 'src/app/service/base.service';
 import { Tabs } from 'src/app/shared';
+import { mergeMap, of } from 'rxjs';
 
 interface Course {
   value: string;
@@ -21,8 +22,8 @@ interface Year {
 })
 export class FeeManagementListInstituteComponent implements OnInit {
 
-  tabs: any[] = [];
-  currentTabIndex: number;
+  // tabs: any[] = [];
+  // currentTabIndex: number;
 
   courses: Course[] = [
     {value: 'bsc', viewValue: 'BSc'},
@@ -36,7 +37,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
   isHallTicket = true;
   removeTbodyColor = true;
-  tableColumns: any = []
+  // tableColumns: any = []
   pendingFeeTableHeader = [
     {
       header: '',
@@ -88,43 +89,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
   ]
 
   pendingFeeTableData= [
-    {
-      studentName: 'Nancy Kurian',
-      examNames: 'Exam 1',
-      noOfExams: '1',
-      fee: '1000',
-      status: 'Pending',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(0, 116, 182)'
-        },
-      }
-    },{
-      studentName: 'Jordan Allen',
-      examNames: 'Exam 1, Exam 2',
-      noOfExams: '2',
-      fee: '2000',
-      status: 'Pending',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(0, 116, 182)'
-        },
-      }
-    },{
-      studentName: 'Purandara Das',
-      examNames: 'Exam 1, Exam 2',
-      noOfExams: '2',
-      fee: '2000',
-      status: 'Pending',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(0, 116, 182)'
-        },
-      }
-    },
   ]
 
   paidFeeTableHeader = [
@@ -168,67 +132,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
   ]
 
   paidFeeTableData= [
-    {
-      studentName: 'Devaprathap Nagendra',
-      examNames: 'Exam 1, Exam 2',
-      noOfExams: '2',
-      fee: '2000',
-      status: 'Paid',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(29, 137, 35)'
-        },
-      }
-    },{
-      studentName: 'Madison Tran',
-      examNames: 'Exam 1, Exam 2, Exam 3',
-      noOfExams: '3',
-      fee: '3000',
-      status: 'Paid',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(29, 137, 35)'
-        },
-      }
-    },{
-      studentName: 'Ravi Verma',
-      examNames: 'Exam 2',
-      noOfExams: '1',
-      fee: '1000',
-      status: 'Paid',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(29, 137, 35)'
-        },
-      }
-    },{
-      studentName: 'Sumalatha Krishna',
-      examNames: 'Exam 3',
-      noOfExams: '1',
-      fee: '1000',
-      status: 'Paid',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(29, 137, 35)'
-        },
-      }
-    },{
-      studentName: 'Kanaka Rao',
-      examNames: 'Exam 1, Exam 2',
-      noOfExams: '2',
-      fee: '2000',
-      status: 'Paid',
-      hasStyle: true,
-      cellStyle: {
-          status: {
-          'color': 'rgb(29, 137, 35)'
-        },
-      }
-    },
   ]
 
   filterForm: FormGroup
@@ -255,67 +158,138 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
   //#region (intialisation)
   intialisation() {
-    this.initializeTabs()
-    this.initializeTableColumns()
+    // this.initializeTabs()
+    // this.initializeTableColumns()
+    this.getStudentsFeeDetails()
   }
 
-  initializeTabs() {
-    this.tabs = Tabs['Fee_Management'];
+  getStudentsFeeDetails() {
+    this.baseService.getStudentFeeTableData$()
+    .pipe((mergeMap((response: any) => {
+      return this.formateStudentFeeDetails(response);
+    })))
+    .subscribe((feeDetails: any) => {
+      this.paidFeeTableData = feeDetails.paidFeeDetails
+      this.pendingFeeTableData = feeDetails.pendingFeeDetails
+    })
   }
 
-  initializeTableColumns() {
-    this.tableColumns = []
-    const tableColumns = [
-      {
-        header: 'Full name',
-        columnDef: 'studentName',
-        cell: (element: Record<string, any>) => `${element['studentName']}`,
-        cellStyle: {
-          'background-color': '#0000000a',
-          'color': '#00000099'
-        }
-      },{
-        header: 'Exam',
-        columnDef: 'examNames',
-        cell: (element: Record<string, any>) => `${element['examNames']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '300px', 'color': '#00000099'
-        }
-      },{
-        header: 'No. of Exams',
-        columnDef: 'noOfExams',
-        cell: (element: Record<string, any>) => `${element['noOfExams']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
-        }
-      },{
-        header: 'Fee',
-        columnDef: 'fee',
-        cell: (element: Record<string, any>) => `${element['fee']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
-        }
-      },{
-        header: '',
-        columnDef: 'status',
-        cell: (element: Record<string, any>) => `${element['status']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '130px', 'color': '#00000099'
-        }
-      },
-    ]
-
-    switch (this.currentTabIndex) {
-      case 0: {
-        break
-      }
-      case 1: {
-        break
-      }
+  formateStudentFeeDetails(response: any) {
+    const studentsFeeDetails: {
+      // studentFeeDetails: any[],
+      pendingFeeDetails: any[],
+      paidFeeDetails: any[]
+    } = {
+      // studentFeeDetails: [],
+      pendingFeeDetails: [],
+      paidFeeDetails: []
     }
 
-    this.tableColumns = tableColumns
+    if (response) {
+      response.forEach((feeDetails: any) => {
+        let foramtedFeeDetails: any = {
+          studentName: feeDetails.studentName,
+          examNames: feeDetails.exams,
+          noOfExams: feeDetails.numberOfExams,
+          fee: feeDetails.fee,
+          status: feeDetails.status,
+          hasStyle: true
+        }
+        switch (feeDetails.status) {
+          case 'Paid': {
+            foramtedFeeDetails['cellStyle'] = {
+              status: {
+                'color': 'rgb(29, 137, 35)'
+              },
+            }
+            studentsFeeDetails.paidFeeDetails.push(foramtedFeeDetails)
+            break;
+          }
+          case 'Pending': {
+            foramtedFeeDetails['cellStyle'] = {
+              status: {
+                'color': 'rgb(0, 116, 182)'
+              },
+            }
+            studentsFeeDetails.pendingFeeDetails.push(foramtedFeeDetails)
+            break;
+          }
+          // studentsFeeDetails.studentFeeDetails.push(foramtedFeeDetails)
+        }
+      })
+    }
+
+    return of(studentsFeeDetails)
   }
+
+  // initializeTabs() {
+  //   this.tabs = Tabs['Fee_Management'];
+  // }
+
+  // initializeTableColumns() {
+  //   this.tableColumns = []
+  //   const tableColumns = [
+  //     {
+  //       header: 'Full name',
+  //       columnDef: 'studentName',
+  //       cell: (element: Record<string, any>) => `${element['studentName']}`,
+  //       cellStyle: {
+  //         'background-color': '#0000000a',
+  //         'color': '#00000099'
+  //       }
+  //     },{
+  //       header: 'Exam',
+  //       columnDef: 'examNames',
+  //       cell: (element: Record<string, any>) => `${element['examNames']}`,
+  //       cellStyle: {
+  //         'background-color': '#0000000a', 'width': '300px', 'color': '#00000099'
+  //       }
+  //     },{
+  //       header: 'No. of Exams',
+  //       columnDef: 'noOfExams',
+  //       cell: (element: Record<string, any>) => `${element['noOfExams']}`,
+  //       cellStyle: {
+  //         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
+  //       }
+  //     },{
+  //       header: 'Fee',
+  //       columnDef: 'fee',
+  //       cell: (element: Record<string, any>) => `${element['fee']}`,
+  //       cellStyle: {
+  //         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
+  //       }
+  //     },{
+  //       header: '',
+  //       columnDef: 'status',
+  //       cell: (element: Record<string, any>) => `${element['status']}`,
+  //       cellStyle: {
+  //         'background-color': '#0000000a', 'width': '130px', 'color': '#00000099'
+  //       }
+  //     },
+  //   ]
+
+  //   switch (this.currentTabIndex) {
+  //     case 0: {
+  //       const selectOption = {
+  //         header: '',
+  //         columnDef: 'select',
+  //         isSortable: false,
+  //         isCheckBox: true,
+  //         cell: (element: Record<string, any>) => ``,
+  //         cellStyle: {
+  //           'background-color': '#0000000a', 'width': '30px', 'color': '#00000099'
+  //         },
+  //       }
+  //       tableColumns.unshift(selectOption);
+  //       break;
+  //     }
+  //     case 1: {
+  //       break;
+  //     }
+  //   }
+
+  //   this.tableColumns = tableColumns
+  // }
 
 
   getExamFeeDetails() {
@@ -328,6 +302,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
   selectTab(event: any) {
     this.tabHeader = event.tab.textLabel
+    // this.initializeTableColumns()
   }
 
   payFee() {
