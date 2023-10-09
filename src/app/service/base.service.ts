@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { CookieService } from 'ngx-cookie-service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, mergeMap } from 'rxjs';
 
 import { ConfigService, RequestParam, ServerResponse } from '../shared';
 
@@ -33,13 +33,48 @@ export class BaseService extends HttpService {
   }
   
   //#region (common apis)
-  getExamCycleList$() {
+
+  //#region (exam cycles)
+  getExamCycles() {
+    return this.getExamCycleList()
+      .pipe(mergeMap((res: any) => {
+        return this.formatExamCycles(res.responseData)
+      }))
+  }
+
+  getExamCycleList() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
       data: {},
     }
     return this.get(requestParam);
   }
+
+  formatExamCycles(response: any) {
+    const examCycles: {
+      examCyclesList: {
+        id: number;
+        examCycleName: string;
+        courseId: string;
+        status: string;
+      }[]
+    } = {
+      examCyclesList: []
+    }
+    if (response && response.length > 0) {
+      response.forEach((examCycle: any) => {
+        const exam = {
+          id: examCycle.id,
+          examCycleName: examCycle.examCycleName,
+          courseId: examCycle.courseId,
+          status: examCycle.status,
+        }
+        examCycles.examCyclesList.push(exam)
+      })
+    }
+    return of(examCycles)
+  }
+  //#endregion
 
   getAllInstitutesList$() {
     const requestParam: RequestParam = {
@@ -557,13 +592,8 @@ export class BaseService extends HttpService {
   
 
   /**************************** exam services ****************************/
-  getExamCycleList() {
-    const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
-      data: {},
-    }
-    return this.get(requestParam);
-  }
+
+
 
   createExamCycle(request: object) {
     const requestParam: RequestParam = {
@@ -708,14 +738,12 @@ downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
  return this.post(reqParam);
 }
 
-
 getQuestionPaperById(questionPaperId: any): Observable<ServerResponse>  {
   const  reqParam: RequestParam = { 
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.GET_BY_ID}/${questionPaperId}`
   }
   return this.get(reqParam);
 }
-
 
 getQuestionPaperPreviewUrl(questionPaperId: any): Observable<ServerResponse>  {
   const  reqParam: RequestParam = { 
@@ -731,6 +759,9 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
   return this.delete(reqParam);
   //#region (candidate portal)
 }
+
+  //#region (Results)
+
   getResults() {
     const response = [
       {
@@ -755,6 +786,16 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
     ]
     return of(response)
   }
+
+  publishResults(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.PUBLISH}`,
+      data: request
+    }
+    return this.post(requestParam);
+  }
+
+  //#endregion
 
   formateResultDetails() {
     const response = [
@@ -782,6 +823,7 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
     return of(response)
   }
   //#endregion
+
 getIntermediateSubjectList() {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INTERMEDIATE_SUBJECT_LIST,
@@ -855,6 +897,15 @@ getAllInstitutes(): Observable<ServerResponse> {
   return this.get(requestParam);
 }
 
+    //#region (get exams)
+    getExamsListByExamCycleId(examCycleId: number) {
+      return this.getExamsByExamCycleId(examCycleId)
+      .pipe(mergeMap((response: any) => {
+        return this.formateExams(response.responseData)
+      }))
+    }
+
+
 getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_BY_EXAM_CYCLE_ID + `/${id}`,
@@ -863,6 +914,27 @@ getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   return this.get(requestParam)
 }
 
+  
+    formateExams(exams: any) {
+      const result: {
+        examsList: any[]
+      } = {
+        examsList: []
+      }
+      if (exams && exams.length) {
+        exams.forEach((exam: any) => {
+          const formatedexame = {
+            value: exam.id, 
+            viewValue: exam.examName,
+            examCycleId: exam.examCycleId,
+          }
+          result.examsList.push(formatedexame)
+        })
+      }
+      return of(result);
+    }
+    //#endregion
+  
 updateExamCycleDetails(request: object, id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAM_CYCLE_DETAILS + `/${id}`,
@@ -872,12 +944,47 @@ updateExamCycleDetails(request: object, id: string | number): Observable<ServerR
 }
 
   //#region (dispatches)
-  getDispatchesList$() {
+  getDispatchesList$(formBody: any) {
+    // const requestParam: RequestParam = {
+    //   url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
+    //   data: formBody
+    // }
+    // return this.get(requestParam)
+    const response = {
+      responseData: [
+        {
+          examName: 'Exam 1',
+          lastDateToUplode: '25 Mar 2023',
+          status: 'Pending',
+        }, {
+          examName: 'Exam 2',
+          lastDateToUplode: '25 Mar 2023',
+          status: 'Dispatched'
+        },
+      ]
+    }
+
+    return of(response)
+  }
+
+  getDispatchesViewProof$(dispatchId: number) {
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
+      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHES_VIEW_PROOF + dispatchId,
       data: {}
     }
     return this.get(requestParam)
+  }
+
+  uplodeDispatch$(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHE_UPLOAD}`,
+      data: request,
+      header: {
+        Accept: "*/*",
+        "Content-Type": "multipart/form-data",
+      }
+    }
+    return this.post(requestParam)
   }
   //#endregion
 

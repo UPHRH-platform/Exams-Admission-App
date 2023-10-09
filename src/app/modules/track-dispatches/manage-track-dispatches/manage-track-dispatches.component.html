@@ -12,7 +12,7 @@
           <mat-select [formControl]="examCycleControl" (ngModelChange)="getExams($event)">
             <ng-container *ngFor="let examCycle of examCycleList">
               <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
-          </ng-container>
+            </ng-container>
           </mat-select>
         </mat-form-field>
       </div>
@@ -21,7 +21,7 @@
           <label class="examCycleLable">Exam </label>
         </div>
         <mat-form-field class="exam-form" appearance="outline">
-          <mat-select [formControl]="examControl">
+          <mat-select [formControl]="examControl" (ngModelChange)="getDispatches($event)">
             <mat-option *ngFor="let course of courses" [value]="course.value">
               {{ course.viewValue }}
             </mat-option>
