@@ -135,7 +135,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   this.baseService.getEnrollmentList(request).subscribe({
     next: (res) => {
       this.isDataLoading = false;
-      res.responseData.students.map((obj: any) => {
+      res.responseData.map((obj: any) => {
         obj.courseName = obj.course.courseName;
       })
       this.enrollmentTableData = res.responseData;
@@ -184,12 +184,23 @@ constructor(private router: Router, private authService: AuthServiceService, pri
           isLink: false,
           cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
         },
+        // {
+        //   columnDef: 'viewStudentEnrollment',
+        //   header: '',
+        //   isSortable: false,
+        //   isLink: true,
+        //   isAction: false,
+        //   cell: (element: Record<string, any>) => `View Enrollment`,
+        //   cellStyle: {
+        //     'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
+        //   },
         {
-          columnDef: 'isLink',
+          columnDef: 'viewStudentEnrollment',
           header: '',
           isSortable: false,
           isLink: true,
-          cell: (element: Record<string, any>) => `View Enrollment`
+          isAction: true,
+          cell: (element: Record<string, any>) => `View Enrollment`,
         },
       ]
       break;
@@ -230,11 +241,19 @@ constructor(private router: Router, private authService: AuthServiceService, pri
             isLink: false,
             cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
           },
+          // {
+          //   columnDef: 'isLink',
+          //   header: '',
+          //   isSortable: false,
+          //   isLink: true,
+          //   cell: (element: Record<string, any>) => `View Enrollment`,
+          // },
           {
-            columnDef: 'isLink',
+            columnDef: 'viewStudentEnrollment',
             header: '',
             isSortable: false,
             isLink: true,
+            isAction: true,
             cell: (element: Record<string, any>) => `View Enrollment`,
           },
         ]
