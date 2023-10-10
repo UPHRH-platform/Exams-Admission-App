@@ -49,6 +49,7 @@ export class ManageExamCycleFormComponent {
   ]
   examcycleId: string;
   examCycleDetails: any = {};
+  subjects: any = [];
   constructor(
     private router: Router, 
     private toasterService: ToastrServiceService,
@@ -82,13 +83,11 @@ export class ManageExamCycleFormComponent {
  getExamsByExamCycle() {
   this.baseService.getExamsByExamCycleId(this.examcycleId).subscribe({
     next: (res) => {
-      console.log(res);
       this.exams = res.responseData;
-      this.initializeFormValues();
     },
     error: (err: HttpErrorResponse) => {
       this.exams = [];
-      this.toasterService.showToastr(err, 'Error', 'error', '');
+      // this.toasterService.showToastr(err, 'Error', 'error', '');
     }
   })
  }
@@ -107,7 +106,7 @@ export class ManageExamCycleFormComponent {
   this.baseService.getExamCycleDetails(this.examcycleId).subscribe({
     next:(res) => {
         this.examCycleDetails = res.responseData;
-        console.log("examCycleDetails =>", this.examCycleDetails);
+        this.initializeFormValues();
         this.getExamsByExamCycle();
        
     },
@@ -162,9 +161,13 @@ export class ManageExamCycleFormComponent {
         if(examCycleId && this.exams.length > 0) {
           this.createExams(examCycleId);
         }
+        else {
+          this.toasterService.showToastr('Exam cycle created successfully', 'Success', 'success', '');
+          this.router.navigate(['/manage-exam-cycle']);
+        }
       },
       error: (err: HttpErrorResponse) => {
-        this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+        this.toasterService.showToastr(err, 'Error', 'error', '');
       }
     })
   } 
@@ -200,14 +203,14 @@ export class ManageExamCycleFormComponent {
         this.router.navigate(['/manage-exam-cycle']);
       },
       error: (err: HttpErrorResponse) => {
-        this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+        this.toasterService.showToastr(err, 'Error', 'error', '');
       }
     })
   }
       
 
  remove(exam:Exam): void{
-   const index = this.examsToAdd.indexOf(exam);
+   const index = this.exams.indexOf(exam);
    if(index >= 0){
      this.exams.splice(index, 1);
      this.examsToAdd.splice(index, 1);
@@ -220,39 +223,7 @@ export class ManageExamCycleFormComponent {
     }
    }
  }
-//  getFormattedTime(timestamp: string): string {
-//    const date = new Date(timestamp);
-//    const hours = date.getHours();
-//    const minutes = date.getMinutes();
-//    const ampm = hours >= 12 ? 'PM' : 'AM';
-//    const twelveHourFormat = (hours % 12) || 12;
- 
-//    return `${twelveHourFormat}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-//  }
- 
-//  endTimeValidator() {
-//    console.log("Working");
-   
-//    const startTime = this.createExamCycle.controls['startTime'].value;
-//    const endTime = this.createExamCycle.controls['endTime'].value;
- 
-//    const startTime = new Date(startTime);
-//    startTime.setHours(startTime.getHours(), startTime.getMinutes());
- 
-//    const endTime = new Date(endTime);
-//    endTime.setHours(endTime.getHours(), endTime.getMinutes());
-//    console.log(endTime.getHours());
-//    console.log(startTime.getHours());
- 
- 
-//    if (endTime <= startTime) {
-//      this.createExamCycle.controls['endTime'].setErrors({ endTimeInvalid: true });
-//    } else {
-//      this.createExamCycle.controls['endTime'].setErrors(null);
-//    }
-   
-   
-//  }
+
 
   goBack() {
     this.router.navigate(['/manage-exam-cycle']);
@@ -318,9 +289,25 @@ export class ManageExamCycleFormComponent {
         this.router.navigate(['/manage-exam-cycle']);
       },
       error: (err: HttpErrorResponse) => {
-        this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+        this.toasterService.showToastr(err, 'Error', 'error', '');
       }
     })
+  }
+
+  getSubjectsByCourse(courseId: string | number) {
+    this.subjects = [];
+    this.baseService.getSubjectsByCourse(courseId).subscribe({
+      next: (res) => {
+        this.subjects = res.responseData;
+        console.log(this.subjects);
+      }
+    })
+  }
+
+  getSelectedCourse(event: any) {
+    if(this.createExamCycle.value.courseId) {
+    this.getSubjectsByCourse(this.createExamCycle.value.courseId);
+    }
   }
  }
 

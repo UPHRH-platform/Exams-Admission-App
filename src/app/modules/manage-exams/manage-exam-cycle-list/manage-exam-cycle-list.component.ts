@@ -112,7 +112,7 @@ export class ManageExamCycleListComponent {
           isAction: true
         },
         {
-          columnDef: 'isAction',
+          columnDef: 'deleteAction',
           header: '',
           isSortable: false,
           isLink: false,
@@ -128,7 +128,12 @@ export class ManageExamCycleListComponent {
   }
 
   onClickItem(event: any) {
-    this.router.navigate(['/manage-exam-cycle/form/'+event.id])
+    if(event.columnDef && event.columnDef == 'deleteAction') {
+      this.onDeleteClick(event.row);
+    }
+    else {
+    this.router.navigate(['/manage-exam-cycle/form/'+event.id]);
+    }
   }
 
   onDeleteClick(event: any) {
