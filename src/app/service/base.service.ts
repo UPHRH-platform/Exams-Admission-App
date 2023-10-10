@@ -547,9 +547,13 @@ export class BaseService extends HttpService {
   /**************************** hall ticket services start ****************************/
 
 
-  generateHallTkt$(): Observable<any> {
+  generateHallTkt$(ids: [number]): Observable<any> {
 
-    return of([])
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GENERATE,
+      data: ids,
+    }
+    return this.post(requestParam);
   }
 
   getHallTickets$(): Observable<any> {
