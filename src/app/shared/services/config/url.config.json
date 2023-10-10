@@ -60,7 +60,12 @@
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",
+            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/",
+            "DISPATCHE_UPLOAD": "v1/admin/institutes/dispatchUpload"
+        },
+        "MANAGE_RESULTS": {
+            "PUBLISH": "/v1/studentResults/publish"
         }
     }
 }

@@ -72,7 +72,7 @@ export class ManageQuestionPapersComponent {
 
   getExamCycleData() {
     this.isDataLoading = true;
-  this.baseService.getExamCycleList().subscribe({
+  this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
       this.isDataLoading = false;
       this.examCycleData = res.responseData;

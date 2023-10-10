@@ -1,7 +1,5 @@
 import { Component, Inject, OnInit  } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { ConformationDialogComponent } from '../conformation-dialog/conformation-dialog.component';
-import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 
 
@@ -21,11 +19,7 @@ export class UploadDialogComponent implements OnInit {
   uploadForm: FormGroup
   //#endregion
   
-  //#region (constructor)
   constructor(
-    private dialog: MatDialog,
-    private router: Router,
-
     public dialogRef: MatDialogRef<UploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
@@ -89,7 +83,8 @@ export class UploadDialogComponent implements OnInit {
       if (this.files.length > 0) {
         const data = {
           files : this.files,
-          idType: this.uploadForm.value.idType
+          idType: this.uploadForm.value.idType,
+          dispatchDate: this.uploadForm.value.dispatchDate
         }
         this.dialogRef.close(data)
       }
