@@ -36,13 +36,13 @@ export class BaseService extends HttpService {
 
   //#region (exam cycles)
   getExamCycles() {
-    return this.getExamCycleList()
+    return this.getExamCycleList$()
       .pipe(mergeMap((res: any) => {
         return this.formatExamCycles(res.responseData)
       }))
   }
 
-  getExamCycleList() {
+  getExamCycleList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
       data: {},
@@ -982,11 +982,11 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
       responseData: [
         {
           examName: 'Exam 1',
-          lastDateToUplode: '25 Mar 2023',
+          lastDateToUpload: '25 Mar 2023',
           status: 'Pending',
         }, {
           examName: 'Exam 2',
-          lastDateToUplode: '25 Mar 2023',
+          lastDateToUpload: '25 Mar 2023',
           status: 'Dispatched'
         },
       ]
@@ -1003,7 +1003,7 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     return this.get(requestParam)
   }
 
-  uplodeDispatch$(request: any) {
+  uploadDispatch$(request: any) {
     const requestParam: RequestParam = {
       url: `${this.baseUrl}${this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHE_UPLOAD}`,
       data: request,

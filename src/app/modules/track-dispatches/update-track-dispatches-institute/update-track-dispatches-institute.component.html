@@ -18,7 +18,7 @@
         <mat-card class="card" *ngFor="let dispatch of dispatchesList">
             <mat-card-content class="content-container">
                 <span class="title-section">{{dispatch.examName}}</span>
-                <span class="desc-section">Last date for Upload : {{dispatch.lastDateToUplode}}</span>
+                <span class="desc-section">Last date for Upload : {{dispatch.lastDateToUpload}}</span>
                 <div class="status-card">
                     <span class="status"
                         [ngStyle]="{'color': dispatch.status == 'Pending' ? '#E99E38' : '#1D8923'}">Status:

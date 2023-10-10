@@ -542,7 +542,7 @@ export class StudentEnrollmentFormComponent {
      
     getExamCycleList() {
       // as of now get all is integrated , we need exam cycle list based on exam batch and course
-      this.baseService.getExamCycleList().subscribe({
+      this.baseService.getExamCycleList$().subscribe({
         next: (res) => {
           this.examBatchList = res.responseData;
           if(this.examBatchList.length > 0) {
