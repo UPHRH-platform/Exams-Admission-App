@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { HallTicket, Institute, Course, Year, TableColumn } from '../../../interfaces/interfaces';
 import { BaseService } from '../../../service/base.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
@@ -21,7 +22,7 @@ export class ManageHallTicketsAdminListComponent {
   courses: Course[];
   years: Year[];
   hallTicketsData: HallTicket[];
-  //generatedHallTickets: HallTicket[];
+  selectedCandidatesForHallTicketsGenerate: HallTicket[];
   pendingHallTicketsTableColumns: TableColumn[] = [];
   generatedHallTicketsTableColumns: TableColumn[] = [];
 
@@ -32,6 +33,7 @@ export class ManageHallTicketsAdminListComponent {
   constructor(
     private baseService: BaseService,
     private router: Router,
+    private toasterService: ToastrServiceService,
   ) {
 
   }
@@ -44,11 +46,11 @@ export class ManageHallTicketsAdminListComponent {
   }
 
 
-  hallTicketControl = new FormControl('',[Validators.required]);
-  courseControl = new FormControl('',[Validators.required]);
-  examCycleControl = new FormControl('',[Validators.required]);
-  instituteControl = new FormControl('',[Validators.required]);
-  
+  hallTicketControl = new FormControl('', [Validators.required]);
+  courseControl = new FormControl('', [Validators.required]);
+  examCycleControl = new FormControl('', [Validators.required]);
+  instituteControl = new FormControl('', [Validators.required]);
+
   initializeTableColumns(): void {
 
     this.pendingHallTicketsTableColumns = [
@@ -132,10 +134,10 @@ export class ManageHallTicketsAdminListComponent {
         isAction: true,
         cell: (element: Record<string, any>) => `View`,
         cellStyle: {
-            'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
-          },
-          
-        
+          'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
+        },
+
+
       }
 
     ];
@@ -204,27 +206,27 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getHallTickets() {
-    let unformattedResponse : HallTicket[];
+    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTickets$()
-    .pipe((mergeMap((response: any) => {
-      unformattedResponse = response.responseData;
-      return this.formateHallTicketsData(response.responseData)
-    })))
-    .subscribe({
-      next: (res: any) => {
-        console.log(res)
-        this.hallTicketsData = res.hallTicketsDetailsList;
-        this.isDataLoading = false;
+      .pipe((mergeMap((response: any) => {
+        unformattedResponse = response.responseData;
+        return this.formateHallTicketsData(response.responseData)
+      })))
+      .subscribe({
+        next: (res: any) => {
+          console.log(res)
+          this.hallTicketsData = res.hallTicketsDetailsList;
+          this.isDataLoading = false;
 
-        this.baseService.setHallTicketData$(unformattedResponse)
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isDataLoading = false;
-        console.log(error)
-      }
+          this.baseService.setHallTicketData$(unformattedResponse)
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isDataLoading = false;
+          console.log(error)
+        }
 
-    })
+      })
 
   }
 
@@ -235,7 +237,7 @@ export class ManageHallTicketsAdminListComponent {
       hallTicketsDetailsList: []
     }
 
-    if(response) {
+    if (response) {
       response.forEach((hallTicketsDetails: any) => {
         const formatedHallTicketDetails = {
           id: hallTicketsDetails.id,
@@ -278,15 +280,15 @@ export class ManageHallTicketsAdminListComponent {
       }
     ]
 
- this.getCoursesList();
- this.getExamCycleList();
-  
+    this.getCoursesList();
+    this.getExamCycleList();
+
   }
 
-  getExamCycleList(){
+  getExamCycleList() {
     this.baseService.getExamCycleList$().subscribe({
       next: (res: any) => {
-          this.isDataLoading = false;
+        this.isDataLoading = false;
         this.years = res.responseData
       },
       error: (error: HttpErrorResponse) => {
@@ -295,10 +297,10 @@ export class ManageHallTicketsAdminListComponent {
     })
   }
 
-  getCoursesList(){
+  getCoursesList() {
     this.baseService.getAllCourses$().subscribe({
       next: (res: any) => {
-          this.isDataLoading = false;
+        this.isDataLoading = false;
         this.courses = res.responseData;
       },
       error: (error: HttpErrorResponse) => {
@@ -309,21 +311,26 @@ export class ManageHallTicketsAdminListComponent {
 
   onSelectedRows(value: any) {
     console.log(value)
+    this.selectedCandidatesForHallTicketsGenerate = value;
+    console.log(this.selectedCandidatesForHallTicketsGenerate)
   }
 
   generateHallTkt() {
-    this.isDataLoading = true;
     let a = this.courseControl?.value;
     let b = this.examCycleControl?.value;
-    this.baseService.generateHallTkt$().subscribe({
+    let idsArray: any = []
+    this.selectedCandidatesForHallTicketsGenerate.forEach(element => {
+      idsArray.push(element.id)
+    });
+    console.log(idsArray)
+    this.baseService.generateHallTkt$(idsArray).subscribe({
       next: (res: any) => {
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
+        this.toasterService.showToastr('Hall tickets generated successfully for selected candidates !!', 'Success', 'success', '');
         this.tabGroup.selectedIndex = 1;
       },
       error: (error: HttpErrorResponse) => {
-        alert(error.message)
+        console.log(error.message)
+        this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
       }
     })
 
@@ -333,7 +340,7 @@ export class ManageHallTicketsAdminListComponent {
     console.log(e)
   }
 
-  onViewClick(event: any)  {
+  onViewClick(event: any) {
     let r = event.row
     this.router.navigate(['/hall-ticket-management/ticket-details', r.id]);
   }
