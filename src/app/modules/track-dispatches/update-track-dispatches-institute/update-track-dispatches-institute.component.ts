@@ -144,7 +144,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
           dispatchDate: result.dispatchDate,
           dispatchProofFile: result.files
         }
-        this.baseService.uplodeDispatch$(formBody)
+        this.baseService.uploadDispatch$(formBody)
         .subscribe({
           next: (res: any) => {
             this.openConformationDialog()
