@@ -179,7 +179,7 @@ export class CctvManagementAdminComponent {
 
   //#region (exam cycles)
   getExamCycles() {
-    this.baseService.getExamCycleList()
+    this.baseService.getExamCycleList$()
       .pipe(mergeMap((res: any) => {
         return this.formatExamCycles(res.responseData)
       }))
