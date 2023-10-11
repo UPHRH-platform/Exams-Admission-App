@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { BaseService } from '../../../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mergeMap, of } from 'rxjs';
 interface Course {
   value: string;
   viewValue: string;
@@ -19,28 +20,15 @@ interface Course {
   styleUrls: ['./manage-result-admin.component.scss']
 })
 export class ManageResultAdminComponent {
+  //#region (global variables)
   selectedCellDetails: any;
   isDataLoading: boolean = false;
   studentResultData: any[] = [];
 
 
   
-  courses: Course[] = [
-    {value: 'bsc', viewValue: 'BSc'},
-    {value: 'msc', viewValue: 'MSc'},
-  ];
-  examCycleList = [
-    {
-      examName: 'Exam Cycle 1',
-      value: '1'
-    },{
-      examName: 'Exam Cycle 2',
-      value: '2'
-    },{
-      examName: 'Exam Cycle 3',
-      value: '3'
-    },
-  ]
+  courses: Course[] = [];
+  examCycleList = []
 
   instituteTableHeader = [
     {
@@ -152,23 +140,6 @@ export class ManageResultAdminComponent {
     }
   ]
 
-  studentExamsTableData(){
-    this.isDataLoading = true;
-    this.baseService.getStudentResultData$().subscribe({
-      next:(res:any)=>{
-        this.studentResultData = res
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
-
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isDataLoading = false;
-        console.log(error)
-      }
-
-    })  } 
-  
   examCycleControl = new FormControl('');
   examControl = new FormControl('');
 
@@ -176,10 +147,10 @@ export class ManageResultAdminComponent {
   // searchKey = ''
   showInstitutesTable = true
 
-  //#endregion
   breadcrumbItems = [
     { label: 'Manage Results', url: '' },
   ]
+  //#endregion
   constructor(
     private baseService: BaseService,
     private dialog: MatDialog,
@@ -193,22 +164,22 @@ export class ManageResultAdminComponent {
   }
 
   intialisation() {
-    // this.getExamCycles()
+    this.getExamCycles()
     this.getInstitutesData();
-    this.studentExamsTableData();
+    // this.studentExamsTableData();
   }
 
   getExamCycles() {
-    //this.baseService.getExamCycles()
-    // .subscribe((examCucles: any) => {
-    //   this.examCycleList = examCucles
-    // })
+    this.baseService.getExamCycles()
+    .subscribe((examCucles: any) => {
+      this.examCycleList = examCucles.examCyclesList
+    })
   }
 
   getInstitutesData(searchKey: string = '') {
     this.baseService.getInstitutesResultData$()
      .subscribe((response: any) => {
-      console.log(response)
+      console.log('InstitutesResultData', response)
       for (let institute of response) {
         if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
           institute.publish = "Publish"
@@ -225,27 +196,30 @@ export class ManageResultAdminComponent {
      })
   }
 
-  getExamsOfInstitute(instituteId: string) {
-    // .subscribe((examsFeeDetails: any) => {
-    //   this.studentExamsTableData = examsFeeDetails
-    // })
-  }
 
-  // search() {
-  //   this.searchKey = this.searcControl
-  //   this.showInstitutesTable = true
-  // }
+  studentExamsTableData(){
+    this.isDataLoading = true;
+    this.baseService.getStudentResultData$().subscribe({
+      next:(res:any)=>{
+        this.studentResultData = res
+        setTimeout(() => {
+          this.isDataLoading = false;
+        }, 1000);
 
-  onSelecteInstitute(event: any) {
-    if (event) {
-      // this.instituteTableData = []
-      // this.feeManagementService.getExamsOfInstitute('')
-      // .subscribe((exams: any) => {
-      //   this.instituteTableData = exams
-      // })
-    }
-    this.showInstitutesTable = false
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isDataLoading = false;
+        console.log(error)
+      }
 
+    })  } 
+
+  getExams(examCycleId: number) {
+    this.courses = []
+    this.baseService.getExamsListByExamCycleId(examCycleId)
+      .subscribe((result: any) => {
+        this.courses = result.examsList
+      })
   }
 
   onCellClick(event: any) {
@@ -408,8 +382,19 @@ export class ManageResultAdminComponent {
     })
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log("Confirmation result", result);
+        const formBody = {
+          // examCycleId: ,
+          // courseId: ,
+        }
+        this.publishResults(formBody)
       }
+    })
+  }
+
+  publishResults(formBody: any) {
+    this.baseService.publishResults(formBody)
+    .subscribe((res: any) => {
+      this.getInstitutesData()
     })
   }
 
