@@ -78,11 +78,10 @@ export class StudentEnrollmentFormComponent {
     this.getInstituteByuserId();
     if(this.enrollmentId !== undefined) {
       this.isCreateView = false;
-      setTimeout(() => {
         this.getEnrollmentDetails();
-      }, 1000);
     }
     if(this.loggedInUserRole === 'exams_admin') {
+      this.isAdmin = true;
       this.getAllCourses();
     }
     
@@ -120,17 +119,67 @@ export class StudentEnrollmentFormComponent {
     })
   }
 
-  getSelectedCourse(event: Event) {
-    // const courseBasedBatch: any = [];
-    // console.log(this.filteredExamCycleList);
-    // this.filteredExamCycleList.map((obj: any) => {
-    //   if(obj.course !== null) {
-    //     if(obj.course.id === this.educationalDetailsForm.value.courseCode) {
-    //       courseBasedBatch.push(obj);
-    //     }
-    //   }
-    // })
-    // this.examBatchList = courseBasedBatch;
+  getSelectedCourse(event: any) {
+    this.educationalDetailsForm.patchValue({
+      examBatch: ''
+    });
+    this.examBatchList = this.examCycleList;
+      let sessionOfAdmission: any = [];
+      sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
+      let startSession = sessionOfAdmission[0];
+      let endSession = sessionOfAdmission[1];
+      // filter with session
+    this.examBatchList = this.examBatchList.filter((obj) => {
+      const startDate = new Date(obj.startDate).getFullYear();
+      const endDate = new Date(obj.endDate).getFullYear();
+      if(startDate >= startSession && endDate <= endSession) {
+              return true;
+      }
+      else {
+        return false;
+      }
+    })
+    // filter with course
+    this.examBatchList = this.examBatchList.filter((obj) => {
+        if(obj.course !== null && (obj.course.id === event.value.course_id)) {
+          return true;
+        }
+        else {
+          return false;
+        }
+    })
+  }
+
+  getSessionOfAdmission(event: Event) {
+    this.educationalDetailsForm.patchValue({
+      examBatch: ''
+    });
+    this.examBatchList = this.examCycleList;
+      let sessionOfAdmission: any = [];
+      sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
+      let startSession = sessionOfAdmission[0];
+      let endSession = sessionOfAdmission[1];
+    // filter with session
+    this.examBatchList = this.examBatchList.filter((obj) => {
+      const startDate = new Date(obj.startDate).getFullYear();
+      const endDate = new Date(obj.endDate).getFullYear();
+      if(startDate >= startSession && endDate <= endSession) {
+              return true;
+      }
+      else {
+        return false;
+      }
+    })
+    // filter with course
+  const courseid = this.educationalDetailsForm.value.courseCode.course_id;
+  this.examBatchList = this.examBatchList.filter((obj) => {
+    if(obj.course !== null && courseid !== undefined && (obj.course.id === courseid)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+})
   }
 
   initBasicDetailsForm() {
@@ -204,6 +253,7 @@ export class StudentEnrollmentFormComponent {
       }
     })
     this.educationalDetailsForm.patchValue({
+        centerCode: `${this.enrollmentDetails?.instituteDTO.instituteCode} - ${this.enrollmentDetails?.instituteDTO.instituteName}`,
         courseCode: this.enrollmentDetails?.course,
         examBatch: this.enrollmentDetails?.examBatch,
         admissionDate: this.enrollmentDetails?.admissionDate,
@@ -224,8 +274,6 @@ export class StudentEnrollmentFormComponent {
         marksSheet: this.enrollmentDetails?.intermediateMarksheetPath,
         certificate: this.enrollmentDetails?.intermediateCertificatePath
     })
-    console.log("educationalDetailsForm =>", this.educationalDetailsForm.value);
-    console.log("courseList =>", this.courseList);
   }
 
   selectLink(link: string) {
@@ -390,6 +438,7 @@ export class StudentEnrollmentFormComponent {
           intermediatePassedBoard: this.educationalDetailsForm.value.intermediatePassedBoard,
           intermediateSubjects: this.educationalDetailsForm.value.intermediateSubjects.join(),
           intermediatePercentage: this.educationalDetailsForm.value.intermediatePercentage,
+          intermediateStream: this.educationalDetailsForm.value.intermediateStream,
           mobileNo: this.basicDetailsForm.value.mobileNumber,
           emailId: this.basicDetailsForm.value.emailId,
           aadhaarNo: this.basicDetailsForm.value.aadharNo,
@@ -559,47 +608,45 @@ export class StudentEnrollmentFormComponent {
     }
      
     getExamCycleList() {
-      // as of now get all is integrated , we need exam cycle list based on exam batch and course
       this.baseService.getExamCycleList().subscribe({
         next: (res) => {
+          this.examBatchList = res.responseData;
+          // this is all response and exam batch list is used for filter;
           this.examCycleList = res.responseData;
-          if(this.examCycleList.length > 0) {
+          // filter exam batch list based on session of admission(pre-selected current FY);
+          if(this.examBatchList.length > 0) {
             let sessionOfAdmission: any = [];
-             sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
+            sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
             let startSession = sessionOfAdmission[0];
             let endSession = sessionOfAdmission[1];
-            this.examCycleList.map((obj: any) => {
-              const startDate = new Date(obj.startDate).getFullYear();
-              const endDate = new Date(obj.endDate).getFullYear();
-              if(startDate >= startSession && endDate <= endSession) {
-                this.filteredExamCycleList.push(obj);
-              }
-            })
-            this.examBatchList = this.filteredExamCycleList;
-          }
+          this.examBatchList = this.examBatchList.filter((obj) => {
+            const startDate = new Date(obj.startDate).getFullYear();
+            const endDate = new Date(obj.endDate).getFullYear();
+            if(startDate >= startSession && endDate <= endSession) {
+                    return true;
+            }
+            else {
+              return false;
+            }
+          })
+        }
+        console.log(this.examBatchList);
+          // if(this.examCycleList.length > 0) {
+          //   let sessionOfAdmission: any = [];
+          //    sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
+          //   let startSession = sessionOfAdmission[0];
+          //   let endSession = sessionOfAdmission[1];
+          //   this.examCycleList.map((obj: any) => {
+          //     const startDate = new Date(obj.startDate).getFullYear();
+          //     const endDate = new Date(obj.endDate).getFullYear();
+          //     if(startDate >= startSession && endDate <= endSession) {
+          //       this.filteredExamCycleList.push(obj);
+          //     }
+          //   })
+          //   this.examBatchList = this.filteredExamCycleList;
+          // }
         }
       })
-    }
-
-
-    getSessionOfAdmission(event: Event) {
-      const filteredExamCycleList: any = [];
-      if(this.examCycleList.length > 0) {
-        let sessionOfAdmission: any = [];
-         sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
-        let startSession = sessionOfAdmission[0];
-        let endSession = sessionOfAdmission[1];
-        console.log(startSession, endSession);
-        this.filteredExamCycleList.map((obj: any) => {
-          const startDate = new Date(obj.startDate).getFullYear();
-          const endDate = new Date(obj.endDate).getFullYear();
-          console.log(startDate, endDate);
-          if(startDate.toString() >= startSession && endDate.toString() <= endSession) {
-            this.examBatchList.push(obj);
-          }
-        })
-      }
-      console.log("examBatchList =>", this.examBatchList);
     }
 
     getIntermediateStreams() {
@@ -635,6 +682,7 @@ export class StudentEnrollmentFormComponent {
           gender: this.basicDetailsForm.value.gender,
           caste: this.basicDetailsForm.value.caste,
           category: this.basicDetailsForm.value.category,
+          intermediateStream: this.educationalDetailsForm.value.intermediateStream,
           intermediatePassedBoard: this.educationalDetailsForm.value.intermediatePassedBoard,
           intermediateSubjects: this.educationalDetailsForm.value.intermediateSubjects.join(),
           intermediatePercentage: this.educationalDetailsForm.value.intermediatePercentage,

@@ -17,7 +17,7 @@
           </mat-list-item>
         </mat-nav-list>
       </mat-drawer>
-      <div *ngIf="enrollmentId !== undefined && enrollmentDetails?.verificationStatus !== 'PENDING'" class="statusBackground">
+      <div *ngIf="enrollmentDetails.id && enrollmentDetails?.verificationStatus !== 'PENDING'" class="statusBackground">
       <p>
         <span class="span" [ngStyle]="enrollmentDetails?.verificationStatus === 'VERIFIED'? {'color': 'green'} : enrollmentDetails?.verificationStatus === 'REJECTED' ? {'color': 'red'}: ''">Status: {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'Approved' : enrollmentDetails?.verificationStatus === 'REJECTED'? 'Rejected': ''}}</span>
       </p>
@@ -1078,7 +1078,7 @@
               </button>
               <div *ngIf="enrollmentDetails?.verificationStatus == 'PENDING'">
               <button *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_admin'"
-              class="text-class action-btns"
+              class="text-class action-btns mr2"
                 type="submit"
                 mat-raised-button
                 color="primary"
@@ -1096,7 +1096,7 @@
               Reject
               </button>
               </div>
-              <div *ngIf="enrollmentDetails?.verificationStatus !== 'REJECTED'">
+              <div *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus == 'PENDING' )">
                 <button *ngIf="selectedLink === 'Educational Details' && !isCreateView && !isEditable"
                 class="text-class action-btns"
                   type="button"
