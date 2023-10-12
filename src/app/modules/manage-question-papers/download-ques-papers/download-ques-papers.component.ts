@@ -24,7 +24,19 @@ export class DownloadQuesPapersComponent {
     });
   }
   examCycleControl = new FormControl();
-  examCycleList: string[] = ['examCycle1', 'examCycle2', 'examCycle3'];
+  examCycleList = [
+    {
+      id: 1,
+      examCycleName:'examCycle1'
+    },
+    {
+      id: 2,
+      examCycleName:'examCycle2'
+    },
+    {
+      id: 3,
+      examCycleName:'examCycle3'
+    }];
   breadcrumbItems = [
     {label: 'Download Question Papers', url: ''}
   ]

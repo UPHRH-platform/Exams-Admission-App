@@ -37,6 +37,7 @@ export interface attendanceTableData {
     isCheckBox?:boolean;
     isDropdown?: boolean;
     cellStyle?: any;
+    classes?: any;
   }
 
   export interface DialogData {

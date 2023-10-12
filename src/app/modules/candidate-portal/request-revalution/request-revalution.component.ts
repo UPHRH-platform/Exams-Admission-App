@@ -86,13 +86,11 @@ export class RequestRevalutionComponent implements OnInit {
   paymentDone = false;
   //#endregion
 
-  //#region (constructor)
   constructor(
     private router: Router,
     private candidatePortalService: CandidatePortalService,
     private baseService: BaseService,
   ) { }
-  //#endregion
 
   ngOnInit(): void {
     this.intialisation()
@@ -120,12 +118,7 @@ export class RequestRevalutionComponent implements OnInit {
         externalMarks: string,
         totalMarks: string,
         status: string,
-        hasStyle: boolean,
-        cellStyle: {
-          status: {
-            color: string
-          }
-        },
+        classes: any,
       }[]
     } = {
       examResults: []
@@ -133,18 +126,16 @@ export class RequestRevalutionComponent implements OnInit {
 
     if (results) {
       results.forEach((result: any) => {
+        const classes:string[] = [result.status === 'Fail' ? 'color-red' : 'color-green']
         const examResult = {
           examName: result.examName,
           internalMarks: result.internalMarks,
           externalMarks: result.externalMarks,
           totalMarks: result.totalMarks,
           status: result.status,
-          hasStyle: true,
-          cellStyle: {
-            status: {
-              color: result.status === 'Fail' ? 'red' : 'green'
-            }
-          },
+          classes: {
+            status: classes
+          }
         }
         exams.examResults.push(examResult)
       })

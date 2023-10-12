@@ -163,11 +163,8 @@ export class FeeManagementAdminComponent implements OnInit {
           paidStudentsCount: instituteData.paidStudentsCount,
           totalFeePaid: instituteData.totalFeePaid,
           viewList: instituteData.viewList,
-          hasStyle: true,
-          cellStyle: {
-            viewList: {
-              'color': '#0074B6'
-            },
+          classes: {
+            viewList: ['cursor-pointer', 'color-blue']
           }
         }
 
@@ -275,12 +272,9 @@ export class FeeManagementAdminComponent implements OnInit {
           numberOfExams: examDetails.numberOfExams,
           fee: examDetails.fee,
           status: examDetails.status,
-          hasStyle: true,
-          cellStyle: {
-            status: {
-              'color': '#1D8923'
-            },
-          }
+          classes: {
+            status: ['color-green']
+          },
         }
 
         studentsExamDetails.studentsExamDetailsList.push(studentExamDetial)
