@@ -27,8 +27,8 @@
             "DELETE_EXAM_CYCLE": "/v1/admin/examCycle/delete",
             "GET_EXAM_BY_EXAM_CYCLE_ID": "/v1/admin/exam/byExamCycle",
             "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update",
-            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle"
-            
+            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle",
+            "EXAM_CYCLE_SEARCH": "/v1/admin/examCycle/search"
         },
         "EXAM_STUDENT_REGISTRATION": {
             "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
@@ -61,6 +61,10 @@
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
+            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+        },
+        "SUBJECTS": {
+            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap",
             "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",
             "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/",
             "DISPATCHE_UPLOAD": "v1/admin/institutes/dispatchUpload"

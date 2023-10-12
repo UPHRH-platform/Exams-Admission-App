@@ -157,8 +157,13 @@ export class SharedTableComponent implements AfterViewInit {
     this.dataSource.sort = this.sort ? this.sort : null;
   }
 
-  emitRowAction(row: any) {
+  emitRowAction(row: any, columnDef?: any) {
+    if(columnDef && columnDef === 'deleteAction') {
+      this.rowAction.emit({row, columnDef});
+    }
+    else {
     this.rowAction.emit(row);
+    }
   }
 
   emitDeleteAction(row: any) {

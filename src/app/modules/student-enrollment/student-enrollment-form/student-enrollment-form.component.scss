@@ -51,7 +51,14 @@
   .file-preview {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
+    a {
+      text-decoration: none;
+      margin-right: 8px;
+      color:  #0074B6;
+      cursor: pointer;
+    }
   }
   
   

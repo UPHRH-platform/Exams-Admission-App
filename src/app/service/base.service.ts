@@ -834,11 +834,33 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
   //#endregion
 
 getIntermediateSubjectList() {
-  const requestParam: RequestParam = {
-    url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INTERMEDIATE_SUBJECT_LIST,
-    data: {}
-  }
-  return this.get(requestParam);
+  // const requestParam: RequestParam = {
+  //   url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INTERMEDIATE_SUBJECT_LIST,
+  //   data: {}
+  // }
+  // return this.get(requestParam);
+  return of({
+    "id": "",
+    "ver": "v1",
+    "ts": "2023-10-10 09:54:13.703",
+    "params": {
+        "resmsgid": null,
+        "msgid": null,
+        "err": null,
+        "status": null,
+        "errmsg": null
+    },
+    "responseCode": "OK",
+    "responseCodeNumeric": 200,
+    "error": null,
+    "result": {
+        "response": ['Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'],
+        "message": "OK"
+    }
+})
+  //   return of([
+  //   'Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'
+  // ])
 }
 
 updateStudentEnrollmentStatus(request: any) {
@@ -852,8 +874,12 @@ updateStudentEnrollmentStatus(request: any) {
 
 updateEnrollmentDetails(request: object, id: string | number) {
   const requestParam: RequestParam = {
-    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INSTITUTE_BY_ID}/${id}`,
-     data: request
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_DETAILS_BY_ID}/${id}`,
+    data: request,
+    header: {
+      'Accept': '*/*',
+      'x-authenticated-user-token': this.token
+  }
   }
   return this.multipartPut(requestParam);
 }
@@ -1020,5 +1046,20 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
   }
   //#endregion
 
+  getSubjectsByCourse(id: string | number): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.SUBJECTS.GET_SUBJECTS_BY_COURSE + `/${id}`,
+      data: {}
+    }
+    return this.get(requestParam); 
+  }
+
+  getExamCycleByCourseAndAdmissionSession(request: object): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.EXAM_CYCLE_SEARCH,
+      data: request
+    }
+    return this.post(requestParam);
+  }
 
 }

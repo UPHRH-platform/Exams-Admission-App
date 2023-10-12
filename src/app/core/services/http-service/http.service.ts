@@ -31,7 +31,7 @@ export class HttpService {
   return this.http.get<Response>(requestParam.url, httpOptions).pipe(
     mergeMap((data: Response) => {
       if (data.error && data.error) {
-        return throwError(() => new Error(data.error));
+        return throwError(() => new Error(data.error.message));
       }
       const serverRes: ServerResponse ={
         statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -50,7 +50,7 @@ multipartPost(requestParam: RequestParam): Observable<any> {
   return this.http.post<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
     mergeMap((data: Response) => {
       if (data.error && data.error) {
-        return throwError(() => new Error(data.error));
+        return throwError(() => new Error(data.error.message));
       }
       const serverRes: ServerResponse ={
         statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -68,7 +68,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
   return this.http.put<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
     mergeMap((data: Response) => {
       if (data.error && data.error) {
-        return throwError(() => new Error(data.error));
+        return throwError(() => new Error(data.error.message));
       }
       const serverRes: ServerResponse ={
         statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -92,7 +92,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
     return this.http.post<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
       mergeMap((data: Response) => {
         if (data.error && data.error) {
-          return throwError(() => new Error(data.error));
+          return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -108,13 +108,13 @@ multipartPut(requestParam: RequestParam): Observable<any> {
   */
   formDataPost(requestParam: RequestParam): Observable<ServerResponse> {
     const httpOptions: HttpOptions = {
-      headers: requestParam.header ? this.getHeader(requestParam.header) : this.getHeader(),
+      headers: requestParam.header,
       params: requestParam.param
     };
     return this.http.post<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
       mergeMap((data: Response) => {
         if (data.error && data.error) {
-          return throwError(() => new Error(data.error));
+          return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -138,7 +138,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
     return this.http.patch<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
       mergeMap((data: Response) => {
         if (data.error && data.error) {
-          return throwError(() => new Error(data.error));
+          return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -162,7 +162,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
       mergeMap((data: Response) => {
         console.log(data);
         if (data.error && data.error) {
-          return throwError(() => new Error(data.error));
+          return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: "success"},
@@ -185,7 +185,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
     return this.http.put<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
       mergeMap((data: Response) => {
         if (data.error && data.error) {
-          return throwError(() => new Error(data.error));
+          return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: "success"},
