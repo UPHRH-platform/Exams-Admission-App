@@ -144,10 +144,10 @@ export class ManageHallTicketsAdminListComponent {
 
     this.generatedHallTicketsTableColumns = [
       {
-        columnDef: 'studentName',
+        columnDef: 'firstName',
         header: 'Student Name',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['studentName']}`,
+        cell: (element: Record<string, any>) => `${element['firstName']}`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '180px', 'color': '#00000099'
         },
@@ -170,10 +170,10 @@ export class ManageHallTicketsAdminListComponent {
           } */
       },
       {
-        columnDef: 'rollNo',
+        columnDef: 'studentEnrollmentNumber',
         header: 'Roll Number',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`,
+        cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
         },
@@ -260,6 +260,17 @@ export class ManageHallTicketsAdminListComponent {
     return of(formatedHallTicketsDetails);
   }
 
+  getAllInstitutes() {
+     this.baseService.getAllInstitutes$().subscribe({
+      next: (res: any) => {
+        this.institutes = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
   initializePageData() {
     this.halltickets = [
       {
@@ -270,16 +281,8 @@ export class ManageHallTicketsAdminListComponent {
 
       }
     ]
-    this.institutes = [
-      {
-        value: 'abc institute', viewValue: "ABC , Institute"
-      },
-      {
-        value: 'xyz institute', viewValue: "XYZ , Institute"
 
-      }
-    ]
-
+    this.getAllInstitutes();
     this.getCoursesList();
     this.getExamCycleList();
 
@@ -310,9 +313,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onSelectedRows(value: any) {
-    console.log(value)
     this.selectedCandidatesForHallTicketsGenerate = value;
-    console.log(this.selectedCandidatesForHallTicketsGenerate)
   }
 
   generateHallTkt() {
@@ -322,7 +323,6 @@ export class ManageHallTicketsAdminListComponent {
     this.selectedCandidatesForHallTicketsGenerate.forEach(element => {
       idsArray.push(element.id)
     });
-    console.log(idsArray)
     this.baseService.generateHallTkt$(idsArray).subscribe({
       next: (res: any) => {
         this.toasterService.showToastr('Hall tickets generated successfully for selected candidates !!', 'Success', 'success', '');

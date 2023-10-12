@@ -36,6 +36,9 @@
         "COURSE": {
             "GET_ALL": "/v1/admin/courses/list"
         },
+        "INSTITUTES":{
+            "GET_ALL": "/v1/admin/institutes/all"
+        },
         "INSTITUTE_COURSE_MAPPING": {
             "GET_ALL_INSTITUTE_COURSE_MAPPING": "/v1/admin/instituteCourseMap/all",
             "GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID": "/v1/admin/instituteCourseMap/list"
