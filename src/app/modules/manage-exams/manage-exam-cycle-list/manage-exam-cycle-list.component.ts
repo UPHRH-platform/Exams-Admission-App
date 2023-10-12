@@ -108,6 +108,7 @@ export class ManageExamCycleListComponent {
           header: '',
           isSortable: false,
           isLink: false,
+          classes: ['color-blue'],
           cell: (element: Record<string, any>) => `View`,
           isAction: true
         },

@@ -181,15 +181,36 @@ export class ManageResultAdminComponent {
      .subscribe((response: any) => {
       console.log('InstitutesResultData', response)
       for (let institute of response) {
+        institute['classes'] = {}
         if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
           institute.publish = "Publish"
-        }else{
+        } else {
           institute.publish = "-"
         }
-        institute.internalMarksProvided ?  institute.internalMarksProvided = "View & Download" : institute.internalMarksProvided = "Pending"
-        institute.finalMarksProvided ?  institute.finalMarksProvided = "View & Delete" : institute.finalMarksProvided = "Upload"
-        institute.revisedFinalMarksProvided ?  institute.revisedFinalMarksProvided = "View & Delete" : institute.revisedFinalMarksProvided = "Upload"
-     
+        institute['classes']['publish'] = ['color-blue']
+        if (institute.internalMarksProvided) {
+          institute.internalMarksProvided = "View & Download"
+          institute['classes']['internalMarksProvided'] = ['color-green']
+        } else {
+          institute.internalMarksProvided = "Pending"
+          institute['classes']['internalMarksProvided'] = ['color-orange']
+        }
+        
+        if (institute.finalMarksProvided) {
+          institute.finalMarksProvided = "View & Delete"
+          institute['classes']['finalMarksProvided'] = ['color-green']
+        } else {
+          institute.finalMarksProvided = "Upload"
+          institute['classes']['finalMarksProvided'] = ['color-blue']
+        }
+        
+        if (institute.revisedFinalMarksProvided) {
+          institute.revisedFinalMarksProvided = "View & Delete"
+          institute['classes']['revisedFinalMarksProvided'] = ['color-green']
+        } else {
+          institute.revisedFinalMarksProvided = "Upload"
+          institute['classes']['revisedFinalMarksProvided'] = ['color-blue']
+        }
       
       }
        this.instituteTableData = response

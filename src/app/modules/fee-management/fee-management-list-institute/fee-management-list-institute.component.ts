@@ -193,23 +193,18 @@ export class FeeManagementListInstituteComponent implements OnInit {
           noOfExams: feeDetails.numberOfExams,
           fee: feeDetails.fee,
           status: feeDetails.status,
-          hasStyle: true
         }
         switch (feeDetails.status) {
           case 'Paid': {
-            foramtedFeeDetails['cellStyle'] = {
-              status: {
-                'color': 'rgb(29, 137, 35)'
-              },
+            foramtedFeeDetails['classes'] = {
+              status: ['color-green'],
             }
             studentsFeeDetails.paidFeeDetails.push(foramtedFeeDetails)
             break;
           }
           case 'Pending': {
-            foramtedFeeDetails['cellStyle'] = {
-              status: {
-                'color': 'rgb(0, 116, 182)'
-              },
+            foramtedFeeDetails['classes'] = {
+              status: ['color-blue'],
             }
             studentsFeeDetails.pendingFeeDetails.push(foramtedFeeDetails)
             break;

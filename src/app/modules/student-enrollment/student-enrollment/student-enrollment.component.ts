@@ -201,6 +201,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
           isLink: true,
           isAction: true,
           cell: (element: Record<string, any>) => `View Enrollment`,
+          classes: ['color-blue'],
         },
       ]
       break;
@@ -254,6 +255,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
             isSortable: false,
             isLink: true,
             isAction: true,
+            classes: ['color-blue'],
             cell: (element: Record<string, any>) => `View Enrollment`,
           },
         ]

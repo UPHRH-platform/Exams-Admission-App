@@ -107,14 +107,57 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
       }
     },
     {
@@ -124,48 +167,21 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
     },
     {
       instituteName: 'NEW COLLEGE OF NURSING',
       instituteId: '123',
       exam: 'Exam 1',
       dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
       }
     },
     {
@@ -175,14 +191,9 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Pending',
       viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
       }
     },
     {
@@ -192,14 +203,93 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
+      }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
+      }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
+      }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Dispatched',
+      viewProof: 'View proof',
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
+    },
+    {
+      instituteName: 'NEW COLLEGE OF NURSING',
+      instituteId: '123',
+      exam: 'Exam 1',
+      dispatchDate: '29-06-2023',
+      dispatchStatus: 'Pending',
+      viewProof: '-',
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
       }
     },
     {
@@ -209,31 +299,9 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Pending',
       viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
+      classes: {
+        viewProof: ['color-blue'],
+        dispatchStatus: ['color-blue'],
       }
     },
     {
@@ -243,32 +311,10 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
     },
     {
       instituteName: 'NEW COLLEGE OF NURSING',
@@ -277,32 +323,10 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
     },
     {
       instituteName: 'NEW COLLEGE OF NURSING',
@@ -311,134 +335,10 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       dispatchDate: '29-06-2023',
       dispatchStatus: 'Dispatched',
       viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': 'Pending' ? '#0074B6' : '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      hasStyle: true,
-      cellStyle: {
-        viewProof: {
-          'color': '#0074B6'
-        },
-        dispatchStatus:{
-          'color': '#1D8923'
-        }
-      }
+      classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: ['color-green'],
+          }
     },
   ]
   
@@ -515,14 +415,9 @@ export class ManageTrackDispatchesComponent implements OnInit  {
           dispatchDate: element,
           dispatchStatus: element,
           viewProof: element,
-          hasStyle: true,
-          cellStyle: {
-            viewProof: {
-              'color': '#0074B6'
-            },
-            dispatchStatus: {
-              'color': '#1D8923'
-            }
+          classes: {
+            viewProof: ['color-blue'],
+            dispatchStatus: element.dispatchStatus === 'Pending' ? ['color-blue'] : ['color-green'],
           }
         }
 

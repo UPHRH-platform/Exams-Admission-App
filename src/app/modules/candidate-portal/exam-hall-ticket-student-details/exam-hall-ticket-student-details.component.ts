@@ -12,8 +12,10 @@ export class ExamHallTicketStudentDetailsComponent {
   constructor() { }
 
   ngOnInit() {
-    this.hallTicketDetails.dob = this.reverseDate(this.hallTicketDetails.dob)
-}
+    if (this.hallTicketDetails) {
+      this.hallTicketDetails!.dob = this.reverseDate(this.hallTicketDetails!.dob)
+    }
+  }
 
   reverseDate(date: string){
     let Dob = new Date(date);

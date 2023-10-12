@@ -115,6 +115,7 @@ export class ManageHallTicketsAdminListComponent {
         header: '',
         isSortable: false,
         isLink: true,
+        classes: ['color-green'],
         cell: (element: Record<string, any>) => {
           if (element['feesPaid']) {
             return 'PAID'
@@ -246,11 +247,8 @@ export class ManageHallTicketsAdminListComponent {
           studentEnrollmentNumber: hallTicketsDetails.studentEnrollmentNumber,
           feesPaid: hallTicketsDetails.feesPaid,
           attendancePercentage: hallTicketsDetails.attendancePercentage,
-          hasStyle: true,
-          cellStyle: {
-            viewHallTicket: {
-              'color': '#0074B6'
-            }
+          classes: {
+            viewHallTicket: ['color-blue']
           }
         }
 
