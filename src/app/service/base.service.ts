@@ -76,10 +76,17 @@ export class BaseService extends HttpService {
   }
   //#endregion
 
-  getAllInstitutesList$() {
+  getAllExamCenterInstitutesList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.ALL_CENTERS,
       data: {},
+    }
+    return this.get(requestParam);
+  }
+
+  getAllInstitutes$(){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTES.GET_ALL,
     }
     return this.get(requestParam);
   }
@@ -556,10 +563,22 @@ export class BaseService extends HttpService {
     return this.post(requestParam);
   }
 
-  getHallTickets$(): Observable<any> {
+  getHallTickets$(courseId?: number,examCycleId?: number, instituteId?: number): Observable<any> {
+
+    let appendToReqParams = "";
+
+    if(courseId){
+      appendToReqParams = appendToReqParams+"courseId="+courseId;
+    }
+    if(examCycleId){
+      appendToReqParams =  appendToReqParams+"examCycleId="+examCycleId;
+    }
+    if(instituteId){
+      appendToReqParams = appendToReqParams+"instituteId="+instituteId;
+    }
 
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS+`?`+appendToReqParams,
       data: {},
     }
     return this.get(requestParam);
