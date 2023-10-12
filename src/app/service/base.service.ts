@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { CookieService } from 'ngx-cookie-service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, mergeMap } from 'rxjs';
 
 import { ConfigService, RequestParam, ServerResponse } from '../shared';
 
@@ -33,6 +33,15 @@ export class BaseService extends HttpService {
   }
   
   //#region (common apis)
+
+  //#region (exam cycles)
+  getExamCycles() {
+    return this.getExamCycleList$()
+      .pipe(mergeMap((res: any) => {
+        return this.formatExamCycles(res.responseData)
+      }))
+  }
+
   getExamCycleList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
@@ -41,10 +50,43 @@ export class BaseService extends HttpService {
     return this.get(requestParam);
   }
 
-  getAllInstitutesList$() {
+  formatExamCycles(response: any) {
+    const examCycles: {
+      examCyclesList: {
+        id: number;
+        examCycleName: string;
+        courseId: string;
+        status: string;
+      }[]
+    } = {
+      examCyclesList: []
+    }
+    if (response && response.length > 0) {
+      response.forEach((examCycle: any) => {
+        const exam = {
+          id: examCycle.id,
+          examCycleName: examCycle.examCycleName,
+          courseId: examCycle.courseId,
+          status: examCycle.status,
+        }
+        examCycles.examCyclesList.push(exam)
+      })
+    }
+    return of(examCycles)
+  }
+  //#endregion
+
+  getAllExamCenterInstitutesList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.ALL_CENTERS,
       data: {},
+    }
+    return this.get(requestParam);
+  }
+
+  getAllInstitutes$(){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTES.GET_ALL,
     }
     return this.get(requestParam);
   }
@@ -512,15 +554,31 @@ export class BaseService extends HttpService {
   /**************************** hall ticket services start ****************************/
 
 
-  generateHallTkt$(): Observable<any> {
-
-    return of([])
-  }
-
-  getHallTickets$(): Observable<any> {
+  generateHallTkt$(ids: [number]): Observable<any> {
 
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GENERATE,
+      data: ids,
+    }
+    return this.post(requestParam);
+  }
+
+  getHallTickets$(courseId?: number,examCycleId?: number, instituteId?: number): Observable<any> {
+
+    let appendToReqParams = "";
+
+    if(courseId){
+      appendToReqParams = appendToReqParams+"courseId="+courseId;
+    }
+    if(examCycleId){
+      appendToReqParams =  appendToReqParams+"examCycleId="+examCycleId;
+    }
+    if(instituteId){
+      appendToReqParams = appendToReqParams+"instituteId="+instituteId;
+    }
+
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS+`?`+appendToReqParams,
       data: {},
     }
     return this.get(requestParam);
@@ -566,13 +624,8 @@ export class BaseService extends HttpService {
   
 
   /**************************** exam services ****************************/
-  getExamCycleList() {
-    const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
-      data: {},
-    }
-    return this.get(requestParam);
-  }
+
+
 
   createExamCycle(request: object) {
     const requestParam: RequestParam = {
@@ -603,12 +656,13 @@ export class BaseService extends HttpService {
   }
 
 /*********************************** enrollment service *****************************/
-enrollStudent(formData: FormData): Observable<ServerResponse> {
+enrollStudent(formData: any): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.CREATE,
     data: formData, 
     header: {
-      'Accept': '*/*',
+        'Accept': '*/*',
+        'x-authenticated-user-token': this.token
     }
   }
   return this.multipartPost(requestParam);
@@ -712,14 +766,12 @@ downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
  return this.post(reqParam);
 }
 
-
 getQuestionPaperById(questionPaperId: any): Observable<ServerResponse>  {
   const  reqParam: RequestParam = { 
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.GET_BY_ID}/${questionPaperId}`
   }
   return this.get(reqParam);
 }
-
 
 getQuestionPaperPreviewUrl(questionPaperId: any): Observable<ServerResponse>  {
   const  reqParam: RequestParam = { 
@@ -735,6 +787,9 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
   return this.delete(reqParam);
   //#region (candidate portal)
 }
+
+  //#region (Results)
+
   getResults() {
     const response = [
       {
@@ -759,6 +814,16 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
     ]
     return of(response)
   }
+
+  publishResults(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.PUBLISH}`,
+      data: request
+    }
+    return this.post(requestParam);
+  }
+
+  //#endregion
 
   formateResultDetails() {
     const response = [
@@ -786,12 +851,35 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
     return of(response)
   }
   //#endregion
+
 getIntermediateSubjectList() {
-  const requestParam: RequestParam = {
-    url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INTERMEDIATE_SUBJECT_LIST,
-    data: {}
-  }
-  return this.get(requestParam);
+  // const requestParam: RequestParam = {
+  //   url: this.baseUrl + this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INTERMEDIATE_SUBJECT_LIST,
+  //   data: {}
+  // }
+  // return this.get(requestParam);
+  return of({
+    "id": "",
+    "ver": "v1",
+    "ts": "2023-10-10 09:54:13.703",
+    "params": {
+        "resmsgid": null,
+        "msgid": null,
+        "err": null,
+        "status": null,
+        "errmsg": null
+    },
+    "responseCode": "OK",
+    "responseCodeNumeric": 200,
+    "error": null,
+    "result": {
+        "response": ['Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'],
+        "message": "OK"
+    }
+})
+  //   return of([
+  //   'Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'
+  // ])
 }
 
 updateStudentEnrollmentStatus(request: any) {
@@ -805,8 +893,12 @@ updateStudentEnrollmentStatus(request: any) {
 
 updateEnrollmentDetails(request: object, id: string | number) {
   const requestParam: RequestParam = {
-    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INSTITUTE_BY_ID}/${id}`,
-     data: request
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_DETAILS_BY_ID}/${id}`,
+    data: request,
+    header: {
+      'Accept': '*/*',
+      'x-authenticated-user-token': this.token
+  }
   }
   return this.multipartPut(requestParam);
 }
@@ -859,6 +951,15 @@ getAllInstitutes(): Observable<ServerResponse> {
   return this.get(requestParam);
 }
 
+    //#region (get exams)
+    getExamsListByExamCycleId(examCycleId: number) {
+      return this.getExamsByExamCycleId(examCycleId)
+      .pipe(mergeMap((response: any) => {
+        return this.formateExams(response.responseData)
+      }))
+    }
+
+
 getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_BY_EXAM_CYCLE_ID + `/${id}`,
@@ -867,6 +968,27 @@ getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   return this.get(requestParam)
 }
 
+  
+    formateExams(exams: any) {
+      const result: {
+        examsList: any[]
+      } = {
+        examsList: []
+      }
+      if (exams && exams.length) {
+        exams.forEach((exam: any) => {
+          const formatedexame = {
+            value: exam.id, 
+            viewValue: exam.examName,
+            examCycleId: exam.examCycleId,
+          }
+          result.examsList.push(formatedexame)
+        })
+      }
+      return of(result);
+    }
+    //#endregion
+  
 updateExamCycleDetails(request: object, id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAM_CYCLE_DETAILS + `/${id}`,
@@ -875,15 +997,88 @@ updateExamCycleDetails(request: object, id: string | number): Observable<ServerR
   return this.put(requestParam);
 }
 
+getCoursesBasedOnInstitute(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTE_COURSE_MAPPING.GET_INST_COURSE_MAPPING_BY_INSTITUTE_ID + `?instituteId=${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+getInstituteDetailsByUser(id: string | number): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.GET_INSTITUTE_BY_USER+ `/${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+updateExamsForExamCycle(id: string | number, request: any): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAMS_FOR_EXAM_CYCLE + `/${id}/updateExams`,
+    data: request
+  }
+  return this.put(requestParam);
+}
   //#region (dispatches)
-  getDispatchesList$() {
+  getDispatchesList$(formBody: any) {
+    // const requestParam: RequestParam = {
+    //   url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
+    //   data: formBody
+    // }
+    // return this.get(requestParam)
+    const response = {
+      responseData: [
+        {
+          examName: 'Exam 1',
+          lastDateToUpload: '25 Mar 2023',
+          status: 'Pending',
+        }, {
+          examName: 'Exam 2',
+          lastDateToUpload: '25 Mar 2023',
+          status: 'Dispatched'
+        },
+      ]
+    }
+
+    return of(response)
+  }
+
+  getDispatchesViewProof$(dispatchId: number) {
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
+      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHES_VIEW_PROOF + dispatchId,
       data: {}
     }
     return this.get(requestParam)
   }
+
+  uploadDispatch$(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHE_UPLOAD}`,
+      data: request,
+      header: {
+        Accept: "*/*",
+        "Content-Type": "multipart/form-data",
+      }
+    }
+    return this.post(requestParam)
+  }
   //#endregion
 
+  getSubjectsByCourse(id: string | number): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.SUBJECTS.GET_SUBJECTS_BY_COURSE + `/${id}`,
+      data: {}
+    }
+    return this.get(requestParam); 
+  }
+
+  getExamCycleByCourseAndAdmissionSession(request: object): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.EXAM_CYCLE_SEARCH,
+      data: request
+    }
+    return this.post(requestParam);
+  }
 
 }

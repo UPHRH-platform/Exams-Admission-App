@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { BaseService } from '../../../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mergeMap, of } from 'rxjs';
 interface Course {
   value: string;
   viewValue: string;
@@ -19,28 +20,15 @@ interface Course {
   styleUrls: ['./manage-result-admin.component.scss']
 })
 export class ManageResultAdminComponent {
+  //#region (global variables)
   selectedCellDetails: any;
   isDataLoading: boolean = false;
   studentResultData: any[] = [];
 
 
   
-  courses: Course[] = [
-    {value: 'bsc', viewValue: 'BSc'},
-    {value: 'msc', viewValue: 'MSc'},
-  ];
-  examCycleList = [
-    {
-      examName: 'Exam Cycle 1',
-      value: '1'
-    },{
-      examName: 'Exam Cycle 2',
-      value: '2'
-    },{
-      examName: 'Exam Cycle 3',
-      value: '3'
-    },
-  ]
+  courses: Course[] = [];
+  examCycleList = []
 
   instituteTableHeader = [
     {
@@ -152,6 +140,84 @@ export class ManageResultAdminComponent {
     }
   ]
 
+  examCycleControl = new FormControl('');
+  examControl = new FormControl('');
+
+  // searcControl = '';
+  // searchKey = ''
+  showInstitutesTable = true
+
+  breadcrumbItems = [
+    { label: 'Manage Results', url: '' },
+  ]
+  //#endregion
+  constructor(
+    private baseService: BaseService,
+    private dialog: MatDialog,
+
+  ) {
+   
+  }
+
+  ngOnInit(): void {
+    this.intialisation()
+  }
+
+  intialisation() {
+    this.getExamCycles()
+    this.getInstitutesData();
+    // this.studentExamsTableData();
+  }
+
+  getExamCycles() {
+    this.baseService.getExamCycles()
+    .subscribe((examCucles: any) => {
+      this.examCycleList = examCucles.examCyclesList
+    })
+  }
+
+  getInstitutesData(searchKey: string = '') {
+    this.baseService.getInstitutesResultData$()
+     .subscribe((response: any) => {
+      console.log('InstitutesResultData', response)
+      for (let institute of response) {
+        institute['classes'] = {}
+        if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
+          institute.publish = "Publish"
+        } else {
+          institute.publish = "-"
+        }
+        institute['classes']['publish'] = ['color-blue']
+        if (institute.internalMarksProvided) {
+          institute.internalMarksProvided = "View & Download"
+          institute['classes']['internalMarksProvided'] = ['color-green']
+        } else {
+          institute.internalMarksProvided = "Pending"
+          institute['classes']['internalMarksProvided'] = ['color-orange']
+        }
+        
+        if (institute.finalMarksProvided) {
+          institute.finalMarksProvided = "View & Delete"
+          institute['classes']['finalMarksProvided'] = ['color-green']
+        } else {
+          institute.finalMarksProvided = "Upload"
+          institute['classes']['finalMarksProvided'] = ['color-blue']
+        }
+        
+        if (institute.revisedFinalMarksProvided) {
+          institute.revisedFinalMarksProvided = "View & Delete"
+          institute['classes']['revisedFinalMarksProvided'] = ['color-green']
+        } else {
+          institute.revisedFinalMarksProvided = "Upload"
+          institute['classes']['revisedFinalMarksProvided'] = ['color-blue']
+        }
+      
+      }
+       this.instituteTableData = response
+     })
+  }
+
+
   studentExamsTableData(){
     this.isDataLoading = true;
     this.baseService.getStudentResultData$().subscribe({
@@ -168,84 +234,13 @@ export class ManageResultAdminComponent {
       }
 
     })  } 
-  
-  examCycleControl = new FormControl('');
-  examControl = new FormControl('');
 
-  // searcControl = '';
-  // searchKey = ''
-  showInstitutesTable = true
-
-  //#endregion
-  breadcrumbItems = [
-    { label: 'Manage Results', url: '' },
-  ]
-  constructor(
-    private baseService: BaseService,
-    private dialog: MatDialog,
-
-  ) {
-   
-  }
-
-  ngOnInit(): void {
-    this.intialisation()
-  }
-
-  intialisation() {
-    // this.getExamCycles()
-    this.getInstitutesData();
-    this.studentExamsTableData();
-  }
-
-  getExamCycles() {
-    //this.baseService.getExamCycles()
-    // .subscribe((examCucles: any) => {
-    //   this.examCycleList = examCucles
-    // })
-  }
-
-  getInstitutesData(searchKey: string = '') {
-    this.baseService.getInstitutesResultData$()
-     .subscribe((response: any) => {
-      console.log(response)
-      for (let institute of response) {
-        if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
-          institute.publish = "Publish"
-        }else{
-          institute.publish = "-"
-        }
-        institute.internalMarksProvided ?  institute.internalMarksProvided = "View & Download" : institute.internalMarksProvided = "Pending"
-        institute.finalMarksProvided ?  institute.finalMarksProvided = "View & Delete" : institute.finalMarksProvided = "Upload"
-        institute.revisedFinalMarksProvided ?  institute.revisedFinalMarksProvided = "View & Delete" : institute.revisedFinalMarksProvided = "Upload"
-     
-      
-      }
-       this.instituteTableData = response
-     })
-  }
-
-  getExamsOfInstitute(instituteId: string) {
-    // .subscribe((examsFeeDetails: any) => {
-    //   this.studentExamsTableData = examsFeeDetails
-    // })
-  }
-
-  // search() {
-  //   this.searchKey = this.searcControl
-  //   this.showInstitutesTable = true
-  // }
-
-  onSelecteInstitute(event: any) {
-    if (event) {
-      // this.instituteTableData = []
-      // this.feeManagementService.getExamsOfInstitute('')
-      // .subscribe((exams: any) => {
-      //   this.instituteTableData = exams
-      // })
-    }
-    this.showInstitutesTable = false
-
+  getExams(examCycleId: number) {
+    this.courses = []
+    this.baseService.getExamsListByExamCycleId(examCycleId)
+      .subscribe((result: any) => {
+        this.courses = result.examsList
+      })
   }
 
   onCellClick(event: any) {
@@ -408,8 +403,19 @@ export class ManageResultAdminComponent {
     })
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log("Confirmation result", result);
+        const formBody = {
+          // examCycleId: ,
+          // courseId: ,
+        }
+        this.publishResults(formBody)
       }
+    })
+  }
+
+  publishResults(formBody: any) {
+    this.baseService.publishResults(formBody)
+    .subscribe((res: any) => {
+      this.getInstitutesData()
     })
   }
 

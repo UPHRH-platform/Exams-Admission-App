@@ -56,7 +56,7 @@ export class ManageExamCycleListComponent {
 
   getExamCycleData() {
     this.isDataLoading = true;
-  this.baseService.getExamCycleList().subscribe({
+  this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
@@ -108,11 +108,12 @@ export class ManageExamCycleListComponent {
           header: '',
           isSortable: false,
           isLink: false,
+          classes: ['color-blue'],
           cell: (element: Record<string, any>) => `View`,
           isAction: true
         },
         {
-          columnDef: 'isAction',
+          columnDef: 'deleteAction',
           header: '',
           isSortable: false,
           isLink: false,
@@ -128,7 +129,12 @@ export class ManageExamCycleListComponent {
   }
 
   onClickItem(event: any) {
-    this.router.navigate(['/manage-exam-cycle/form/'+event.id])
+    if(event.columnDef && event.columnDef == 'deleteAction') {
+      this.onDeleteClick(event.row);
+    }
+    else {
+    this.router.navigate(['/manage-exam-cycle/form/'+event.id]);
+    }
   }
 
   onDeleteClick(event: any) {

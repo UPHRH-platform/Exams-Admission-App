@@ -71,10 +71,13 @@ export class HallTicketComponent implements OnInit {
 
     this.baseService.getHallTicketData$(1).subscribe({
       next: (res: any) => {
+
+        if (res && res[0]) {
       
         this.hallTicketDetails = res[0];
 
-        this.examTableData  = res[0].examCycle.exams;
+        this.examTableData  = res[0]!.examCycle.exams;
+        }
 
         
       },

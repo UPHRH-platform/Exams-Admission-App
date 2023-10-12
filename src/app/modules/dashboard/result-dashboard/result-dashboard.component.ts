@@ -144,15 +144,7 @@ export class ResultDashboardComponent {
 
 
   initializePageData() {
-    this.institutes = [
-      {
-        value: 'abc institute', viewValue: "ABC , Institute"
-      },
-      {
-        value: 'xyz institute', viewValue: "XYZ , Institute"
-
-      }
-    ];
+    this.getAllInstitutes();
 
     this.years = [
       { value: 'sem-1', viewValue: '2020' },
@@ -160,6 +152,16 @@ export class ResultDashboardComponent {
       { value: 'sem-3', viewValue: '2022' },
     ];
 
+  }
+  getAllInstitutes() {
+    return this.baseService.getAllInstitutes$().subscribe({
+      next: (res: any) => {
+        this.institutes = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
   }
   getMarksData() {
     this.isDataLoading = true;

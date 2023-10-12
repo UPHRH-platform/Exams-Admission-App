@@ -57,11 +57,11 @@ export class CctvManagementAdminComponent {
   instituteesTableData = []
   pageSize = 10;
   searcControl = '';
-  //#endregion
-
   breadcrumbItems = [
     { label: 'CCTV Management', url: '' },
   ]
+  //#endregion
+
   constructor(
     private baseService: BaseService,
     private router: Router,
@@ -179,7 +179,7 @@ export class CctvManagementAdminComponent {
 
   //#region (exam cycles)
   getExamCycles() {
-    this.baseService.getExamCycleList()
+    this.baseService.getExamCycleList$()
       .pipe(mergeMap((res: any) => {
         return this.formatExamCycles(res.responseData)
       }))
@@ -219,11 +219,11 @@ export class CctvManagementAdminComponent {
   }
   //#endregion
 
+  //#region (table data)
   getInstitutesCCTVtableData(searchKey: string = '') {
-    this.baseService.getAllInstitutesList$()
+    this.baseService.getAllExamCenterInstitutesList$()
     .pipe(mergeMap((response: any) => {
       return this.getformatInstitutesTablesData(response.responseData)
-      // return this.getformatInstitutesTablesData(response.result.response)
     }))
     .subscribe((InstituteesCCTVtableData: any) => {
       this.getTablesData(InstituteesCCTVtableData)
@@ -319,6 +319,7 @@ export class CctvManagementAdminComponent {
       this.isDataLoading = false;
     }, 0)
   }
+  //#endregion
 
   //#endregion
 
@@ -339,7 +340,8 @@ export class CctvManagementAdminComponent {
     }
     this.getInstitutesCCTVtableData()
   }
-  //#region (approve or reject cctv status)
+
+  //#region (update cctv status)
 
   updateInstituteCCTVStatus(event: any) {
     switch (this.currentTabIndex) {
@@ -476,6 +478,7 @@ export class CctvManagementAdminComponent {
   }
   //#endregion
 
+  //#region (assign alternate institute)
   assignAlternateInstitute(event: any) {
 
     this.getNearestInstitutesList(event)
@@ -572,6 +575,7 @@ export class CctvManagementAdminComponent {
       this.getInstitutesCCTVtableData()
     })
   }
+  //#endregion
 
   cancel() {
     this.router.navigateByUrl('')

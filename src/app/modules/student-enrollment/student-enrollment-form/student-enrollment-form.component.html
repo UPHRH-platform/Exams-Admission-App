@@ -17,7 +17,7 @@
           </mat-list-item>
         </mat-nav-list>
       </mat-drawer>
-      <div *ngIf="enrollmentId !== undefined && enrollmentDetails?.verificationStatus !== 'PENDING'" class="statusBackground">
+      <div *ngIf="enrollmentDetails.id && enrollmentDetails?.verificationStatus !== 'PENDING'" class="statusBackground">
       <p>
         <span class="span" [ngStyle]="enrollmentDetails?.verificationStatus === 'VERIFIED'? {'color': 'green'} : enrollmentDetails?.verificationStatus === 'REJECTED' ? {'color': 'red'}: ''">Status: {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'Approved' : enrollmentDetails?.verificationStatus === 'REJECTED'? 'Rejected': ''}}</span>
       </p>
@@ -26,7 +26,7 @@
       <div class="px2 py2 outer-bg" [ngClass]="enrollmentDetails?.verificationStatus !== 'PENDING' ? 'mt2': ''">
         <div class="content-container">
           <div class="content-details">
-            <form [formGroup]="basicDetailsForm" *ngIf="selectedLink === 'Basic Details'">
+            <form enctype="multipart/form-data" [formGroup]="basicDetailsForm" *ngIf="selectedLink === 'Basic Details'">
               <div class="clearfix">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-6">
                   <h4 class="w-full mat-label">First Name*</h4>
@@ -106,21 +106,22 @@
                     <mat-label>Select your date</mat-label>
                     <input
                       matInput
-                      [matDatepicker]="picker"
+                      [matDatepicker]="picker10"
                       formControlName="dateOfBirth"
                       [readonly]="!iseditable"
                     />
                     <mat-datepicker-toggle
                       matIconSuffix
-                      [for]="picker"
+                      [for]="picker10"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker #picker [disabled]="!iseditable"></mat-datepicker>
+                    <mat-datepicker #picker10 [disabled]="!iseditable"></mat-datepicker>
                     <mat-error
-                      *ngIf="basicDetailsForm.controls['dateOfBirth'].invalid"
-                    >
-                      Date of birth is required
-                    </mat-error>
+                  *ngIf="basicDetailsForm.controls['dateOfBirth'].invalid"
+                >
+                  Date of birth is required
+                </mat-error>
                   </mat-form-field>
+                 
                 </div>
               </div>
               <div class="clearfix">
@@ -362,6 +363,7 @@
                     <mat-form-field appearance="outline" class="w-full">
                       <input
                         matInput
+                        maxlength="6"
                         placeholder="Type here"
                         formControlName="pincode"
                         [readonly]="!iseditable"
@@ -370,10 +372,19 @@
                         *ngIf="
                           basicDetailsForm.controls['address'].controls[
                             'pincode'
-                          ].invalid
+                          ].hasError('required')
                         "
                       >
                         Pincode is required
+                      </mat-error>
+                      <mat-error
+                        *ngIf="
+                          basicDetailsForm.controls['address'].controls[
+                            'pincode'
+                          ].hasError('pattern')
+                        "
+                      >
+                        Enter a valid pinCode
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -403,15 +414,16 @@
                   <h4 class="w-full mat-label">Course code and Name</h4>
                   <mat-form-field appearance="outline" class="w-full">
                     <mat-select
-                      [compareWith]="compareFn"
-                      [(value)]="courseCode"
+                      [compareWith]="compareCourseFn"
                       formControlName="courseCode"
                       placeholder="Select here"
                       [readonly]="!iseditable"
+                      [(value)]="courseCode"
+                      (selectionChange)="getSelectedCourse($event)"
                     >
                       <span *ngFor="let course of courseList; let i = index">
                         <mat-option [value]="course">{{
-                          course.name
+                          course.courseName
                         }}</mat-option>
                       </span>
                     </mat-select>
@@ -426,6 +438,7 @@
                     formControlName="sessionOfAdmission"
                     placeholder="Select here"
                     [readonly]="!iseditable"
+                    (selectionChange)="getSessionOfAdmission($event)"
                   >
                     <span *ngFor="let session of admissionSessionList; let i = index">
                       <mat-option [value]="session">{{
@@ -472,16 +485,16 @@
                     <mat-label>Select your date</mat-label>
                     <input
                       matInput
-                      [matDatepicker]="picker"
+                      [matDatepicker]="picker11"
                       formControlName="admissionDate"
                       [readonly]="!iseditable"
                     />
                     <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
                     <mat-datepicker-toggle
                       matIconSuffix
-                      [for]="picker"
+                      [for]="picker11"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker #picker [disabled]="!iseditable"></mat-datepicker>
+                    <mat-datepicker #picker11 [disabled]="!iseditable"></mat-datepicker>
                     <mat-error
                       *ngIf="
                         educationalDetailsForm.controls['admissionDate'].invalid
@@ -577,8 +590,8 @@
                           let i = index
                         "
                       >
-                        <mat-option [value]="subject.subjectName">{{
-                          subject.subjectName
+                        <mat-option [value]="subject">{{
+                          subject
                         }}</mat-option>
                       </span>
                     </mat-select>
@@ -646,6 +659,7 @@
                       <mat-form-field appearance="outline" class="w-full">
                         <input
                           matInput
+                          maxlength="4"
                           placeholder="Type here"
                           formControlName="yearOfPassing"
                           [readonly]="!iseditable"
@@ -654,10 +668,19 @@
                           *ngIf="
                             educationalDetailsForm.controls[
                               'highSchoolDocuments'
-                            ].controls['yearOfPassing'].invalid
+                            ].controls['yearOfPassing'].hasError('required')
                           "
                         >
-                          Please Enter Year of Passing
+                          Please enter year of passing
+                        </mat-error>
+                        <mat-error
+                          *ngIf="
+                            educationalDetailsForm.controls[
+                              'highSchoolDocuments'
+                            ].controls['yearOfPassing'].hasError('pattern')
+                          "
+                        >
+                          Please Enter a valid year
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -705,10 +728,16 @@
                       <div
                         class="file-preview"
                       >
-                        <span>{{
+                        <span>{{educationalDetailsForm.get("highSchoolDocuments")
+                          .controls["marksSheet"].value.name? 
                           educationalDetailsForm.get("highSchoolDocuments")
+                            .controls["marksSheet"].value.name: educationalDetailsForm.get("highSchoolDocuments")
                             .controls["marksSheet"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
+                          .controls['marksSheet'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -774,8 +803,14 @@
                       >
                         <span>{{
                           educationalDetailsForm.get("highSchoolDocuments")
+                            .controls["certificate"].value.name ? educationalDetailsForm.get("highSchoolDocuments")
+                            .controls["certificate"].value.name : educationalDetailsForm.get("highSchoolDocuments")
                             .controls["certificate"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
+                          .controls['certificate'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -829,6 +864,7 @@
                       <mat-form-field appearance="outline" class="w-full">
                         <input
                           matInput
+                          maxlength="4"
                           placeholder="Type here"
                           formControlName="yearOfPassing"
                           [readonly]="!iseditable"
@@ -837,10 +873,19 @@
                           *ngIf="
                             educationalDetailsForm.controls[
                               'intermediateDocuments'
-                            ].controls['yearOfPassing'].invalid
+                            ].controls['yearOfPassing'].hasError('required')
                           "
                         >
-                          Please enter Year of Passing
+                          Please enter year of passing
+                        </mat-error>
+                        <mat-error
+                          *ngIf="
+                            educationalDetailsForm.controls[
+                              'intermediateDocuments'
+                            ].controls['yearOfPassing'].hasError('pattern')
+                          "
+                        >
+                          Please enter a valid Year
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -890,8 +935,14 @@
                       >
                         <span>{{
                           educationalDetailsForm.get("intermediateDocuments")
+                            .controls["marksSheet"].value.name ?  educationalDetailsForm.get("intermediateDocuments")
+                            .controls["marksSheet"].value.name :  educationalDetailsForm.get("intermediateDocuments")
                             .controls["marksSheet"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
+                          .controls['marksSheet'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -957,8 +1008,14 @@
                       >
                         <span>{{
                           educationalDetailsForm.get("intermediateDocuments")
+                            .controls["certificate"].value.name ?  educationalDetailsForm.get("intermediateDocuments")
+                            .controls["certificate"].value.name :  educationalDetailsForm.get("intermediateDocuments")
                             .controls["certificate"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
+                          .controls['certificate'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -1037,7 +1094,7 @@
               </button>
               <div *ngIf="enrollmentDetails?.verificationStatus == 'PENDING'">
               <button *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_admin'"
-              class="text-class action-btns"
+              class="text-class action-btns mr2"
                 type="submit"
                 mat-raised-button
                 color="primary"
@@ -1055,7 +1112,7 @@
               Reject
               </button>
               </div>
-              <div *ngIf="enrollmentDetails?.verificationStatus !== 'REJECTED'">
+              <div *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus === 'REJECTED')">
                 <button *ngIf="selectedLink === 'Educational Details' && !isCreateView && !isEditable"
                 class="text-class action-btns"
                   type="button"
@@ -1073,7 +1130,7 @@
                 color="primary"
                 *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_institute' && enrollmentDetails?.verificationStatus === 'REJECTED'"
                 [disabled]="!educationalDetailsForm.valid"
-                (click)="createEnrollment()"
+                (click)="updateEnrollment()"
               >
                 Edit and re-apply
               </button>

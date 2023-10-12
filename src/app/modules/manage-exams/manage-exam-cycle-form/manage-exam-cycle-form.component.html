@@ -34,7 +34,7 @@
                   <h4 class="label w-full">Course name</h4>
                   <mat-form-field appearance="outline" class="w-full">
                     <mat-label>Course name</mat-label>
-                    <mat-select formControlName="courseId">
+                    <mat-select formControlName="courseId" (selectionChange)="getSelectedCourse($event)">
                       <ng-container *ngFor="let course of courses">
                         <mat-option [value]="course.id">{{course.courseName}}</mat-option>
                       </ng-container>
@@ -93,12 +93,17 @@
                   <h4 class="label w-full">Exam name</h4>
                   <mat-form-field appearance="outline" class="w-full">
                     <mat-label>Exam name</mat-label>
-                    <input
+                    <!-- <input
                       matInput
                       placeholder="Exam name"
                       formControlName="examName"
                       type="text"
-                    />
+                    /> -->
+                    <mat-select formControlName="examName">
+                      <ng-container *ngFor="let subject of subjects">
+                        <mat-option [value]="subject.name">{{subject.name}}</mat-option>
+                      </ng-container>
+                    </mat-select>
                   </mat-form-field>
                 </div>
                 <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
