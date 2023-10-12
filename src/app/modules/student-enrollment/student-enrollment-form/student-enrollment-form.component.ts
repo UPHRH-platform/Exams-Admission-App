@@ -69,7 +69,6 @@ export class StudentEnrollmentFormComponent {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     console.log(this.loggedInUserId);
     this.getAdmissionSessionList();
-    this.getExamCycleList();
     this.getIntermediateSubjects();
     this.getIntermediateStreams();
     this.getIntermediatePassedBoard();
@@ -123,62 +122,42 @@ export class StudentEnrollmentFormComponent {
     this.educationalDetailsForm.patchValue({
       examBatch: ''
     });
-    this.examBatchList = this.examCycleList;
-      let sessionOfAdmission: any = [];
-      sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
-      let startSession = sessionOfAdmission[0];
-      let endSession = sessionOfAdmission[1];
-      // filter with session
-    this.examBatchList = this.examBatchList.filter((obj) => {
-      const startDate = new Date(obj.startDate).getFullYear();
-      const endDate = new Date(obj.endDate).getFullYear();
-      if(startDate >= startSession && endDate <= endSession) {
-              return true;
-      }
-      else {
-        return false;
-      }
-    })
-    // filter with course
-    this.examBatchList = this.examBatchList.filter((obj) => {
-        if(obj.course !== null && (obj.course.id === event.value.course_id)) {
-          return true;
-        }
-        else {
-          return false;
-        }
-    })
+    this.examBatchList = [];
+    let sessionOfAdmission: any = [];
+    sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
+    let startSession = sessionOfAdmission[0];
+    let endSession = sessionOfAdmission[1];
+    const request = {
+    startYear: startSession,
+    endYear: endSession,
+    courseId: event.value.courseCode
+    }
+  this.baseService.getExamCycleByCourseAndAdmissionSession(request).subscribe({
+    next: (res) => {
+    this.examBatchList = res.responseData;
+    }
+})
   }
 
   getSessionOfAdmission(event: Event) {
     this.educationalDetailsForm.patchValue({
       examBatch: ''
     });
-    this.examBatchList = this.examCycleList;
+    const courseid = this.educationalDetailsForm.value.courseCode.courseCode;
+      this.examBatchList = [];
       let sessionOfAdmission: any = [];
       sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
       let startSession = sessionOfAdmission[0];
       let endSession = sessionOfAdmission[1];
-    // filter with session
-    this.examBatchList = this.examBatchList.filter((obj) => {
-      const startDate = new Date(obj.startDate).getFullYear();
-      const endDate = new Date(obj.endDate).getFullYear();
-      if(startDate >= startSession && endDate <= endSession) {
-              return true;
+      const request = {
+      startYear: startSession,
+      endYear: endSession,
+      courseId: courseid,
       }
-      else {
-        return false;
+    this.baseService.getExamCycleByCourseAndAdmissionSession(request).subscribe({
+      next: (res) => {
+      this.examBatchList = res.responseData;
       }
-    })
-    // filter with course
-  const courseid = this.educationalDetailsForm.value.courseCode.course_id;
-  this.examBatchList = this.examBatchList.filter((obj) => {
-    if(obj.course !== null && courseid !== undefined && (obj.course.id === courseid)) {
-      return true;
-    }
-    else {
-      return false;
-    }
 })
   }
 
@@ -229,6 +208,7 @@ export class StudentEnrollmentFormComponent {
         certificate: new FormControl('', Validators.required) 
       })
     })
+    this.getExamCycleList();
   }
 
   assignFormValues() {
@@ -609,43 +589,18 @@ export class StudentEnrollmentFormComponent {
      
     getExamCycleList() {
       // as of now get all is integrated , we need exam cycle list based on exam batch and course
-      this.baseService.getExamCycleList$().subscribe({
-        next: (res) => {
-          this.examBatchList = res.responseData;
-          // this is all response and exam batch list is used for filter;
-          this.examCycleList = res.responseData;
-          // filter exam batch list based on session of admission(pre-selected current FY);
-          if(this.examBatchList.length > 0) {
-            let sessionOfAdmission: any = [];
+      let sessionOfAdmission: any = [];
             sessionOfAdmission = this.educationalDetailsForm?.value.sessionOfAdmission.split('-');
             let startSession = sessionOfAdmission[0];
             let endSession = sessionOfAdmission[1];
-          this.examBatchList = this.examBatchList.filter((obj) => {
-            const startDate = new Date(obj.startDate).getFullYear();
-            const endDate = new Date(obj.endDate).getFullYear();
-            if(startDate >= startSession && endDate <= endSession) {
-                    return true;
-            }
-            else {
-              return false;
-            }
-          })
-        }
-        console.log(this.examBatchList);
-          // if(this.examCycleList.length > 0) {
-          //   let sessionOfAdmission: any = [];
-          //    sessionOfAdmission = this.educationalDetailsForm.value.sessionOfAdmission.split('-');
-          //   let startSession = sessionOfAdmission[0];
-          //   let endSession = sessionOfAdmission[1];
-          //   this.examCycleList.map((obj: any) => {
-          //     const startDate = new Date(obj.startDate).getFullYear();
-          //     const endDate = new Date(obj.endDate).getFullYear();
-          //     if(startDate >= startSession && endDate <= endSession) {
-          //       this.filteredExamCycleList.push(obj);
-          //     }
-          //   })
-          //   this.examBatchList = this.filteredExamCycleList;
-          // }
+      const request = {
+        startYear: startSession,
+        endYear: endSession,
+        courseId: '',
+      }
+      this.baseService.getExamCycleByCourseAndAdmissionSession(request).subscribe({
+        next: (res) => {
+          this.examBatchList = res.responseData;
         }
       })
     }
@@ -670,8 +625,8 @@ export class StudentEnrollmentFormComponent {
     updateEnrollment() {
       if(this.basicDetailsForm.valid && this.educationalDetailsForm.valid) {
         const request = {
-          courseCode: this.educationalDetailsForm.value.courseCode,
-          courseName: this.educationalDetailsForm.value.courseCode.name,
+          courseCode: this.educationalDetailsForm.value.courseCode.courseCode,
+          courseName: this.educationalDetailsForm.value.courseCode.courseName,
           session: this.educationalDetailsForm.value.sessionOfAdmission,
           examBatch: this.educationalDetailsForm.value.examBatch,
           admissionDate: this.convertDateFormat(this.educationalDetailsForm.value.admissionDate),
@@ -707,11 +662,19 @@ export class StudentEnrollmentFormComponent {
         for (let [key, value] of Object.entries(request)) {
           formData.append(`${key}`, `${value}`)
           }
-          // need to modify this incase of update enrollment
-          formData.append("highSchoolMarksheet", this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet, this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet.name ? this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet.name: "image.png" );
-          formData.append("highSchoolCertificate", this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate, this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate.name ? this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate.name: "image.png");
-          formData.append("intermediateMarksheet", this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet, this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet.name ? this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet.name : "image.png");
-          formData.append("intermediateCertificate", this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate, this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate.name ? this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate.name: "image.png");
+          if(this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet.name) {
+          formData.append("highSchoolMarksheet", this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet, this.educationalDetailsForm.controls['highSchoolDocuments'].value.marksSheet.name);
+          }
+          if(this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate.name) {
+          formData.append("highSchoolCertificate", this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate, this.educationalDetailsForm.controls['highSchoolDocuments'].value.certificate.name);
+          }
+          if(this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet.name) {
+          formData.append("intermediateMarksheet", this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet, this.educationalDetailsForm.controls['intermediateDocuments'].value.marksSheet.name);
+          }
+          if(this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate.name) {
+          formData.append("intermediateCertificate", this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate, this.educationalDetailsForm.controls['intermediateDocuments'].value.certificate.name);
+          }
+          console.log("Request ===>", request);
         this.baseService.updateEnrollmentDetails(formData, this.enrollmentId).subscribe({
           next: (res) => {
             const dialogRef = this.dialog.open(ConformationDialogComponent, {

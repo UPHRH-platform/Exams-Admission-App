@@ -734,6 +734,10 @@
                             .controls["marksSheet"].value.name: educationalDetailsForm.get("highSchoolDocuments")
                             .controls["marksSheet"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
+                          .controls['marksSheet'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -803,6 +807,10 @@
                             .controls["certificate"].value.name : educationalDetailsForm.get("highSchoolDocuments")
                             .controls["certificate"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
+                          .controls['certificate'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -931,6 +939,10 @@
                             .controls["marksSheet"].value.name :  educationalDetailsForm.get("intermediateDocuments")
                             .controls["marksSheet"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
+                          .controls['marksSheet'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -1000,6 +1012,10 @@
                             .controls["certificate"].value.name :  educationalDetailsForm.get("intermediateDocuments")
                             .controls["certificate"].value
                         }}</span>
+                        <span class="attachment-label" *ngIf="!isCreateView">
+                          <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
+                          .controls['certificate'].value}}"><span>View</span></a>
+                        </span>
                         <span
                           class="attachment-label"
                           (click)="
@@ -1096,7 +1112,7 @@
               Reject
               </button>
               </div>
-              <div *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus == 'PENDING' )">
+              <div *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus === 'REJECTED')">
                 <button *ngIf="selectedLink === 'Educational Details' && !isCreateView && !isEditable"
                 class="text-class action-btns"
                   type="button"
@@ -1114,7 +1130,7 @@
                 color="primary"
                 *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_institute' && enrollmentDetails?.verificationStatus === 'REJECTED'"
                 [disabled]="!educationalDetailsForm.valid"
-                (click)="createEnrollment()"
+                (click)="updateEnrollment()"
               >
                 Edit and re-apply
               </button>

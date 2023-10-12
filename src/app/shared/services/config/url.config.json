@@ -27,8 +27,8 @@
             "DELETE_EXAM_CYCLE": "/v1/admin/examCycle/delete",
             "GET_EXAM_BY_EXAM_CYCLE_ID": "/v1/admin/exam/byExamCycle",
             "UPDATE_EXAM_CYCLE_DETAILS": "/v1/admin/examCycle/update",
-            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle"
-            
+            "UPDATE_EXAMS_FOR_EXAM_CYCLE": "/v1/admin/examCycle",
+            "EXAM_CYCLE_SEARCH": "/v1/admin/examCycle/search"
         },
         "EXAM_STUDENT_REGISTRATION": {
             "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"

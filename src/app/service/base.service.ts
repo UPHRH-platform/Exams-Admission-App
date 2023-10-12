@@ -874,8 +874,12 @@ updateStudentEnrollmentStatus(request: any) {
 
 updateEnrollmentDetails(request: object, id: string | number) {
   const requestParam: RequestParam = {
-    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_INSTITUTE_BY_ID}/${id}`,
-     data: request
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_DETAILS_BY_ID}/${id}`,
+    data: request,
+    header: {
+      'Accept': '*/*',
+      'x-authenticated-user-token': this.token
+  }
   }
   return this.multipartPut(requestParam);
 }
@@ -1048,6 +1052,14 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
       data: {}
     }
     return this.get(requestParam); 
+  }
+
+  getExamCycleByCourseAndAdmissionSession(request: object): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.EXAM_CYCLE_SEARCH,
+      data: request
+    }
+    return this.post(requestParam);
   }
 
 }
