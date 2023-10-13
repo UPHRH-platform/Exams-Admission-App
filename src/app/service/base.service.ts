@@ -34,13 +34,6 @@ export class BaseService extends HttpService {
   
   //#region (common apis)
 
-  //#region (exam cycles)
-  getExamCycles() {
-    return this.getExamCycleList$()
-      .pipe(mergeMap((res: any) => {
-        return this.formatExamCycles(res.responseData)
-      }))
-  }
 
   getExamCycleList$() {
     const requestParam: RequestParam = {
@@ -49,32 +42,6 @@ export class BaseService extends HttpService {
     }
     return this.get(requestParam);
   }
-
-  formatExamCycles(response: any) {
-    const examCycles: {
-      examCyclesList: {
-        id: number;
-        examCycleName: string;
-        courseId: string;
-        status: string;
-      }[]
-    } = {
-      examCyclesList: []
-    }
-    if (response && response.length > 0) {
-      response.forEach((examCycle: any) => {
-        const exam = {
-          id: examCycle.id,
-          examCycleName: examCycle.examCycleName,
-          courseId: examCycle.courseId,
-          status: examCycle.status,
-        }
-        examCycles.examCyclesList.push(exam)
-      })
-    }
-    return of(examCycles)
-  }
-  //#endregion
 
   getAllInstitutesList$() {
     const requestParam: RequestParam = {
@@ -932,15 +899,6 @@ getAllInstitutes(): Observable<ServerResponse> {
   return this.get(requestParam);
 }
 
-    //#region (get exams)
-    getExamsListByExamCycleId(examCycleId: number) {
-      return this.getExamsByExamCycleId(examCycleId)
-      .pipe(mergeMap((response: any) => {
-        return this.formateExams(response.responseData)
-      }))
-    }
-
-
 getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_BY_EXAM_CYCLE_ID + `/${id}`,
@@ -949,27 +907,6 @@ getExamsByExamCycleId(id: string | number): Observable<ServerResponse> {
   return this.get(requestParam)
 }
 
-  
-    formateExams(exams: any) {
-      const result: {
-        examsList: any[]
-      } = {
-        examsList: []
-      }
-      if (exams && exams.length) {
-        exams.forEach((exam: any) => {
-          const formatedexame = {
-            value: exam.id, 
-            viewValue: exam.examName,
-            examCycleId: exam.examCycleId,
-          }
-          result.examsList.push(formatedexame)
-        })
-      }
-      return of(result);
-    }
-    //#endregion
-  
 updateExamCycleDetails(request: object, id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.UPDATE_EXAM_CYCLE_DETAILS + `/${id}`,

@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { BaseService } from '../../../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mergeMap, of } from 'rxjs';
+import { SharedServiceService } from 'src/app/service/shared-service.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 interface Course {
   value: string;
   viewValue: string;
@@ -154,7 +156,8 @@ export class ManageResultAdminComponent {
   constructor(
     private baseService: BaseService,
     private dialog: MatDialog,
-
+    private sharedService: SharedServiceService,
+    private toastrService: ToastrServiceService
   ) {
    
   }
@@ -170,7 +173,10 @@ export class ManageResultAdminComponent {
   }
 
   getExamCycles() {
-    this.baseService.getExamCycles()
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.sharedService.formatExamCyclesForDropdown(res.responseData)
+    }))
     .subscribe((examCucles: any) => {
       this.examCycleList = examCucles.examCyclesList
     })
@@ -237,9 +243,18 @@ export class ManageResultAdminComponent {
 
   getExams(examCycleId: number) {
     this.courses = []
-    this.baseService.getExamsListByExamCycleId(examCycleId)
-      .subscribe((result: any) => {
-        this.courses = result.examsList
+    this.baseService.getExamsByExamCycleId(examCycleId)
+    .pipe(mergeMap((res: any) => {
+      return this.sharedService.formateExams(res.responseData)
+    }))
+      .subscribe({
+        next: (result: any) => {
+          this.courses = result.examsList
+        },
+        error: (err) => {
+          console.log(err)
+          this.toastrService.showToastr(err, 'Error', 'error', '');
+        }
       })
   }
 

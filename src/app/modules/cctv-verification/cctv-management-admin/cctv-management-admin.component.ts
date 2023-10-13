@@ -9,6 +9,7 @@ import { mergeMap, of } from 'rxjs';
 import { TableColumn } from 'src/app/interfaces/interfaces';
 import { Tabs } from 'src/app/shared';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SharedServiceService } from 'src/app/service/shared-service.service';
 
 interface Course {
   value: string;
@@ -66,6 +67,7 @@ export class CctvManagementAdminComponent {
     private baseService: BaseService,
     private router: Router,
     private dialog: MatDialog,
+    private sharedService: SharedServiceService
   ) {
   }
 
@@ -177,11 +179,10 @@ export class CctvManagementAdminComponent {
     this.instituteesTableColumns = TableColumns
   }
 
-  //#region (exam cycles)
   getExamCycles() {
     this.baseService.getExamCycleList$()
       .pipe(mergeMap((res: any) => {
-        return this.formatExamCycles(res.responseData)
+        return this.sharedService.formatExamCyclesForDropdown(res.responseData)
       }))
       .subscribe({
         next: (res: any) => {
@@ -192,32 +193,6 @@ export class CctvManagementAdminComponent {
         }
       })
   }
-
-  formatExamCycles(response: any)  {
-    const examCycles: {
-      examCyclesList: {
-        id: number;
-        examCycleName: string;
-        courseId: string;
-        status: string;
-      }[]
-   } = {
-    examCyclesList: []
-   }
-    if (response && response.length > 0) {
-      response.forEach((examCycle: any) => {
-        const exam = {
-          id: examCycle.id,
-          examCycleName: examCycle.examCycleName,
-          courseId: examCycle.courseId,
-          status: examCycle.status,
-        }
-        examCycles.examCyclesList.push(exam)
-      })
-    }
-    return of(examCycles)
-  }
-  //#endregion
 
   //#region (table data)
   getInstitutesCCTVtableData(searchKey: string = '') {

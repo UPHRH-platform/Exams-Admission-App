@@ -8,6 +8,7 @@ import { ConformationDialogComponent } from 'src/app/shared/components/conformat
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
 import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SharedServiceService } from 'src/app/service/shared-service.service';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
@@ -29,6 +30,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private baseService: BaseService,
+    private sharedService: SharedServiceService
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +38,10 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   }
 
   getExamCycles() {
-    this.baseService.getExamCycles()
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.sharedService.formatExamCyclesForDropdown(res.responseData)
+    }))
       .subscribe((examCucles: any) => {
         this.examCycleList = examCucles.examCyclesList;
       })
