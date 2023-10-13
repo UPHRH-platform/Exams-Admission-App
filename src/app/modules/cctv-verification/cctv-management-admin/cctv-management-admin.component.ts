@@ -9,7 +9,6 @@ import { mergeMap, of } from 'rxjs';
 import { TableColumn } from 'src/app/interfaces/interfaces';
 import { Tabs } from 'src/app/shared';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SharedServiceService } from 'src/app/service/shared-service.service';
 
 interface Course {
   value: string;
@@ -66,8 +65,7 @@ export class CctvManagementAdminComponent {
   constructor(
     private baseService: BaseService,
     private router: Router,
-    private dialog: MatDialog,
-    private sharedService: SharedServiceService
+    private dialog: MatDialog
   ) {
   }
 
@@ -182,7 +180,7 @@ export class CctvManagementAdminComponent {
   getExamCycles() {
     this.baseService.getExamCycleList$()
       .pipe(mergeMap((res: any) => {
-        return this.sharedService.formatExamCyclesForDropdown(res.responseData)
+        return this.baseService.formatExamCyclesForDropdown(res.responseData)
       }))
       .subscribe({
         next: (res: any) => {

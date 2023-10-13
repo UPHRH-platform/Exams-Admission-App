@@ -5,7 +5,6 @@ import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-pro
 import { BaseService } from 'src/app/service/base.service';
 import { mergeMap, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SharedServiceService } from 'src/app/service/shared-service.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 interface Course {
@@ -359,7 +358,6 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
-    private sharedService: SharedServiceService,
     private toastrService: ToastrServiceService
   ) {}
 
@@ -374,7 +372,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   getExamCycles() {
     this.baseService.getExamCycleList$()
     .pipe(mergeMap((res: any) => {
-      return this.sharedService.formatExamCyclesForDropdown(res.responseData)
+      return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
       .subscribe((examCycles: any) => {
         this.examCycleList = examCycles.examCyclesList;
@@ -385,7 +383,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     this.courses = []
     this.baseService.getExamsByExamCycleId(examCycleId)
     .pipe(mergeMap((res: any) => {
-      return this.sharedService.formateExams(res.responseData)
+      return this.baseService.formateExams(res.responseData)
     }))
       .subscribe({
         next: (result: any) => {
