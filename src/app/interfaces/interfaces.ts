@@ -116,10 +116,15 @@ export interface attendanceTableData {
     attendanCePercentage: string;
   }
   
-  export interface Institute {
-    value: string;
-    viewValue: string;
-  }
+export interface Institute {
+  address?: string;
+  district?: string;
+  email?: string;
+  id: number;
+  instituteCode: string;
+  instituteName: string;
+
+}
 export interface Course {
   courseCode: string;
   courseName: string;

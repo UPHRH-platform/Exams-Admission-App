@@ -43,10 +43,17 @@ export class BaseService extends HttpService {
     return this.get(requestParam);
   }
 
-  getAllInstitutesList$() {
+  getAllExamCenterInstitutesList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.ALL_CENTERS,
       data: {},
+    }
+    return this.get(requestParam);
+  }
+
+  getAllInstitutes$(){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.INSTITUTES.GET_ALL,
     }
     return this.get(requestParam);
   }
@@ -523,10 +530,22 @@ export class BaseService extends HttpService {
     return this.post(requestParam);
   }
 
-  getHallTickets$(): Observable<any> {
+  getHallTickets$(courseId?: number,examCycleId?: number, instituteId?: number): Observable<any> {
+
+    let appendToReqParams = "";
+
+    if(courseId){
+      appendToReqParams = appendToReqParams+"courseId="+courseId;
+    }
+    if(examCycleId){
+      appendToReqParams =  appendToReqParams+"examCycleId="+examCycleId;
+    }
+    if(instituteId){
+      appendToReqParams = appendToReqParams+"instituteId="+instituteId;
+    }
 
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.GET_ALL_DETAILS+`?`+appendToReqParams,
       data: {},
     }
     return this.get(requestParam);
@@ -998,5 +1017,53 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     }
     return this.post(requestParam);
   }
+
+
+  //#region (foramting common api data)
+  formatExamCyclesForDropdown(response: any) {
+    const examCycles: {
+      examCyclesList: {
+        id: number;
+        examCycleName: string;
+        courseId: string;
+        status: string;
+      }[]
+    } = {
+      examCyclesList: []
+    }
+    if (response && response.length > 0) {
+      response.forEach((examCycle: any) => {
+        const exam = {
+          id: examCycle.id,
+          examCycleName: examCycle.examCycleName,
+          courseId: examCycle.courseId,
+          status: examCycle.status,
+        }
+        examCycles.examCyclesList.push(exam)
+      })
+    }
+    return of(examCycles)
+    
+  }
+
+  formateExams(exams: any) {
+    const result: {
+      examsList: any[]
+    } = {
+      examsList: []
+    }
+    if (exams && exams.length) {
+      exams.forEach((exam: any) => {
+        const formatedexame = {
+          value: exam.id, 
+          viewValue: exam.examName,
+          examCycleId: exam.examCycleId,
+        }
+        result.examsList.push(formatedexame)
+      })
+    }
+    return of(result);
+  }
+  //#endregion
 
 }

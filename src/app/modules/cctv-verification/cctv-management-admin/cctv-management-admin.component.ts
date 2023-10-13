@@ -196,7 +196,7 @@ export class CctvManagementAdminComponent {
 
   //#region (table data)
   getInstitutesCCTVtableData(searchKey: string = '') {
-    this.baseService.getAllInstitutesList$()
+    this.baseService.getAllExamCenterInstitutesList$()
     .pipe(mergeMap((response: any) => {
       return this.getformatInstitutesTablesData(response.responseData)
     }))

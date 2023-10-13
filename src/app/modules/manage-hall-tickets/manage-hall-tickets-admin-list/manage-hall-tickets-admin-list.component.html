@@ -83,9 +83,9 @@
         <mat-select [formControl]="instituteControl">
           <mat-option
             *ngFor="let institute of institutes"
-            [value]="institute.value"
+            [value]="institute.id"
           >
-            {{ institute.viewValue }}
+            {{ institute.instituteCode }} - {{institute.instituteName}}
           </mat-option>
           <mat-option style="display: none;" value="">Select here</mat-option>
         </mat-select>
