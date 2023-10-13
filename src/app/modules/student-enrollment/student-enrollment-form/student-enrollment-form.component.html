@@ -422,9 +422,9 @@
                       (selectionChange)="getSelectedCourse($event)"
                     >
                       <span *ngFor="let course of courseList; let i = index">
-                        <mat-option [value]="course">{{
-                          course.courseName
-                        }}</mat-option>
+                        <mat-option [value]="course">
+                          {{course.courseCode}} - {{ course.courseName }}
+                        </mat-option>
                       </span>
                     </mat-select>
                   </mat-form-field>

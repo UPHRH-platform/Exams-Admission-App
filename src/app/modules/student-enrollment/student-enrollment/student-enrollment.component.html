@@ -2,26 +2,26 @@
 <div class="secondary-container" id="enrollment">
   <div class="selector">
     <mat-form-field
-      class="exam-form"
+      class="exam-form-enrollment"
       appearance="outline"
       *ngIf="this.loggedInUserRole === 'exams_admin'"
     >
       <mat-label>Select Institute</mat-label>
       <mat-select (selectionChange)="getSelectedInstitute($event)">
         <mat-option *ngFor="let institute of instituteList" [value]="institute.id">
-          {{ institute.name }}
+          {{ institute.instituteCode }} - {{institute.instituteName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="exam-form" appearance="outline">
+    <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label class="label">Select Course</mat-label>
       <mat-select (selectionChange)="getSelectedCourse($event)">
         <mat-option *ngFor="let course of courses" [value]="course.course_id">
-          {{ course.courseName }}
+          {{course.courseCode}} - {{ course.courseName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="exam-form" appearance="outline">
+    <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
       <mat-select (selectionChange)="getSelectedAcademicYear($event)">
         <mat-option *ngFor="let year of years" [value]="year.value">
