@@ -14,6 +14,7 @@ import { ConfigService, RequestParam, ServerResponse } from '../shared';
   providedIn: 'root'
 })
 export class BaseService extends HttpService {
+
   token: string;
   override baseUrl: string;
   headers = {
@@ -561,6 +562,14 @@ export class BaseService extends HttpService {
       data: ids,
     }
     return this.post(requestParam);
+  }
+
+  getHallTicketsForDataCorrections$() {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION,
+      data: {},
+    }
+    return this.get(requestParam);
   }
 
   getHallTickets$(courseId?: number,examCycleId?: number, instituteId?: number): Observable<any> {
