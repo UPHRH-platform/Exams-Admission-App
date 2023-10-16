@@ -151,7 +151,9 @@ export interface Course {
           examCenterName: string,
           feesPaid: boolean,
           attendancePercentage: number,
-          examCycle: ExamCycle 
+          hallTicketStatus: string,
+          examCycle: ExamCycle ,
+
   }
 
   export interface ExamCycle {
