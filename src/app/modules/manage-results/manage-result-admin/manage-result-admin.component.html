@@ -1,6 +1,6 @@
 <app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
     <div class="secondary-container">
-      <mat-label class="title-header"> Manage Results </mat-label>
+      <mat-label class="title-header"> {{title}} </mat-label>
       <div style="display: flex; justify-content: space-between;">
         <div
         style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
@@ -59,7 +59,7 @@
         <div>
           <app-shared-table 
             [tableColumns]="studentExamsTableHeader" 
-            [tableData]="studentExamsTableData" 
+            [tableData]="studentResultData" 
             [isHallTicket]="true" 
             [removeTbodyColor]="true" 
             [isPageable]="true"

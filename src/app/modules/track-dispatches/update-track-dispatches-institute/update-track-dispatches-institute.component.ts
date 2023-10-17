@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { mergeMap, of } from 'rxjs';
 import { BaseService } from 'src/app/service/base.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
 import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthServiceService } from 'src/app/core/services';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
@@ -23,77 +24,66 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   examCycle = new FormControl('');
   breadcrumbItems = [
     { label: 'Track Dispatches', url: '' }
-  ]
-  dispatchesList = []
+  ];
+  dispatchesList = [];
+  loggedInUserId: string | number;
+  instituteDetail: any
   constructor(
-    private router: Router,
     private dialog: MatDialog,
     private baseService: BaseService,
+    private authService: AuthServiceService,
+    private toastrService: ToastrServiceService,
   ) { }
 
   ngOnInit(): void {
+    this.initialization()
+  }
+
+  initialization() {
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.getExamCycles();
+    this.getInstituteByuserId()
   }
 
   getExamCycles() {
-    this.baseService.getExamCycles()
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.baseService.formatExamCyclesForDropdown(res.responseData)
+    }))
       .subscribe((examCucles: any) => {
         this.examCycleList = examCucles.examCyclesList;
       })
   }
 
+  getInstituteByuserId() {
+      this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+        next: (res) => {
+          this.instituteDetail = res.responseData[0];
+        }
+      })
+  }
+
   getDispatches(examCycleId: string | null) {
     this.dispatchesList = []
-    if (examCycleId) {
-      const formBody = {
-        examCycleId: examCycleId
-      }
-      this.baseService.getDispatchesList$(formBody)
-        .pipe(mergeMap((response: any) => {
-          return this.formateDispatches(response?.responseData)
-        }))
-        .subscribe((res: any) => {
-          // if (res.dispatchesLsit && res.dispatchesLsit.length > 0) { // remove if when api working
-          //   this.dispatchesList = res.dispatchesLsit
-          // }
-          this.dispatchesList = res.dispatchesLsit;
+    if (examCycleId && this.instituteDetail) {
+      this.baseService.getDispatchesListByInstitutes$(this.instituteDetail.id, examCycleId)
+        .subscribe({
+          next:(res: any) => {
+            if (res.responseData && res.responseData.length > 0) { // remove if when api working
+              this.dispatchesList = res.responseData
+            }
+          },
+          error: (err) => {
+            this.toastrService.showToastr(err, 'Error', 'error', '')
+          }
         })
     }
   }
 
-  formateDispatches(dispatches: any) {
-    const formatedDispatch: {
-      dispatchesLsit: any[]
-    } = {
-      dispatchesLsit: []
-    }
-
-    // if (dispatches && dispatches.length) {
-    //   dispatches.forEach((element: any) => {
-    //     const formatedDispatch = {
-    //       instituteName: element,
-    //       instituteId: element,
-    //       exam: element,
-    //       dispatchDate: element,
-    //       dispatchStatus: element,
-    //       viewProof: element
-    //     }
-
-    //     result.dispatchesLsit.push(formatedDispatch)
-    //   })
-    // }
-    // return of(result);
-
-
-    formatedDispatch.dispatchesLsit = dispatches
-    return of(formatedDispatch)
-  }
-
   uplodeOrViewProof(dispatch: any) {
-    if (dispatch.status === 'Dispatched') {
-      // this.viewProof(dispatch.id)
-      this.viewProof(1)
-    } else if (dispatch.status === 'Pending') {
+    if (dispatch.proofUploaded) {
+      this.viewProof(dispatch.dispatchProofFileLocation)
+    } else {
       this.uploadProof(dispatch)
     }
   }
@@ -138,21 +128,38 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log("file", result)
       if (result) {
-        const formBody = {
-          examCycleId: this.examCycle.value,
-          examId: dispatch.examId,
-          dispatchDate: result.dispatchDate,
-          dispatchProofFile: result.files
+        let month = '' + (result.dispatchDate.getMonth() + 1);
+        let day = '' + result.dispatchDate.getDate();
+        let year = result.dispatchDate.getFullYear();
+
+        month = month.length < 2 ? '0' + month : month
+        day = day.length < 2 ? '0' + day : day
+        const dispatchDate = year + '-' + month + '-' + day
+        // const formBody = {
+        //   examCycleId: this.examCycle.value,
+        //   examId: dispatch.examId,
+        //   dispatchDate: dispatchDate,
+        // }
+        const request = {
+          examCycleId: 5,
+          examId: 15,
+          dispatchDate: dispatchDate,
+          examCenterCode: this.instituteDetail.instituteCode
         }
-        this.baseService.uploadDispatch$(formBody)
-        .subscribe({
-          next: (res: any) => {
-            this.openConformationDialog()
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error);
-          }
-        })
+        const formData = new FormData();
+        for (let [key, value] of Object.entries(request)) {
+          formData.append(`${key}`, `${value}`)
+        }
+        formData.append("dispatchProofFile", result.files[0], result.files[0].name);
+        this.baseService.uploadDispatch$(formData)
+          .subscribe({
+            next: (res: any) => {
+              this.openConformationDialog()
+            },
+            error: (error: HttpErrorResponse) => {
+              console.log(error);
+            }
+          })
       }
     })
   }
