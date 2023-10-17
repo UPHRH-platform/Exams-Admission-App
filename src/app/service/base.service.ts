@@ -64,37 +64,46 @@ export class BaseService extends HttpService {
   getInstitutesResultData$(): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
 
-    return of(  [
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        instituteId: '123',
-        course: 'xxxx',
-        internalMarksProvided: true,
-        finalMarksProvided: true,
-        revisedFinalMarksProvided: true,
+    const result = {
+      responseData: [
+        {
+          instituteName: 'NEW COLLEGE OF NURSING',
+          instituteId: '123',
+          course: 'xxxx',
+          internalMarksProvided: true,
+          finalMarksProvided: true,
+          revisedFinalMarksProvided: true,
+         
+        },
+        {
+          instituteName: 'OLD COLLEGE OF NURSING',
+          instituteId: '123',
+          course: 'xxxx',
+          internalMarksProvided:false,
+          finalMarksProvided: true,
+          revisedfinalMarksProvided: false,
        
-      },
-      {
-        instituteName: 'OLD COLLEGE OF NURSING',
-        instituteId: '123',
-        course: 'xxxx',
-        internalMarksProvided:false,
-        finalMarksProvided: true,
-        revisedfinalMarksProvided: false,
+        },
+        {
+          instituteName: 'MODERN COLLEGE OF NURSING',
+          instituteId: '123',
+          course: 'xxxx',
+          internalMarksProvided: true,
+          finalMarksProvided: false,
+          revisedfinalMarksProvided: true,
+      
+        },
+      
      
-      },
-      {
-        instituteName: 'MODERN COLLEGE OF NURSING',
-        instituteId: '123',
-        course: 'xxxx',
-        internalMarksProvided: true,
-        finalMarksProvided: false,
-        revisedfinalMarksProvided: true,
-    
-      },
-    
-   
-    ])
+      ]
+    }
+    return of( result )
+
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}`,
+    //   data: {}
+    // }
+    // return this.get(requestParam)
   }
   getStudentResultData$():Observable<any>{
     return of(
@@ -665,10 +674,23 @@ getEnrollmentList(request: any) {
 /** verify student(Approve/reject) */
 
   //#region (CCTV management admin) 
-  updateCCTVstatus$(request: any) {
+
+  getInstitutesListByExamCycle$(examCycleId: number | string) {
     const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.instituteId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&status=${request.status}`,
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.CENTERS_BY_EXAM_CYCLE + examCycleId,
       data: {},
+    }
+    return this.get(requestParam);
+  }
+
+  updateCCTVstatus$(request: any) {
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.instituteId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
+    //   data: {},
+    // }
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.instituteId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
+      data: request,
     }
     return this.put(requestParam);
   }
@@ -967,32 +989,40 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
   return this.put(requestParam);
 }
   //#region (dispatches)
-  getDispatchesList$(formBody: any) {
-    // const requestParam: RequestParam = {
-    //   url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST,
-    //   data: formBody
-    // }
-    // return this.get(requestParam)
-    const response = {
-      responseData: [
-        {
-          examName: 'Exam 1',
-          lastDateToUpload: '25 Mar 2023',
-          status: 'Pending',
-        }, {
-          examName: 'Exam 2',
-          lastDateToUpload: '25 Mar 2023',
-          status: 'Dispatched'
-        },
-      ]
+  getDispatchesAllInstitutesList$(examCycleId: number, examId: number) {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST + examCycleId + '/' + examId + '/allInstitutes',
+      data: {}
     }
+    return this.get(requestParam)
+    // const response = {
+    //   responseData: [
+    //     {
+    //       examName: 'Exam 1',
+    //       lastDateToUpload: '25 Mar 2023',
+    //       status: 'Pending',
+    //     }, {
+    //       examName: 'Exam 2',
+    //       lastDateToUpload: '25 Mar 2023',
+    //       status: 'Dispatched'
+    //     },
+    //   ]
+    // }
 
-    return of(response)
+    // return of(response)
   }
 
   getDispatchesViewProof$(dispatchId: number) {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.DISPATCHES_VIEW_PROOF + dispatchId,
+      data: {}
+    }
+    return this.get(requestParam)
+  }
+
+  getDispatchesListByInstitutes$(examCenterId: number | string, examCycleId: number | string) {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.TRACK_DISPATCHES.GET_DISPATCHES_LIST + examCenterId + '/' + examCycleId,
       data: {}
     }
     return this.get(requestParam)
@@ -1004,10 +1034,10 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
       data: request,
       header: {
         Accept: "*/*",
-        "Content-Type": "multipart/form-data",
+        'x-authenticated-user-token': this.token
       }
     }
-    return this.post(requestParam)
+    return this.multipartPost(requestParam)
   }
   //#endregion
 

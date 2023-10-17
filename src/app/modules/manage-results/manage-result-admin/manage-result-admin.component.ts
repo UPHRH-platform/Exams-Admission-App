@@ -25,6 +25,7 @@ export class ManageResultAdminComponent {
   selectedCellDetails: any;
   isDataLoading: boolean = false;
   studentResultData: any[] = [];
+  title: string = 'Manage Results'
 
 
   
@@ -167,7 +168,6 @@ export class ManageResultAdminComponent {
   intialisation() {
     this.getExamCycles()
     this.getInstitutesData();
-    // this.studentExamsTableData();
   }
 
   getExamCycles() {
@@ -182,62 +182,59 @@ export class ManageResultAdminComponent {
 
   getInstitutesData(searchKey: string = '') {
     this.baseService.getInstitutesResultData$()
-     .subscribe((response: any) => {
-      console.log('InstitutesResultData', response)
-      for (let institute of response) {
-        institute['classes'] = {}
-        if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
-          institute.publish = "Publish"
-        } else {
-          institute.publish = "-"
-        }
-        institute['classes']['publish'] = ['color-blue']
-        if (institute.internalMarksProvided) {
-          institute.internalMarksProvided = "View & Download"
-          institute['classes']['internalMarksProvided'] = ['color-green']
-        } else {
-          institute.internalMarksProvided = "Pending"
-          institute['classes']['internalMarksProvided'] = ['color-orange']
-        }
-        
-        if (institute.finalMarksProvided) {
-          institute.finalMarksProvided = "View & Delete"
-          institute['classes']['finalMarksProvided'] = ['color-green']
-        } else {
-          institute.finalMarksProvided = "Upload"
-          institute['classes']['finalMarksProvided'] = ['color-blue']
-        }
-        
-        if (institute.revisedFinalMarksProvided) {
-          institute.revisedFinalMarksProvided = "View & Delete"
-          institute['classes']['revisedFinalMarksProvided'] = ['color-green']
-        } else {
-          institute.revisedFinalMarksProvided = "Upload"
-          institute['classes']['revisedFinalMarksProvided'] = ['color-blue']
-        }
-      
+    .pipe((mergeMap((res) => {
+      return this.formateInstitutesData(res.responseData)
+    })))
+     .subscribe({
+        next: (response: any) => {
+          console.log('InstitutesResultData', response)
+          this.instituteTableData = response
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastrService.showToastr(err, 'Error', 'error', '')
       }
-       this.instituteTableData = response
-     })
+    })
   }
 
-
-  studentExamsTableData(){
-    this.isDataLoading = true;
-    this.baseService.getStudentResultData$().subscribe({
-      next:(res:any)=>{
-        this.studentResultData = res
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
-
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isDataLoading = false;
-        console.log(error)
+  formateInstitutesData(response: any) {
+    const foramtedData: any[] = []
+    response.forEach((institute: any) => {
+      institute['classes'] = {}
+      if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
+        institute.publish = "Publish"
+      } else {
+        institute.publish = "-"
+      }
+      institute['classes']['publish'] = ['color-blue']
+      if (institute.internalMarksProvided) {
+        institute.internalMarksProvided = "View & Download"
+        institute['classes']['internalMarksProvided'] = ['color-green']
+      } else {
+        institute.internalMarksProvided = "Pending"
+        institute['classes']['internalMarksProvided'] = ['color-orange']
+      }
+      
+      if (institute.finalMarksProvided) {
+        institute.finalMarksProvided = "View & Delete"
+        institute['classes']['finalMarksProvided'] = ['color-green']
+      } else {
+        institute.finalMarksProvided = "Upload"
+        institute['classes']['finalMarksProvided'] = ['color-blue']
+      }
+      
+      if (institute.revisedFinalMarksProvided) {
+        institute.revisedFinalMarksProvided = "View & Delete"
+        institute['classes']['revisedFinalMarksProvided'] = ['color-green']
+      } else {
+        institute.revisedFinalMarksProvided = "Upload"
+        institute['classes']['revisedFinalMarksProvided'] = ['color-blue']
       }
 
-    })  } 
+      foramtedData.push(institute)
+    
+    })
+    return of(foramtedData)
+  }
 
   getExams(examCycleId: number) {
     this.courses = []
@@ -277,21 +274,43 @@ export class ManageResultAdminComponent {
 
 
   internalMarksHandler(cellDetails: any) {
-    if(cellDetails.row.internalMarksProvided === 'View & download'){
+    if(cellDetails.row.internalMarksProvided === 'View & Download'){
+      this.title = cellDetails.row.instituteName;
       this.showInstitutesTable = false;
       this.selectedCellDetails  = cellDetails;
+      this.studentExamsTableData()
     }
   }
 
   finalMarksHandler(cellDetails:any) {
-    if(cellDetails.row.finalMarksProvided === 'View & delete'){
+    if(cellDetails.row.finalMarksProvided === 'View & Delete'){
       this.showInstitutesTable = false;
       this.selectedCellDetails  = cellDetails;
+      this.studentExamsTableData()
     } else if(cellDetails.row.finalMarksProvided === 'Upload') {
       this.openUploadModal(cellDetails);
     }
 
   }
+
+
+  studentExamsTableData(){
+    this.isDataLoading = true;
+    this.baseService.getStudentResultData$().subscribe({
+      next:(res:any)=>{
+        this.studentResultData = res
+        setTimeout(() => {
+          this.isDataLoading = false;
+        }, 1000);
+
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isDataLoading = false;
+        console.log(error)
+      }
+
+    })  } 
+
 
   revisedFinalMarksHandler(cellDetails:any) {
     if(cellDetails.row.revisedFinalMarksProvided === 'Upload') {
@@ -304,7 +323,6 @@ export class ManageResultAdminComponent {
     const dialogRef = this.dialog.open(UploadDialogComponent, {
     data: {
               heading: heading,     
-              // labelOne: 'Select Dispatch Date',
               labelTwo:'Attach file(s)',
               // dateSelect: 'dateSelect',  
 

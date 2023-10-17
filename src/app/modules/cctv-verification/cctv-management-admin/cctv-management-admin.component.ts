@@ -9,6 +9,7 @@ import { mergeMap, of } from 'rxjs';
 import { TableColumn } from 'src/app/interfaces/interfaces';
 import { Tabs } from 'src/app/shared';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 interface Course {
   value: string;
@@ -65,7 +66,8 @@ export class CctvManagementAdminComponent {
   constructor(
     private baseService: BaseService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private toasterService: ToastrServiceService
   ) {
   }
 
@@ -194,12 +196,26 @@ export class CctvManagementAdminComponent {
 
   //#region (table data)
   getInstitutesCCTVtableData(searchKey: string = '') {
+    this.isDataLoading = true
     this.baseService.getAllExamCenterInstitutesList$()
     .pipe(mergeMap((response: any) => {
       return this.getformatInstitutesTablesData(response.responseData)
     }))
     .subscribe((InstituteesCCTVtableData: any) => {
       this.getTablesData(InstituteesCCTVtableData)
+      this.isDataLoading = false
+    })
+  }
+
+  getInstitutesCCTVtableDataByExamCycle(examCycleId: number | string) {
+    this.isDataLoading = true
+    this.baseService.getInstitutesListByExamCycle$(examCycleId)
+    .pipe(mergeMap((response: any) => {
+      return this.getformatInstitutesTablesData(response.responseData)
+    }))
+    .subscribe((InstituteesCCTVtableData: any) => {
+      this.getTablesData(InstituteesCCTVtableData)
+      this.isDataLoading = false
     })
   }
 
@@ -209,20 +225,17 @@ export class CctvManagementAdminComponent {
       instituteName: string,
       instituteCode: string,
       district: string,
-      allowedForExamCentre: boolean,
       cctvVerified: boolean,
       ipAddress: string,
     }[] = [];
     if (instituteesList && instituteesList.length) {
       instituteesList.forEach((institute: any) => {
-        institute = institute.institute
         const formattedInstitute = {
           instituteId: institute.id,
-          instituteName: institute.instituteName,
+          instituteName: institute.name,
           instituteCode: institute.instituteCode,
           district: institute.district,
-          allowedForExamCentre: institute.allowedForExamCentre,
-          cctvVerified: institute.cctvVerified,
+          cctvVerified: institute.approvalStatus,
           ipAddress: institute.ipAddress,
         }
         formattedInstitutesList.push(formattedInstitute)
@@ -236,14 +249,11 @@ export class CctvManagementAdminComponent {
       let pendingInstitute: any = institute
       switch (this.currentTabIndex) {
         case 0: {
-          if (institute.cctvVerified === false) {
+          if (institute.cctvVerified === 'PENDING' || institute.cctvVerified === null) {
             institute.updateStatus == true;
             pendingInstitute['hasStyle'] = true;
-            pendingInstitute['cellStyle'] = {
-              status: {
-                'color': '#0074B6',
-                'cursor': 'pointer',
-              },
+            pendingInstitute['classes'] = {
+              status: ['cursor-pointer', 'color-blue']
             }
             pendingInstitute['status'] = 'Approve / Reject';
           } else {
@@ -252,14 +262,11 @@ export class CctvManagementAdminComponent {
           break;
         }
         case 1: {
-          if (institute.cctvVerified && institute.allowedForExamCentre ) {
+          if (institute.cctvVerified === 'APPROVED') {
             institute.updateStatus == true;
             pendingInstitute['hasStyle'] = true;
-            pendingInstitute['cellStyle'] = {
-              status: {
-                'color': '#0074B6',
-                'cursor': 'pointer',
-              },
+            pendingInstitute['classes'] = {
+              status: ['cursor-pointer', 'color-blue']
             }
             pendingInstitute['status'] = 'Reject';
           } else {
@@ -268,14 +275,11 @@ export class CctvManagementAdminComponent {
           break;
         }
         case 2: {
-          if (institute.cctvVerified && institute.allowedForExamCentre === false) {
+          if (institute.cctvVerified === 'REJECTED') {
             institute.updateStatus == true;
             pendingInstitute['hasStyle'] = true;
-            pendingInstitute['cellStyle'] = {
-              status: {
-                'color': '#0074B6',
-                'cursor': 'pointer',
-              },
+            pendingInstitute['classes'] = {
+              status: ['cursor-pointer', 'color-blue']
             }
             pendingInstitute['status'] = 'Enter alternate Institute';
           } else {
@@ -284,7 +288,7 @@ export class CctvManagementAdminComponent {
           break
         }
       }
-      if (pendingInstitute !== undefined) {
+      if (pendingInstitute !== null) {
         return pendingInstitute
       }
     })
@@ -300,18 +304,11 @@ export class CctvManagementAdminComponent {
     this.isDataLoading = true
     this.currentTabIndex = event.index;
     this.initializeTableColumns()
-    switch (event.index) {
-      case 0: {
-        break;
-      }
-      case 1: {
-        break;
-      }
-      case 2: {
-        break;
-      }
+    if (this.examCycleControl.value) {
+      this.getInstitutesCCTVtableDataByExamCycle(this.examCycleControl.value)
+    } else {
+      this.getInstitutesCCTVtableData();
     }
-    this.getInstitutesCCTVtableData()
   }
 
   //#region (update cctv status)
@@ -342,8 +339,7 @@ export class CctvManagementAdminComponent {
           controlType: 'input',
           placeholder: 'Type here',
           value: event.ipAddress,
-          validators: ['required'],
-          disabled: true,
+          validators: ['required']
         }, {
           controlLable: 'Enter remarks',
           controlName: 'remarks',
@@ -365,13 +361,13 @@ export class CctvManagementAdminComponent {
           btnText: 'Approve',
           positionClass: 'right',
           btnClass: 'btn-full',
-          type: 'Approved'
+          type: 'APPROVED'
         },
         {
           btnText: 'Reject',
           positionClass: 'right',
           btnClass: 'btn-outline mr2',
-          type: 'Rejected'
+          type: 'REJECTED'
         },
       ],
     }
@@ -410,7 +406,7 @@ export class CctvManagementAdminComponent {
           btnText: 'Reject',
           positionClass: 'right',
           btnClass: 'btn-full',
-          type: 'Rejected'
+          type: 'REJECTED'
         },
       ],
     }
@@ -430,7 +426,7 @@ export class CctvManagementAdminComponent {
         const formBody = {
           ipAddress: response.form.IPaddress,
           remarks: response.form.remarks,
-          status: response.type,
+          approvalStatus: response.type,
           instituteId: response.instituteId
         }
         this.updateCCTVstatus(formBody)
@@ -444,7 +440,19 @@ export class CctvManagementAdminComponent {
       this.baseService.updateCCTVstatus$(formBody)
         .subscribe((res: any) => {
           if (res) {
-            this.getInstitutesCCTVtableData();
+            if (res.statusInfo.statusMessage) {
+              this.toasterService.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '');
+            }
+            if (formBody.approvalStatus === 'Rejected') {
+              this.currentTabIndex = 2
+            } else if (formBody.approvalStatus === 'Approved') {
+              this.currentTabIndex = 1
+            }
+            if (this.examCycleControl.value) {
+              this.getInstitutesCCTVtableDataByExamCycle(this.examCycleControl.value)
+            } else {
+              this.getInstitutesCCTVtableData();
+            }
           }
         })
     }
@@ -461,12 +469,14 @@ export class CctvManagementAdminComponent {
     const formBody = {
       district: event.district,
     }
+    this.isDataLoading = true
     this.baseService.getNearestInstitutesList(formBody)
       .pipe(mergeMap((res: any) => {
         return this.formatNearestInstitutesList(res.responseData)
       }))
       .subscribe((response: any) => {
         const institutesList = response
+        this.isDataLoading = false
         if (institutesList) {
           let nearestInstitutesList = institutesList
           const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
@@ -531,12 +541,14 @@ export class CctvManagementAdminComponent {
     }[] = [];
     if (institutes && institutes.length) {
       institutes.forEach((institute: any) => {
-        const formattedInstitute = {
-          id: institute.institute.id,
-          instituteName: institute.institute.instituteName,
-          instituteCode: institute.institute.instituteCode
+        if (institute.approvalStatus === 'APPROVED') {
+          const formattedInstitute = {
+            id: institute.id,
+            instituteName: institute.name,
+            instituteCode: institute.instituteCode
+          }
+          formattedInstitutesList.push(formattedInstitute)
         }
-        formattedInstitutesList.push(formattedInstitute)
       })
     }
     return of(formattedInstitutesList)
@@ -544,8 +556,17 @@ export class CctvManagementAdminComponent {
 
   assignAlternateExamCenter(formBody: any) {
     this.baseService.assignAlternateExamCenter$(formBody)
-    .subscribe(() => {
-      this.getInstitutesCCTVtableData()
+    .subscribe((res) => {
+      if (res) {
+        if (res.statusInfo.statusMessage) {
+          this.toasterService.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '');
+        }
+        if (this.examCycleControl.value) {
+          this.getInstitutesCCTVtableDataByExamCycle(this.examCycleControl.value)
+        } else {
+          this.getInstitutesCCTVtableData();
+        }
+      }
     })
   }
   //#endregion

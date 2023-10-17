@@ -159,15 +159,15 @@
                     <ng-container *ngIf="!disCol?.showDeleteIcon; else deleteIcon">
 
                         <ng-container *ngIf="disCol?.classes; else cellStylesOfActionCell">
-                            <a [ngClass]="disCol?.classes" mat-button (click)="emitCellClickAction(element)">{{ disCol?.cell(element)}}</a>
+                            <a [ngClass]="disCol?.classes" mat-button (click)="emitCellClickAction(element, disCol?.columnDef)">{{ disCol?.cell(element)}}</a>
                         </ng-container>
                         <ng-template #cellStylesOfActionCell>
                             <ng-container
                                 *ngIf="element?.classes else styleLessActionCell">
-                                <a [ngClass]="element?.classes[disCol?.columnDef]" mat-button (click)="emitCellClickAction(element)" >{{ disCol?.cell(element)}}</a>
+                                <a [ngClass]="element?.classes[disCol?.columnDef]" mat-button (click)="emitCellClickAction(element, disCol?.columnDef)" >{{ disCol?.cell(element)}}</a>
                             </ng-container>
                             <ng-template #styleLessActionCell>
-                                <a mat-button (click)="emitCellClickAction(element)" >{{ disCol?.cell(element)}}</a>
+                                <a mat-button (click)="emitCellClickAction(element, disCol?.columnDef)" >{{ disCol?.cell(element)}}</a>
                             </ng-template>
                         </ng-template>
                     </ng-container>

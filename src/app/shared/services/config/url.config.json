@@ -47,7 +47,8 @@
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
-            "ALL_CENTERS": "/v1/admin/examCenters/all"
+            "ALL_CENTERS": "/v1/admin/examCenters/all",
+            "CENTERS_BY_EXAM_CYCLE": "/v1/admin/byExamCycle/"
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
@@ -64,16 +65,16 @@
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+            "GET_DISPATCHES_LIST": "/v1/admin/institutes/dispatchStatus/",
+            "DISPATCHE_UPLOAD": "/v1/admin/institutes/dispatchUpload",
+            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/"
         },
         "SUBJECTS": {
-            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap",
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",
-            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/",
-            "DISPATCHE_UPLOAD": "v1/admin/institutes/dispatchUpload"
+            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap"
         },
         "MANAGE_RESULTS": {
-            "PUBLISH": "/v1/studentResults/publish"
+            "PUBLISH": "/v1/studentResults/publish",
+            "MANAGE_RESULTS": "/v1/studentResults/manageResults"
         }
     }
 }

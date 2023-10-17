@@ -8,7 +8,7 @@
               <label class="examCycleLable">Exam cycle</label>
             </div>
             <mat-form-field appearance="outline" class="feeManagementForms">
-              <mat-select [formControl]="examCycleControl">
+              <mat-select [formControl]="examCycleControl" (ngModelChange)="getInstitutesCCTVtableDataByExamCycle($event)">
                   <ng-container *ngFor="let examCycle of examCycleList">
                       <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
                   </ng-container>
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start"
+    <mat-tab-group [selectedIndex]="currentTabIndex" mat-stretch-tabs="false" mat-align-tabs="start"
     (selectedTabChange)="tabChange($event)">
       <ng-container *ngFor="let tab of tabs">
         <mat-tab [label]="tabs.name">
