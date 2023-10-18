@@ -69,7 +69,7 @@ export class HallTicketComponent implements OnInit {
   //#region (intialisation)
   intialisation() {
 
-    this.baseService.getHallTicketData$(1).subscribe({
+    this.baseService.getHallTicketData$(11).subscribe({
       next: (res: any) => {
 
         if (res && res[0]) {

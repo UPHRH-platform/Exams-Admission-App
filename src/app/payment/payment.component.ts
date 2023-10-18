@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -16,6 +16,7 @@ export class PaymentComponent implements OnInit{
 
   constructor(
     private route : ActivatedRoute,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -30,7 +31,7 @@ export class PaymentComponent implements OnInit{
       })
   }
   navigateToHome(){
-    
+    this.router.navigate(['/fee-management/manage-fee']);
   }
   
 }
