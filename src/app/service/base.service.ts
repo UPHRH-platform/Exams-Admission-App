@@ -528,6 +528,14 @@ export class BaseService extends HttpService {
     ])
   }
 
+  getQuestionsByExamsAndExamCycle(examCycleId : string | number, examId: string | number): Observable<any> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.QUESTION_PAPER_MANAGEMENT.GET_QUESTIONPAPER_BY_EXAMS +`?examCycleId=${examCycleId}&examId=${examId}`,
+      data: {}
+    }
+    return this.get(requestParam);
+  }
+
   /**************************** hall ticket services start ****************************/
 
 
@@ -752,6 +760,10 @@ uploadQuestionPaper(fileData: any):  Observable<ServerResponse> {
   const reqParam: RequestParam = {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.UPLOAD}`,
     data: fileData,
+    header: {
+      'Accept': '*/*',
+      'x-authenticated-user-token': this.token
+    }
   }
  return this.multipartPost(reqParam);
 }
@@ -783,8 +795,17 @@ deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DELETE}/${questionPaperId}`
   }
   return this.delete(reqParam);
-  //#region (candidate portal)
 }
+
+getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.QUESTION_PAPER.GET_QUESTIONPAPER_BY_EXAMCYCLE + `/${examCycleId}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+  //#region (candidate portal)
+
 
   //#region (Results)
 
@@ -1055,6 +1076,14 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
       data: request
     }
     return this.post(requestParam);
+  }
+
+  getCCTVVerificationStatus(instId: string | number, examcycleId: string | number): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.GET_CCTV_VERIFICATION_BY_EXAMCYCLE + `?examCycleId=${examcycleId}&examCenterId=${instId}`,
+      data: {}
+    }
+    return this.get(requestParam);
   }
 
 

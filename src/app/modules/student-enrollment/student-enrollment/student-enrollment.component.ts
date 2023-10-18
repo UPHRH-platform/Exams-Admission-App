@@ -11,6 +11,7 @@ import { TableColumn } from 'src/app/interfaces/interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from 'src/app/service/base.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 interface Course {
   value: string;
@@ -63,7 +64,7 @@ export class StudentEnrollmentComponent {
   ];
   isHallTicket: boolean = true;
   instituteDetail: InstituteDetail;
-constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService){}
+constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService, private toastrService: ToastrServiceService){}
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
@@ -101,14 +102,15 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   }
 
   getAllInstitutes() {
-    this.baseService.getAllInstitutes().subscribe({
-      next: (res) => {
-        console.log("res");
-        console.log("Res =>", res.responseData);
-        this.instituteList = res.responseData;
-      }
-    })
-  }
+    this.baseService.getAllInstitutes$().subscribe({
+     next: (res: any) => {
+       this.instituteList = res.responseData;
+     },
+     error: (error: HttpErrorResponse) => {
+       console.log(error.message)
+     }
+   })
+ }
 
   onClickItem(e: any) {
     const id = e?.id;
@@ -140,9 +142,9 @@ constructor(private router: Router, private authService: AuthServiceService, pri
       })
       this.enrollmentTableData = res.responseData;
     },
-    error: (error: HttpErrorResponse) => {
+    error: (error: any) => {
       this.isDataLoading = false;
-      console.log(error);
+      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
     }
   })
   }
@@ -226,7 +228,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
             header: 'Marks',
             isSortable: false,
             isLink: false,
-            cell: (element: Record<string, any>) => `${element['marks']}`
+            cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
           },
           {
             columnDef: 'courseName',
