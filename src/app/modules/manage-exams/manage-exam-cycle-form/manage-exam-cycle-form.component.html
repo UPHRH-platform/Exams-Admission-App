@@ -103,7 +103,7 @@
                     /> -->
                     <mat-select formControlName="examName">
                       <ng-container *ngFor="let subject of subjects">
-                        <mat-option [value]="subject.name">{{subject.name}}</mat-option>
+                        <mat-option [value]="subject.subjectName">{{subject.subjectName}}</mat-option>
                       </ng-container>
                     </mat-select>
                   </mat-form-field>
