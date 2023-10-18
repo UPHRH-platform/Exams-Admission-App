@@ -60,12 +60,11 @@ export class ManageExamCycleListComponent {
     next: (res) => {
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
-      this.examCycleData.map((obj, index) => {
+      this.examCycleData.map((obj) => {
         obj.courseName = obj.course?.courseName;
-      })
+      });
     },
     error: (error: HttpErrorResponse) => {
-      console.log(error);
       this.isDataLoading = false;
     }
   })

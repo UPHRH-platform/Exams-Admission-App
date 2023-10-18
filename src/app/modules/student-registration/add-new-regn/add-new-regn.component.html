@@ -24,7 +24,7 @@
     <app-shared-table *ngIf="!isDataLoading" 
     [tableColumns]="viewStudentsTableColumns" 
 
-    [tableData]="regdStudents"
+    [tableData]="enrollmentData"
     [examList] = "examList"
     [isPageable]="true" 
     (checkBoxAction)="onSelectedRows($event)">

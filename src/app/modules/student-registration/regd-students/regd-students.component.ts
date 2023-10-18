@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
+import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-regd-students',
@@ -8,14 +9,15 @@ import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interface
   styleUrls: ['./regd-students.component.scss']
 })
 export class RegdStudentsComponent {
-  stateData : any; 
+  examCycleId: string;
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
   constructor(
-    private router: Router){
-      this.stateData = this.router?.getCurrentNavigation()?.extras.state;
-      console.log( this.stateData)
+    private router: Router, private baseService: BaseService, private route: ActivatedRoute){
+      this.route.params.subscribe((param => {
+        this.examCycleId = param['id'];
+      }))
   }
  
   viewStudentsTableColumns: TableColumn[] = [];
@@ -23,52 +25,20 @@ export class RegdStudentsComponent {
   regdStudents : RegdStudentsTableData[] = [];
   
   ngOnInit(): void {
-  
     this.initializeColumns();
-    this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
+    if(this.examCycleId !== undefined) {
+    this.getRegdStudents(this.examCycleId);
+    }
   }
 
-  getRegdStudents(examId: number, examCycle: string){
-    this.isDataLoading = false;
-    this.regdStudents = [
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
-      },
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
-      },
-      {
-        name: "Adhi",
-        rollNo: "12345",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
-      },
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
+  getRegdStudents(examCycle: string){
+    this.isDataLoading = true;
+    this.baseService.getStudentRegistrationByExamCycle(this.examCycleId).subscribe({
+      next: (res) => {
+        console.log("res ==>", res);
+        this.isDataLoading = false;
       }
-    ]
-
+    })
   }
 
   initializeColumns(): void {

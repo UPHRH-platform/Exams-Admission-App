@@ -52,7 +52,7 @@ multipartPost(requestParam: RequestParam): Observable<any> {
       if (data.error && data.error) {
         return throwError(() => new Error(data.error.message));
       }
-      const serverRes: ServerResponse ={
+      const serverRes: ServerResponse = {
         statusInfo: {statusCode: 200, statusMessage: "success"},
         responseData: data.result?.response? data.result.response : data
       }

@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { ConfirmStudentRegistrationComponent } from '../dialogs/confirm-student-registration/confirm-student-registration.component';
+import { AuthServiceService } from 'src/app/core/services';
+import { BaseService } from 'src/app/service/base.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-add-new-regn',
@@ -16,12 +19,17 @@ export class AddNewRegnComponent {
   stateData : any;  
   searcKey: string = '';
   studentsToRegister: any = [];
+  loggedInUserId: string;
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ]
+  enrollmentData: any[] = [];
   constructor(
     private router: Router,
     private dialog: MatDialog,
+    private authService: AuthServiceService,
+    private baseService: BaseService,
+    private toastr: ToastrServiceService
     ){
       this.stateData = this.router?.getCurrentNavigation()?.extras.state;
       if (!this.stateData) {
@@ -35,10 +43,44 @@ export class AddNewRegnComponent {
   
   examList =  ["Exam1", "Exam2","Exam3", "Exam4","Exam5", "Exam6"];
   ngOnInit(): void {
-  
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.initializeColumns();
-    this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
+    this.getInstituteDetails();
+    // this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
   }
+  // get institute detail
+  getInstituteDetails() {
+    this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      next: (res) => {
+        const instituteId = res.responseData[0].id;
+        this.getEnrollmentData(instituteId);
+      }
+    })
+  }
+  // get enrollment based on institute
+  getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
+    let request = {
+      instituteId: instituteId !== undefined? instituteId : '',
+      courseId: courseId !== undefined? courseId : '',
+      academicYear: academicYear !== undefined? academicYear: '',
+      verificationStatus: ''
+    }
+    this.isDataLoading = true;
+    this.baseService.getEnrollmentList(request).subscribe({
+      next: (res) => {
+        this.isDataLoading = false;
+        res.responseData.map((obj: any) => {
+          obj.courseName = obj.course.courseName;
+        })
+        console.log("RES ===>", res);
+        this.enrollmentData = res.responseData;
+      },
+      error: (error: any) => {
+        this.isDataLoading = false;
+        this.toastr.showToastr(error.error.error.message, 'Error', 'error', '');
+      }
+    })
+    }
 
   onSelectedRows(value: any) {
     this.studentsToRegister = value
@@ -98,42 +140,77 @@ export class AddNewRegnComponent {
         cell: (element: Record<string, any>) => ``
       }, 
       {
-        columnDef: 'name',
-        header: 'Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['name']}`
+        columnDef: 'firstName',
+        header: 'Applicant Name',
+        isSortable: false,
+        isLink: false,
+        cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
       },
       {
-        columnDef: 'rollNo',
-        header: 'Roll no',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`
+        columnDef: 'provisionalEnrollmentNumber',
+        header: 'Provisional Enrollment Number',
+        isSortable: false,
+        isLink: false,
+        cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
       },
       {
-        columnDef: 'course',
-        header: 'Course',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['course']}`
+        columnDef: 'marks',
+        header: 'Marks',
+        isSortable: false,
+        isLink: false,
+        cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
       },
       {
-        columnDef: 'admissionYr',
-        header: 'Year Of Admission',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['admissionYr']}`
+        columnDef: 'courseName',
+        header: 'Course Name',
+        isSortable: false,
+        isLink: false,
+        cell: (element: Record<string, any>) => `${element['courseName']}`
       },
       {
-        columnDef: 'noOfExam',
-        header: 'No of Exam',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['noOfExam']}`
+        columnDef: 'admissionYear',
+        header: 'Admission Year',
+        isSortable: false,
+        isLink: false,
+        cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
       },
-      {
-        columnDef: 'examName',
-        header: 'Exam Name',
-        isCheckBox: false,
-        isDropdown: true,
-        cell: (element: Record<string, any>) => ``
-      }, 
+      // {
+      //   columnDef: 'name',
+      //   header: 'Name',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['name']}`
+      // },
+      // {
+      //   columnDef: 'rollNo',
+      //   header: 'Roll no',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['rollNo']}`
+      // },
+      // {
+      //   columnDef: 'course',
+      //   header: 'Course',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['course']}`
+      // },
+      // {
+      //   columnDef: 'admissionYr',
+      //   header: 'Year Of Admission',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['admissionYr']}`
+      // },
+      // {
+      //   columnDef: 'noOfExam',
+      //   header: 'No of Exam',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['noOfExam']}`
+      // },
+      // {
+      //   columnDef: 'examName',
+      //   header: 'Exam Name',
+      //   isCheckBox: false,
+      //   isDropdown: true,
+      //   cell: (element: Record<string, any>) => ``
+      // }, 
 
     ];
   }

@@ -68,11 +68,9 @@ export class RegisterStudentsComponent {
 
 
   viewRegdStdnts(exam: QuestionPaper) {
-
     if (this.examCycleControl.valid) {
-      this.router.navigate(['student-registration/view-regd-students'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
+      this.router.navigate([`student-registration/view-regd-students/${this.examCycle}`]);
     }
-
   }
 
   regNewStdnts(exam: QuestionPaper) {
