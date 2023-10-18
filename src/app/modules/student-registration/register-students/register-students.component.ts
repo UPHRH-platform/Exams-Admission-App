@@ -17,19 +17,7 @@ export class RegisterStudentsComponent {
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ]
   questionPapersList: QuestionPaper[]=[];
-  examCycleList = [
-    {
-      id: 1,
-      examCycleName:'examCycle1'
-    },
-    {
-      id: 2,
-      examCycleName:'examCycle2'
-    },
-    {
-      id: 3,
-      examCycleName:'examCycle3'
-    }];
+  examCycleList:any[] = [];
   examCycleControl: any;
 
 
@@ -42,27 +30,40 @@ export class RegisterStudentsComponent {
 
   ngOnInit(): void {
     this.examCycleControl = new FormControl('', [Validators.required]);
-    this.getQuestionPapersList();
+    this.getExamCycleData();
+  }
+  examCycleSelected(e: any) {
+    this.examCycle = e;
+    this.getQuestionPapersByExamCycle();
   }
 
-  getQuestionPapersList() {
-    this.baseService.getExamsAndQuestionPapersList$().subscribe({
-      next:(res:any)=>{
-        this.questionPapersList = res;
-        setTimeout(() => {
-        }, 1000);
+  getExamCycleData() {
+    // this.isDataLoading = true;
+    this.baseService.getExamCycleList$().subscribe({
+    next: (res) => {
+      // this.isDataLoading = false;
+      this.examCycleList = res.responseData;
+      // this.examCycleData.map((obj, index) => {
+      //   obj.id = obj?.id;
+      //   obj.examCycleName = obj?.examCycleName
+      //   console.log("exam cycle data",this.examCycleData)
+      // })
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.examCycleList = [];
+    }
+  })
+  }
 
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error)
+  getQuestionPapersByExamCycle() {
+    this.questionPapersList = [];
+    this.baseService.getQuestionPapersByExamCycle(this.examCycle).subscribe({
+      next: (res) => {
+        this.questionPapersList = res.responseData.exams;
+        console.log(this.questionPapersList);
       }
-
-    })  
-  } 
-
-  examCycleSelected(e: any) {
-    console.log(e.value)
-    this.examCycle = e.value;
+    })
   }
 
 

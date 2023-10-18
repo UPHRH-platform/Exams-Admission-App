@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { QuestionPaper } from 'src/app/interfaces/interfaces';
+import { Exam, QuestionPaper } from 'src/app/interfaces/interfaces';
 import { FormControl,  Validators } from '@angular/forms';
 import { AuthServiceService } from 'src/app/core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformationDialogComponent } from '../conformation-dialog/conformation-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-shared-ques-paper',
@@ -12,19 +13,26 @@ import { ConformationDialogComponent } from '../conformation-dialog/conformation
 })
 export class SharedQuestionPaperComponent {
   examCycle: string;
+  downloadComponent: boolean = true;
   constructor(
-    private authService: AuthServiceService,
+    private authService: AuthServiceService, private router: Router
   ) { }
   file:any;
    fileUploadError: string;
    listOfFiles: any[] = [];
    files: any[] = [];
-
+   currentDate = new Date();
+   currentTime = new Date().getMinutes();
+  formattedDate: any;
+  currentRoute: any;
+  lessTime = new Date(this.currentDate).getMinutes() - 30;
   @Input() examCycleList : string[] ;
   @Input() examCycleControl: FormControl;
   @Input() questionPapersList : QuestionPaper[];
-  @Input() showCardDetails : Boolean;
-
+  @Input() showCardDetails : boolean;
+  @Input() examsList: Exam[];
+  @Input() previewURL: string;
+  @Input() cctvVerified: string; 
   @Output() viewRegdStdnts: EventEmitter<any> = new EventEmitter<any>();//view regd students
   @Output() addNewStdnts: EventEmitter<any> = new EventEmitter<any>();//add new students
   @Output() uploadQuesPaper: EventEmitter<any> = new EventEmitter<any>();//upload ques paper
@@ -35,12 +43,23 @@ export class SharedQuestionPaperComponent {
   loggedInUserRole: string;
   ngOnInit(): void {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
-    console.log( this.loggedInUserRole )
-    // this.examCycleControl = new FormControl('', [Validators.required]);
+    this.formattedDate = this.currentDate.getFullYear()  + '-'
+   + ('0' + (this.currentDate.getMonth()+1)).slice(-2) + '-'
+   + ('0' + this.currentDate.getDate()).slice(-2);
+   this.currentRoute = this.router.url;
+   if(this.router.url === '/student-registration/institute') {
+    this.downloadComponent = false;
+   }
+   console.log(this.lessTime)
+   console.log(this.currentTime);
+  }
+
+  getTime(timeString: any) {
+    const time = new Date(timeString).getMinutes();
+    return time;
   }
 
   examCycleSelected(e: any) {
-    console.log(e.value)
     this.examCycle = e.value;
     this.examCycleSelection.emit(e.value);
   }

@@ -15,6 +15,7 @@ import { ConfigService } from './services/config/config.service';
 import { SharedSkeletonLoadingComponent } from './components/shared-skeleton-loading/shared-skeleton-loading.component';
 import { UploadDialogComponent } from './components/upload-dialog/upload-dialog.component';
 import { SharedQuestionPaperComponent } from './components/shared-ques-paper/shared-ques.component';
+import { SafePipe } from './services/pipes/safe.pipe';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SharedQuestionPaperComponent } from './components/shared-ques-paper/sha
     ConformationDialogComponent,
     UploadDialogComponent,
     SharedQuestionPaperComponent,
+    SafePipe,
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { SharedQuestionPaperComponent } from './components/shared-ques-paper/sha
     HeaderComponent,
     SharedTableComponent,
     HttpClientModule,
-    SharedQuestionPaperComponent
+    SharedQuestionPaperComponent,
+    SafePipe
   ],
   providers: [ConfigService]
 })

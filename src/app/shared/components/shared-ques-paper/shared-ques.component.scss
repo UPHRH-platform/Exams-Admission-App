@@ -124,3 +124,14 @@ width: 50%;
     justify-content: end;
     align-items: end !important;
 }
+
+.cctv-verification-card {
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+
+  .verified {
+    color: green;
+  }
+}

@@ -57,7 +57,8 @@ export class LoginComponent {
           }
         },
         error: (err) => {
-            this.toastrService.showToastr(err.error, 'Error', 'error', '');
+          console.log(err);
+            this.toastrService.showToastr(err.error.error, 'Error', 'error', '');
         }
       });
     }

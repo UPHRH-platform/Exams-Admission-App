@@ -137,10 +137,11 @@ export class AuthServiceService extends HttpService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_DATA);
     localStorage.removeItem(this.ALL_ROLES);
-    this.cookieService.delete('access_token');
+    this.cookieService.deleteAll('/');
   }
 
   isLoggedIn(): boolean{
+    console.log(!!this.getToken());
     return !!this.getToken();
   }
 
@@ -187,6 +188,17 @@ export class AuthServiceService extends HttpService {
       }
     }
     return isStudent;
+  }
+
+  isSecretary(): boolean {
+    let isSecretary: boolean = false;
+    const userRole = this.getUserRoles()[0];
+    if(userRole !== undefined) {
+      if (userRole.indexOf('exams_secretary') > -1) {
+        isSecretary = true;
+      }
+    }
+    return isSecretary;
   }
   
 }
