@@ -175,6 +175,7 @@ export class SharedTableComponent implements AfterViewInit {
       row: row,
       columnDef: columnDef
     }
+    console.log(data)
     this.cellClickAction.emit(data);
   }
   updateExamNames() {

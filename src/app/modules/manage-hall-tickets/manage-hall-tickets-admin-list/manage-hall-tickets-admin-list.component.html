@@ -14,7 +14,7 @@
         <label class="examCycleLable">Hall Ticket Type</label>
       </div>
       <mat-form-field class="exam-form" appearance="outline">
-        <mat-select [formControl]="hallTicketControl">
+        <mat-select [formControl]="hallTicketControl"  (selectionChange)="onSelectionChangeHallTicketType($event)">
           <mat-option
             *ngFor="let hallticket of halltickets"
             [value]="hallticket.value"
@@ -112,7 +112,7 @@
             <app-shared-table *ngIf="!isDataLoading" 
             [tableColumns]="pendingHallTicketsTableColumns" 
         
-            [tableData]="hallTicketsData"
+            [tableData]="pendingHallTicketsData"
             [examList] = "examList"
             [isPageable]="true" 
             (checkBoxAction)="onSelectedRows($event)"
@@ -127,7 +127,7 @@
             <app-shared-table *ngIf="!isDataLoading" 
             [tableColumns]="generatedHallTicketsTableColumns" 
         
-            [tableData]="hallTicketsData"
+            [tableData]="generatedHallTicketsData"
             [examList] = "examList"
             [isPageable]="true" 
             (checkBoxAction)="onSelectedRows($event)"

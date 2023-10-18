@@ -95,7 +95,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
           return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
-          statusInfo: {statusCode: 200, statusMessage: "success"},
+          statusInfo: {statusCode: 200, statusMessage: data.result?.message ? data.result?.message : "success"},
           responseData: data.result?.response? data.result.response : data
         }
         return observableOf(serverRes);
@@ -188,7 +188,7 @@ multipartPut(requestParam: RequestParam): Observable<any> {
           return throwError(() => new Error(data.error.message));
         }
         const serverRes: ServerResponse ={
-          statusInfo: {statusCode: 200, statusMessage: "success"},
+          statusInfo: {statusCode: 200, statusMessage: data.result?.message ? data.result?.message : "success"},
           responseData: data.result?.response? data.result.response : data
         }
         return observableOf(serverRes);
