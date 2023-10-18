@@ -7,8 +7,9 @@
             "UPLOAD": "/questionPaper/upload",
             "DOWNLOAD": "/v1/questionPaper/download",
             "GET_BY_ID": "/v1/questionPaper",
-            "GET_PREVIEW_URL": "/v1/questionPaper/preview",
-            "DELETE": "/v1/questionPaper/delete"
+            "GET_PREVIEW_URL": "/questionPaper/preview",
+            "DELETE": "/v1/questionPaper/delete",
+            "GET_QUESTIONPAPER_BY_EXAMCYCLE": "/questionPaper/examCycle"
         },
         "STUDENT_ENROLLMENT": {
             "CREATE": "/v1/students/add",
@@ -47,7 +48,9 @@
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
-            "ALL_CENTERS": "/v1/admin/examCenters/all"
+            "ALL_CENTERS": "/v1/admin/examCenters/all",
+            "GET_CCTV_VERIFICATION_BY_INSTITUTE": "/v1/admin/examCenter/verified",
+            "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus"
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
