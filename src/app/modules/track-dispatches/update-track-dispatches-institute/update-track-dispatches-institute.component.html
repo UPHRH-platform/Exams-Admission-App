@@ -21,12 +21,12 @@
                 <span class="desc-section">Last date for Upload : {{dispatch.lastDateToUpload}}</span>
                 <div class="status-card">
                     <span class="status"
-                        [ngStyle]="{'color': dispatch.status == 'Pending' ? '#E99E38' : '#1D8923'}">Status:
-                        {{dispatch.status}}</span>
+                        [ngStyle]="{'color': dispatch.proofUploaded ? '#1D8923' : '#E99E38'}">Status:
+                        {{dispatch.proofUploaded ? "Dispatched" : "Pending"}}</span>
                 </div>
             </mat-card-content>
             <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                <button class="view-btn" (click)="uplodeOrViewProof(dispatch)">{{ (dispatch.status === "Dispatched" ? "View
+                <button class="view-btn" (click)="uplodeOrViewProof(dispatch)" [disabled]="!instituteDetail.allowedForExamCentre">{{ (dispatch.proofUploaded ? "View
                     Proof" : "Upload Proof") }}</button>
                 <!-- <button class="btn-2" (click)="navigateToView(item.navigateUrl)" *ngIf="item.status !== 'Pending'">View</button> -->
             </div>

@@ -50,12 +50,13 @@
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all",
             "GET_CCTV_VERIFICATION_BY_INSTITUTE": "/v1/admin/examCenter/verified",
-            "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus"
+            "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus",
+            "CENTERS_BY_EXAM_CYCLE": "/v1/admin/byExamCycle/"
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
             "DOWNLOAD":"/v1/admin/hallticket/downloadHallTicket",
-            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
+            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/requests",
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
             "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "GENERATE":"/v1/admin/hallticket/generateHallTickets",
@@ -67,16 +68,16 @@
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
         },
         "TRACK_DISPATCHES": {
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+            "GET_DISPATCHES_LIST": "/v1/admin/institutes/dispatchStatus/",
+            "DISPATCHE_UPLOAD": "/v1/admin/institutes/dispatchUpload",
+            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/"
         },
         "SUBJECTS": {
-            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap",
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",
-            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/",
-            "DISPATCHE_UPLOAD": "v1/admin/institutes/dispatchUpload"
+            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap"
         },
         "MANAGE_RESULTS": {
-            "PUBLISH": "/v1/studentResults/publish"
+            "PUBLISH": "/v1/studentResults/publish",
+            "MANAGE_RESULTS": "/v1/studentResults/manageResults"
         }
     }
 }
