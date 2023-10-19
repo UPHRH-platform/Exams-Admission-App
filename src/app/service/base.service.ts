@@ -585,10 +585,17 @@ export class BaseService extends HttpService {
     console.log(newData)
   }
 
-  getHallTicketData$(id: number) {
+/*   getHallTicketData$(id: number) {
     return this.hallTktData.asObservable();
-  }
+  } */
 
+  getHallTicketData$(studentId: number, examCycleId: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
+        data: {},
+      }
+      return this.get(requestParam);
+  }
   
 
   approveHallTicket$(id: number): Observable<any> {
@@ -611,6 +618,15 @@ export class BaseService extends HttpService {
     }
     return this.post(requestParam);
 
+  }
+
+
+  downloadHallTicket(){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+'?dateOfBirth=1995-12-15&id=4',
+      data: {},
+    }
+    return this.get(requestParam);
   }
     /**************************** hall ticket services ends ****************************/
 

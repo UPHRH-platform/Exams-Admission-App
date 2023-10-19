@@ -1,31 +1,35 @@
 <div class="main-container">
     <div class="secondary-container">
         <h2 class="title-header">Candidate portal</h2>
-        <div>
+        <form [formGroup]="candidateFormGroup" (ngSubmit)="onCandidateFormGroupSubmit(candidateFormGroup.value)">
             <div>
-                <span class="exam-lable">Exam Cycle</span>
-            </div>
-            <mat-form-field appearance="outline" class="exam-form">
-                <mat-select [formControl]="examCycle">
-                    <ng-container *ngFor="let examCycle of examCycleList">
-                        <mat-option [value]="examCycle.value">{{examCycle.examName}}</mat-option>
-                    </ng-container>
-                    <mat-option style="display: none;"  value="">Select here</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="cards-boxes" >
-            <mat-card class="card" *ngFor="let item of cardList">
-                <mat-card-content class="content-container">
-                        <span class="title-section">{{item.title}}</span>
-                        <span class="desc-section">{{item.lable}} : {{item.date}}</span>
-                        <div class="status-card">
-                            <span class="status">status: {{item.status}}</span>
-                        </div>
-                </mat-card-content>
-                <button  class="view-btn" (click)="navigateToView(item.navigateUrl)">View</button>
-            </mat-card>
-        </div>
+                <div>
+                        <span class="exam-lable">Exam Cycle</span>
+                    </div>
+                    <mat-form-field appearance="outline" class="exam-form">
+                    <mat-select formControlName="examCycleFormControl" >
+                            <ng-container *ngFor="let examCycle of examCycleList">
+                                <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                            </ng-container>
+                            <mat-option style="display: none;" value="">Select here</mat-option>
+                        </mat-select>
+                       
+                    </mat-form-field>
+                </div>
+                <div class="cards-boxes" >
+                    <mat-card class="card" *ngFor="let item of cardList">
+                        <mat-card-content class="content-container">
+                                <span class="title-section">{{item.title}}</span>
+                                <span class="desc-section">{{item.lable}} : {{item.date}}</span>
+                                <div class="status-card">
+                                    <span class="status">status: {{item.status}}</span>
+                                </div>
+                        </mat-card-content>
+                        <button  class="view-btn">View</button>
+                    </mat-card>
+                </div>
+        </form>
+       
     </div>
 </div>
 

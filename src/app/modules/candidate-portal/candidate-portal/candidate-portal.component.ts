@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CandidatePortalService } from '../services/candidate-portal.service';
+import { BaseService } from 'src/app/service/base.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-candidate-portal',
@@ -25,48 +26,48 @@ export class CandidatePortalComponent implements OnInit {
     },
   ];
 
-  examCycleList = [
-    {
-      examName: 'Exam Cycle 1',
-      value: '1'
-    },{
-      examName: 'Exam Cycle 2',
-      value: '2'
-    },{
-      examName: 'Exam Cycle 3',
-      value: '3'
-    },
-  ]
+  examCycleList = []
 
-  examCycle = new FormControl('',[Validators.required]);
+  candidateFormGroup: FormGroup;
+
 
   constructor(
     private router: Router,
-    private candidatePortalService: CandidatePortalService
+    private baseService: BaseService,
+     private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.intialisation()
+   
+    this.initiateCandidateForm()
   }
-
-  intialisation() {
+  initiateCandidateForm() {
+ 
+    this.candidateFormGroup = this.formBuilder.group({
+      examCycleFormControl: new FormControl('', [
+        Validators.required]),
+   
+    })
     this.getExamCycles()
   }
 
+  onCandidateFormGroupSubmit(value: any){
+    if (this.candidateFormGroup.valid) {
+      this.router.navigate(['/candidate-portal/view-hallticket',12,value.examCycleFormControl])
+   }
+  }
+
+
   getExamCycles() {
-    this.candidatePortalService.getExamCycles()
-    // .pipe(mergeMap((res: any) => {
-    //   return this.formateExamCycleDetails(res)
-    // })).subscribe((examDetails: any)) {
-    // }
+    this.baseService.getExamCycleList$() 
+    .subscribe({
+      next: (res: any) => {
+        this.examCycleList = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error);
+      }
+    })
   }
 
-  // formateExamCycleDetails(examData: any) {
-  //   let formatedData = examData
-  //   return formatedData;
-  // }
-
-  navigateToView(navigateUrl: string) {
-    this.router.navigateByUrl(navigateUrl)
-  }
 }
