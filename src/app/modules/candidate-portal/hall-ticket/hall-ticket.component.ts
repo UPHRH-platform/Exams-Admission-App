@@ -72,10 +72,12 @@ export class HallTicketComponent implements OnInit {
   }
 
   //#region (intialisation)
+
   intialisation(studentId: number, examCycleId: number) {
     this.isDataLoading = true;
   /*   this.baseService.getHallTicketData$(studentId,examCycleId).subscribe({ */
       this.baseService.getHallTicketData$(12,5).subscribe({
+
       next: (res: any) => {
         if (res && res.responseData) {
         this.hallTicketDetails = res.responseData;

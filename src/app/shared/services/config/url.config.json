@@ -53,6 +53,12 @@
             "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus",
             "CENTERS_BY_EXAM_CYCLE": "/v1/admin/byExamCycle/"
         },
+        "PAYMENT": {
+            "FEES": "/v1/fee/initiate",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
+            "ALL_CENTERS": "/v1/admin/examCenters/all"
+        },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
             "DOWNLOAD":"/v1/admin/hallticket/downloadHallTicket",

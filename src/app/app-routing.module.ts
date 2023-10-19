@@ -111,7 +111,6 @@ const routes: Routes = [
         // data: {
         //   allowedRoles: [Roles.ADMIN, Roles.GRIEVANCE_NODAL, Roles.NODAL_OFFICER, Roles.SECRETARY],
         // },
-        pathMatch: 'full',
       },
       {
         path: "**",
