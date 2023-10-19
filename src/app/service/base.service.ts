@@ -630,6 +630,31 @@ export class BaseService extends HttpService {
   }
     /**************************** hall ticket services ends ****************************/
 
+     /**************************** fee management services ends ****************************/
+     payFees(feeDetails?: any): Observable<any> {
+
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.FEES,
+        data: {
+          "examCycleId": 18,
+        "instituteId": 5,
+        "studentExam": {
+            "5": {
+                "15": 2000.00
+            },
+            "6": {
+                "15": 2000.00
+            }
+        },
+        "amount": 2200.00,
+        "payerType": "EXAM",
+        "createdBy": "64bf323c-0cfd-440d-aa0e-be24d148b006"},
+      }
+      return this.post(requestParam);
+  
+    }
+
+      /**************************** fee management services ends ****************************/
   
 
   /**************************** exam services ****************************/

@@ -374,6 +374,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onViewClick(event: any) {
+    console.log(event)
     let r = event.row
     this.router.navigate(['/hall-ticket-management/ticket-details', r.id]);
   }
