@@ -444,7 +444,7 @@ export class ManageResultAdminComponent {
   }
 
   publishResults(formBody: any) {
-    this.baseService.publishResults(formBody)
+    this.baseService.publishResults$(formBody)
     .subscribe((res: any) => {
       this.getInstitutesData()
     })
