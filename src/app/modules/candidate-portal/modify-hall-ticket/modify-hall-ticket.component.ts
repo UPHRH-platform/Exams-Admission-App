@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CandidatePortalService } from '../services/candidate-portal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-modify-hall-ticket',
@@ -43,51 +43,37 @@ export class ModifyHallTicketComponent implements OnInit {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     }, {
-      header: 'Exam time',
-      columnDef: 'examTime',
-      cell: (element: Record<string, any>) => `${element['examTime']}`,
+      header: 'Start time',
+      columnDef: 'startTime',
+      cell: (element: Record<string, any>) => `${element['startTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     }, {
-      header: 'Duration',
-      columnDef: 'examDuration',
-      cell: (element: Record<string, any>) => `${element['examDuration']}`,
+      header: 'End time',
+      columnDef: 'endTime',
+      cell: (element: Record<string, any>) => `${element['endTime']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },
   ]
-  examTableData = [
-    {
-      examName: 'Exam 1',
-      examDate: '23-03-2024',
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    }, {
-      examName: 'Exam 2',
-      examDate: '24-03-2024',
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    }, {
-      examName: 'Exam 3',
-      examDate: '25-03-2024',
-      examTime: '10:00 AM',
-      examDuration: '3 Hours',
-    },
+  examTableData = [ 
   ]
   isHallTicket = true
 
   studentDetails: FormGroup
   uplodedDocuments: any = []
+  stateData: any | undefined;
   //#endregion
 
   //#region (constructor)
   constructor(
     private router: Router,
-    private candidatePortalService: CandidatePortalService,
+    private baseService: BaseService,
     private dialog: MatDialog
   ) {
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state;
     this.studentDetails = new FormGroup({
       firstName: new FormControl(null, [Validators.required]),
       lastName: new FormControl(null, [Validators.required]),
@@ -108,11 +94,12 @@ export class ModifyHallTicketComponent implements OnInit {
   }
 
   getHallTicketDetails() {
-    this.candidatePortalService.getHallTicketDetails()
+    //this.baseService.getHallTicketDetails()
     // .pipe(mergeMap((res: any) => {
     //   return this.formateExamDetails(res)
+    console.log(this.stateData)
     // })).subscribe((hallTicketDetails: any)) {
-    this.patchHallticketDetails(this.hallTicketDetails.studentDetails)
+    this.patchHallticketDetails()
     // }
   }
 
@@ -121,17 +108,19 @@ export class ModifyHallTicketComponent implements OnInit {
   //   return formatedData;
   // }
 
-  patchHallticketDetails(hallTicketDetails: any) {
-    if (hallTicketDetails) {
-      const dob = new Date(hallTicketDetails.DOB);
+  patchHallticketDetails() {
+    if (this.stateData) {
+      const dob = new Date(this.stateData.dateOfBirth);
       this.studentDetails.setValue({
-        firstName: hallTicketDetails.firstName,
-        lastName: hallTicketDetails.lastName,
-        roolNumber: hallTicketDetails.roolNumber,
+        firstName: this.stateData.firstName,
+        lastName: this.stateData.lastName,
+        roolNumber: this.stateData.enrollmentNumber,
         DOB: dob,
-        courseName: this.hallTicketDetails.hallTicketDetqails.courseName,
-        courseYear: this.hallTicketDetails.hallTicketDetqails.courseYear
+        courseName: this.stateData.courseName,
+        courseYear: this.stateData.courseYear
       })
+
+      this.examTableData = this.stateData.exams
     }
   }
 
@@ -145,12 +134,12 @@ export class ModifyHallTicketComponent implements OnInit {
         select: {
           selectCycleList: [
             {
-              displayValue: 'Exam 1',
-              value: 'Exam 1'
+              displayValue: 'Aadhar',
+              value: 'Aadhar'
             },
             {
-              displayValue: 'Exam 2',
-              value: 'Exam 2'
+              displayValue: 'Driving Licence',
+              value: 'DL'
             }
           ]
         },
@@ -184,6 +173,7 @@ export class ModifyHallTicketComponent implements OnInit {
       if (result) {
         this.uplodedDocuments.push(result.files[0])
       }
+      console.log( this.uplodedDocuments)
     })
   }
 

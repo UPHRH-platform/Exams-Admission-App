@@ -49,7 +49,7 @@ export class UploadDialogComponent implements OnInit {
      let selectedFile = event.target.files[0];
      const extension = selectedFile.name.split('.').pop();
      const fileSize = selectedFile.size;
-     const allowedExtensions = ['csv'];
+     const allowedExtensions = ['pdf','jpeg','jpg','png'];
      if (allowedExtensions.includes(extension)) {
        // validate file size to be less than 2mb if the file has a valid extension
        if (fileSize < 2000000) {

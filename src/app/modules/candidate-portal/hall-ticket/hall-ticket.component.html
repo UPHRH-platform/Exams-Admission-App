@@ -7,6 +7,8 @@
           <button *ngIf="loggedInUserRole === 'exams_admin'" class="modify-btn" (click)="cancel()">Cancel</button>
         </div>
       </div>
+      <app-shared-skeleton-loading [isLoading]="isDataLoading">
+      </app-shared-skeleton-loading>
       <app-exam-cycle [hallTicketDetails]="hallTicketDetails" 
       [examTableHeader]="examTableHeader" [examTableData]="examTableData"
       [isHallTicket]="isHallTicket"></app-exam-cycle>

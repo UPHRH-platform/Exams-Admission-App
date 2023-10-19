@@ -208,12 +208,9 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getHallTickets() {
-    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTickets$()
       .pipe((mergeMap((response: any) => {
-        unformattedResponse = response.responseData;
-        console.log(unformattedResponse)
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
@@ -224,7 +221,6 @@ export class ManageHallTicketsAdminListComponent {
           this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
 
           this.isDataLoading = false;
-          this.baseService.setHallTicketData$(unformattedResponse)
         },
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;
@@ -280,12 +276,9 @@ export class ManageHallTicketsAdminListComponent {
 
   }
   getHallTicketsForDataCorrections() {
-    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTicketsForDataCorrections$()
       .pipe((mergeMap((response: any) => {
-        unformattedResponse = response.responseData;
-        console.log(unformattedResponse)
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
@@ -295,7 +288,6 @@ export class ManageHallTicketsAdminListComponent {
           this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
 
           this.isDataLoading = false;
-          this.baseService.setHallTicketData$(unformattedResponse)
         },
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;

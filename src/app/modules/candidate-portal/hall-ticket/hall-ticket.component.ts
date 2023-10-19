@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 import { BaseService } from '../../../service/base.service';
 @Component({
@@ -48,7 +48,7 @@ export class HallTicketComponent implements OnInit {
   ]
 
   examTableData= []
-
+  isDataLoading: boolean = false;
   isHallTicket = true
   //#endregion
 
@@ -56,6 +56,7 @@ export class HallTicketComponent implements OnInit {
   constructor(
     private router: Router,
     private baseService: BaseService,
+    private route: ActivatedRoute,
     private authService: AuthServiceService
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -63,39 +64,45 @@ export class HallTicketComponent implements OnInit {
   //#endregion
 
   ngOnInit(): void {
-    this.intialisation()
+    let eid  = this.route.snapshot.paramMap.get('eid') ||""
+    let sid  = this.route.snapshot.paramMap.get('sid') ||""
+    console.log(eid)
+    console.log(sid)
+    this.intialisation(parseInt(sid),parseInt(eid))
   }
 
   //#region (intialisation)
-  intialisation() {
-
-    this.baseService.getHallTicketData$(1).subscribe({
+  intialisation(studentId: number, examCycleId: number) {
+    this.isDataLoading = true;
+  /*   this.baseService.getHallTicketData$(studentId,examCycleId).subscribe({ */
+      this.baseService.getHallTicketData$(12,5).subscribe({
       next: (res: any) => {
-
-        if (res && res[0]) {
-      
-        this.hallTicketDetails = res[0];
-
-        this.examTableData  = res[0]!.examCycle.exams;
+        if (res && res.responseData) {
+        this.hallTicketDetails = res.responseData;
+        this.hallTicketDetails.dob = this.reverseDate(res.responseData.dateOfBirth)
+        this.examTableData  =  res.responseData.exams;
         }
-
-        
+        this.isDataLoading = false;
       },
       error: (error: any) => {
         console.log(error.message)
+        this.isDataLoading = false;
       }
     })
  
   }
 
-  getHallTicketDetails() {
-    //this.candidatePortalService.getHallTicketDetails()
-    // .pipe(mergeMap((res: any) => {
-    //   return this.formateExamDetails(res)
-    // })).subscribe((examDetails: any)) {
-
-    // }
+  reverseDate(date: string){
+    let Dob = new Date(date);
+    return  Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
   }
+
+/*   getHallTicketDetails() {
+    this.baseService.getHallTicketDetails()
+   .subscribe((examDetails: any)) {
+
+    }
+  } */
 
   // formateExamDetails(examData: any) {
   //   let formatedData = examData
@@ -106,7 +113,7 @@ export class HallTicketComponent implements OnInit {
 
   //#region (navigate to modify)
   redirectToModifyHallticket() {
-    this.router.navigateByUrl('/candidate-portal/modify-hallticket')
+    this.router.navigate(['/candidate-portal/modify-hallticket'],{ state: this.hallTicketDetails })
   }
 
   cancel() {

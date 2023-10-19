@@ -11,16 +11,6 @@ export class ExamHallTicketStudentDetailsComponent {
 
   constructor() { }
 
-  ngOnInit() {
-    if (this.hallTicketDetails) {
-      this.hallTicketDetails!.dob = this.reverseDate(this.hallTicketDetails!.dob)
-    }
-  }
 
-  reverseDate(date: string){
-    let Dob = new Date(date);
-    return  Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
-  
-  }
 
 }
