@@ -23,7 +23,8 @@ export class UploadDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<UploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    this.dialogDetails = data
+    this.dialogDetails = data;
+    this.dialogDetails.acceptFiles = data.acceptFiles ? data.acceptFiles : '.csv';
     this.uploadForm = new FormGroup({
       dispatchDate: new FormControl(),
       idType: new FormControl()
@@ -49,7 +50,7 @@ export class UploadDialogComponent implements OnInit {
      let selectedFile = event.target.files[0];
      const extension = selectedFile.name.split('.').pop();
      const fileSize = selectedFile.size;
-     const allowedExtensions = ['csv'];
+     const allowedExtensions = this.dialogDetails.acceptFiles;
      if (allowedExtensions.includes(extension)) {
        // validate file size to be less than 2mb if the file has a valid extension
        if (fileSize < 2000000) {
@@ -65,7 +66,7 @@ export class UploadDialogComponent implements OnInit {
          this.fileUploadError = 'Please upload files with size less than 2MB';
        }
      } else {
-       this.fileUploadError = `Please upload ${allowedExtensions.join(', ')} files`;
+       this.fileUploadError = `Please upload ${allowedExtensions} files`;
      }
      if (this.files.length > 0) {
       btn.hideButton = true

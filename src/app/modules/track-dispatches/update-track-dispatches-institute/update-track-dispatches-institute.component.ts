@@ -9,6 +9,7 @@ import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-pro
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthServiceService } from 'src/app/core/services';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
@@ -27,12 +28,15 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   ];
   dispatchesList = [];
   loggedInUserId: string | number;
-  instituteDetail: any
+  instituteDetail: any;
+  pdfUrl: any;
+  downloadPdf = false;
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
     private authService: AuthServiceService,
     private toastrService: ToastrServiceService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -56,9 +60,13 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   }
 
   getInstituteByuserId() {
-      this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      this.baseService.getInstituteDetailsByUser(this.loggedInUserId)
+      .pipe(mergeMap((res: any) => {
+        return this.baseService.getInstituteVerifiedDetails(res.responseData[0].instituteCode);
+      }))
+      .subscribe({
         next: (res) => {
-          this.instituteDetail = res.responseData[0];
+          this.instituteDetail = res.responseData;
         }
       })
   }
@@ -69,7 +77,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       this.baseService.getDispatchesListByInstitutes$(this.instituteDetail.id, examCycleId)
         .subscribe({
           next:(res: any) => {
-            if (res.responseData && res.responseData.length > 0) { // remove if when api working
+            if (res.responseData && res.responseData.length > 0) {
               this.dispatchesList = res.responseData
             }
           },
@@ -82,7 +90,8 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
 
   uplodeOrViewProof(dispatch: any) {
     if (dispatch.proofUploaded) {
-      this.viewProof(dispatch.dispatchProofFileLocation)
+      // this.viewProof(dispatch.dispatchProofFileLocation)
+      this.downloadProof(dispatch.dispatchProofFileLocation)
     } else {
       this.uploadProof(dispatch)
     }
@@ -95,6 +104,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
         labelOne: 'Select Dispatch Date',
         labelTwo: 'Attach file(s)',
         dateSelect: 'dateSelect',
+        acceptFiles: '.pdf',
 
         description: ['Hall ticket downloaded successfully'],
         buttons: [
@@ -126,7 +136,6 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       },
     })
     dialogRef.afterClosed().subscribe(result => {
-      console.log("file", result)
       if (result) {
         let month = '' + (result.dispatchDate.getMonth() + 1);
         let day = '' + result.dispatchDate.getDate();
@@ -135,14 +144,9 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
         month = month.length < 2 ? '0' + month : month
         day = day.length < 2 ? '0' + day : day
         const dispatchDate = year + '-' + month + '-' + day
-        // const formBody = {
-        //   examCycleId: this.examCycle.value,
-        //   examId: dispatch.examId,
-        //   dispatchDate: dispatchDate,
-        // }
         const request = {
-          examCycleId: 5,
-          examId: 15,
+          examCycleId: this.examCycle.value,
+          examId: dispatch.examId,
           dispatchDate: dispatchDate,
           examCenterCode: this.instituteDetail.instituteCode
         }
@@ -188,37 +192,46 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     })
   }
 
-  viewProof(dispatchId: any) {
-    this.baseService.getDispatchesViewProof$(dispatchId)
-    .subscribe({
-      next: (res: any) => {
-        if (res.responseData) {
-          const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
-            data: {
-              documentLink: res.responseData,
-              buttons: [
-                {
-                  btnText: 'Cancel',
-                  positionClass: 'left',
-                  btnClass: 'btn-outline-gray',
-                  type: 'close'
-                }
-              ],
-            },
-            width: '700px',
-            maxWidth: '90vw',
-            maxHeight: '90vh'
-          })
-          dialogRef.afterClosed().subscribe((response: any) => {
-            if (response) {
-            }
-          })
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error)
-      }
-    })
+  // viewProof(dispatchId: any) {
+  //   this.baseService.getDispatchesViewProof$(dispatchId)
+  //   .subscribe({
+  //     next: (res: any) => {
+  //       if (res.responseData) {
+  //         const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
+  //           data: {
+  //             documentLink: res.responseData,
+  //             buttons: [
+  //               {
+  //                 btnText: 'Cancel',
+  //                 positionClass: 'left',
+  //                 btnClass: 'btn-outline-gray',
+  //                 type: 'close'
+  //               }
+  //             ],
+  //           },
+  //           width: '700px',
+  //           maxWidth: '90vw',
+  //           maxHeight: '90vh'
+  //         })
+  //         dialogRef.afterClosed().subscribe((response: any) => {
+  //           if (response) {
+  //           }
+  //         })
+  //       }
+  //     },
+  //     error: (error: HttpErrorResponse) => {
+  //       console.log(error)
+  //     }
+  //   })
+  // }
+
+  downloadProof(dispatchProofFileLocation: string) {
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dispatchProofFileLocation);
+    this.downloadPdf = true;
+    setTimeout(() => {
+      this.downloadPdf = false;
+    }, 500);
+
   }
 
 }

@@ -62,7 +62,8 @@
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
         },
         "USER_INSTITUTE_MAPPING": {
-            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
+            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user",
+            "EXAM_CENTER_VERIFIED": "/v1/admin/examCenter/verified"
         },
         "TRACK_DISPATCHES": {
             "GET_DISPATCHES_LIST": "/v1/admin/institutes/dispatchStatus/",
@@ -74,7 +75,9 @@
         },
         "MANAGE_RESULTS": {
             "PUBLISH": "/v1/studentResults/publish",
-            "MANAGE_RESULTS": "/v1/studentResults/manageResults"
+            "MANAGE_RESULTS": "/v1/studentResults/manageResults",
+            "UPLOAD_EXTERNAL_MARKS": "",
+            "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload"
         }
     }
 }

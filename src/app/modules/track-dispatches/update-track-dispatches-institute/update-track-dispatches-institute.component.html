@@ -26,10 +26,13 @@
                 </div>
             </mat-card-content>
             <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                <button class="view-btn" (click)="uplodeOrViewProof(dispatch)" [disabled]="!instituteDetail.allowedForExamCentre">{{ (dispatch.proofUploaded ? "View
+                <button class="view-btn" (click)="uplodeOrViewProof(dispatch)" [disabled]="!instituteDetail.allowedForExamCentre">{{ (dispatch.proofUploaded ? "Download
                     Proof" : "Upload Proof") }}</button>
                 <!-- <button class="btn-2" (click)="navigateToView(item.navigateUrl)" *ngIf="item.status !== 'Pending'">View</button> -->
             </div>
         </mat-card>
     </div>
 </div>
+<ng-container *ngIf="downloadPdf">
+    <iframe style="display: none;" [src]="pdfUrl" width="100%" height="500px"></iframe>
+</ng-container>

@@ -37,7 +37,7 @@
           [isHallTicket]="true" 
           [removeTbodyColor]="true" 
           [isPageable]="true" 
-          (cellClickAction)="viewProof($event)"
+          (cellClickAction)="downloadProof($event)"
         ></app-shared-table>
       </div>
     </ng-container>
@@ -51,4 +51,8 @@
           [isPageable]="true"
         ></app-shared-table>
       </div>
-    </ng-template>  </div>
+    </ng-template>  
+    <ng-container *ngIf="downloadPdf">
+      <iframe style="display: none;" [src]="pdfUrl" width="100%" height="500px"></iframe>
+    </ng-container>
+  </div>
