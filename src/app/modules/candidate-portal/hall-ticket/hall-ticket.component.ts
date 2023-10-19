@@ -79,6 +79,7 @@ export class HallTicketComponent implements OnInit {
       next: (res: any) => {
         if (res && res.responseData) {
         this.hallTicketDetails = res.responseData;
+        this.hallTicketDetails = res.responseData;
         this.hallTicketDetails.dob = this.reverseDate(res.responseData.dateOfBirth)
         this.examTableData  =  res.responseData.exams;
         }

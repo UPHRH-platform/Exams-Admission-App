@@ -15,6 +15,7 @@ import { ConfigService, RequestParam, ServerResponse } from '../shared';
 })
 export class BaseService extends HttpService {
 
+
   token: string;
   override baseUrl: string;
   headers = {
@@ -595,6 +596,19 @@ export class BaseService extends HttpService {
         data: {},
       }
       return this.get(requestParam);
+  }
+
+  requestHallTicketModification$(reqbody: any) {
+    console.log(reqbody)
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION,
+      data: reqbody,
+      header: {
+        'Accept': '*/*',
+        'x-authenticated-user-token': this.token
+      }
+    }
+    return this.multipartPost(requestParam);
   }
   
 

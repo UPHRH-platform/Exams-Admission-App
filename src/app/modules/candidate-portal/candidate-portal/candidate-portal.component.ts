@@ -29,6 +29,7 @@ export class CandidatePortalComponent implements OnInit {
   examCycleList = []
 
   candidateFormGroup: FormGroup;
+  selectedExamCycle: any;
 
 
   constructor(
@@ -46,7 +47,6 @@ export class CandidatePortalComponent implements OnInit {
     this.candidateFormGroup = this.formBuilder.group({
       examCycleFormControl: new FormControl('', [
         Validators.required]),
-   
     })
     this.getExamCycles()
   }
