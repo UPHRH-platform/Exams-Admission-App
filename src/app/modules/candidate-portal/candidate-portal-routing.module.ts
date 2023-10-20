@@ -9,7 +9,7 @@ import { StudentGuard } from 'src/app/core/guards/role-guard/role.guard';
 
 const routes: Routes = [
   { path: '', component: CandidatePortalComponent },
-  { path: 'view-hallticket/:sid/:eid', component: HallTicketComponent },
+  { path: 'view-hallticket', component: HallTicketComponent },
   { path: 'modify-hallticket', component: ModifyHallTicketComponent},
   { path: 'view-results', component:  ResultsComponent},
   { path: 'request-revalution', component:  RequestRevalutionComponent},

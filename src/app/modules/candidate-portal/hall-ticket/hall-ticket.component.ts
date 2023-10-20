@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
-import { BaseService } from '../../../service/base.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -50,67 +49,31 @@ export class HallTicketComponent implements OnInit {
   examTableData= []
   isDataLoading: boolean = false;
   isHallTicket = true
+  stateData: any | undefined;
   //#endregion
 
   //#region (constructor)
   constructor(
     private router: Router,
-    private baseService: BaseService,
-    private route: ActivatedRoute,
     private authService: AuthServiceService
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state;
+    console.log(this.stateData.data)
   }
   //#endregion
 
   ngOnInit(): void {
-    let eid  = this.route.snapshot.paramMap.get('eid') ||""
-    let sid  = this.route.snapshot.paramMap.get('sid') ||""
-    console.log(eid)
-    console.log(sid)
-    this.intialisation(parseInt(sid),parseInt(eid))
+    this.intialisation()
   }
 
   //#region (intialisation)
 
-  intialisation(studentId: number, examCycleId: number) {
-    this.isDataLoading = true;
-  /*   this.baseService.getHallTicketData$(studentId,examCycleId).subscribe({ */
-      this.baseService.getHallTicketData$(12,5).subscribe({
-
-      next: (res: any) => {
-        if (res && res.responseData) {
-        this.hallTicketDetails = res.responseData;
-        this.hallTicketDetails = res.responseData;
-        this.hallTicketDetails.dob = this.reverseDate(res.responseData.dateOfBirth)
-        this.examTableData  =  res.responseData.exams;
-        }
-        this.isDataLoading = false;
-      },
-      error: (error: any) => {
-        console.log(error.message)
-        this.isDataLoading = false;
-      }
-    })
- 
+  intialisation() {
+    this.hallTicketDetails = this.stateData.data;
+    this.examTableData  =  this.stateData.data.exams;
   }
 
-  reverseDate(date: string){
-    let Dob = new Date(date);
-    return  Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
-  }
-
-/*   getHallTicketDetails() {
-    this.baseService.getHallTicketDetails()
-   .subscribe((examDetails: any)) {
-
-    }
-  } */
-
-  // formateExamDetails(examData: any) {
-  //   let formatedData = examData
-  //   return formatedData;
-  // }
 
   //#endregion
 

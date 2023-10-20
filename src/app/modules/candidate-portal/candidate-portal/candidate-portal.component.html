@@ -1,6 +1,8 @@
 <div class="main-container">
     <div class="secondary-container">
         <h2 class="title-header">Candidate portal</h2>
+        <app-shared-skeleton-loading [isLoading]="isDataLoading">
+        </app-shared-skeleton-loading>
         <form [formGroup]="candidateFormGroup" (ngSubmit)="onCandidateFormGroupSubmit(candidateFormGroup.value)">
             <div>
                 <div>
