@@ -7,8 +7,9 @@
             "UPLOAD": "/questionPaper/upload",
             "DOWNLOAD": "/v1/questionPaper/download",
             "GET_BY_ID": "/v1/questionPaper",
-            "GET_PREVIEW_URL": "/v1/questionPaper/preview",
-            "DELETE": "/v1/questionPaper/delete"
+            "GET_PREVIEW_URL": "/questionPaper/preview",
+            "DELETE": "/v1/questionPaper/delete",
+            "GET_QUESTIONPAPER_BY_EXAMCYCLE": "/questionPaper/examCycle"
         },
         "STUDENT_ENROLLMENT": {
             "CREATE": "/v1/students/add",
@@ -48,12 +49,21 @@
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all",
+            "GET_CCTV_VERIFICATION_BY_INSTITUTE": "/v1/admin/examCenter/verified",
+            "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus",
             "CENTERS_BY_EXAM_CYCLE": "/v1/admin/byExamCycle/"
+        },
+        "PAYMENT": {
+            "FEES": "/v1/fee/initiate",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
+            "ALL_CENTERS": "/v1/admin/examCenters/all"
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
             "DOWNLOAD":"/v1/admin/hallticket/downloadHallTicket",
-            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/requests",
+            "DETAILS":"/v1/admin/hallticket/hallTicketDetail",
+            "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
             "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "GENERATE":"/v1/admin/hallticket/generateHallTickets",

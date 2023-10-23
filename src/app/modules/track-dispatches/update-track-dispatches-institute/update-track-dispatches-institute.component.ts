@@ -22,21 +22,18 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     id: number;
     examCycleName: string;
   }[] = []
-  examCycle = new FormControl('');
+  examCycle = new FormControl();
   breadcrumbItems = [
     { label: 'Track Dispatches', url: '' }
   ];
   dispatchesList = [];
   loggedInUserId: string | number;
   instituteDetail: any;
-  pdfUrl: any;
-  downloadPdf = false;
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
     private authService: AuthServiceService,
-    private toastrService: ToastrServiceService,
-    private sanitizer: DomSanitizer
+    private toastrService: ToastrServiceService
   ) { }
 
   ngOnInit(): void {
@@ -54,9 +51,15 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
-      .subscribe((examCucles: any) => {
+    .subscribe({
+      next: (examCucles: any) => {
         this.examCycleList = examCucles.examCyclesList;
-      })
+        this.examCycle.setValue(this.examCycleList[this.examCycleList.length - 1].id)
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastrService.showToastr(err, 'Error', 'error', '')
+      }
+    })
   }
 
   getInstituteByuserId() {
@@ -67,6 +70,9 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.instituteDetail = res.responseData;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.showToastr(err, 'Error', 'error', '')
         }
       })
   }
@@ -91,7 +97,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   uplodeOrViewProof(dispatch: any) {
     if (dispatch.proofUploaded) {
       // this.viewProof(dispatch.dispatchProofFileLocation)
-      this.downloadProof(dispatch.dispatchProofFileLocation)
+      this.downloadProof(dispatch)
     } else {
       this.uploadProof(dispatch)
     }
@@ -160,8 +166,8 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
             next: (res: any) => {
               this.openConformationDialog()
             },
-            error: (error: HttpErrorResponse) => {
-              console.log(error);
+            error: (err: HttpErrorResponse) => {
+              this.toastrService.showToastr(err, 'Error', 'error', '')
             }
           })
       }
@@ -225,13 +231,36 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   //   })
   // }
 
-  downloadProof(dispatchProofFileLocation: string) {
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(dispatchProofFileLocation);
-    this.downloadPdf = true;
-    setTimeout(() => {
-      this.downloadPdf = false;
-    }, 500);
-
+  downloadProof(dispatch: any) {
+    const fileLocation = dispatch.dispatchProofFileLocation;
+    this.baseService.downloadPdf$(fileLocation)
+    .subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = dispatch.examName + '_dispatch_proof.pdf';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      window.URL.revokeObjectURL(url);
+      this.dialog.open(ConformationDialogComponent, {
+        data: {
+          dialogType: 'success',
+          description: ['Dispatch proof downloaded successfully'],
+          buttons: [
+            {
+              btnText: 'Ok',
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
+          ],
+        },
+        width: '700px',
+        height: '400px',
+        maxWidth: '90vw',
+        maxHeight: '90vh'
+      })
+    });
   }
 
 }

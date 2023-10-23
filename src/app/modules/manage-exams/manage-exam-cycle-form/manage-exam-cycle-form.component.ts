@@ -298,7 +298,7 @@ export class ManageExamCycleFormComponent {
     this.subjects = [];
     this.baseService.getSubjectsByCourse(courseId).subscribe({
       next: (res) => {
-        this.subjects = res.responseData.subjects;
+        this.subjects = res.responseData.course.subjects;
       }
     })
   }

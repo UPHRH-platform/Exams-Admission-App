@@ -6,7 +6,8 @@ import { BaseService } from 'src/app/service/base.service';
 import { mergeMap, of } from 'rxjs';
 // import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Course {
   value: string;
@@ -104,7 +105,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   instituteTableData = []
   
   examCycleControl = new FormControl();
-  examControl = new FormControl('');
+  examControl = new FormControl();
 
   // searcControl = '';
   // searchKey = ''
@@ -121,8 +122,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
-    private toastrService: ToastrServiceService,
-    private sanitizer: DomSanitizer
+    private toastrService: ToastrServiceService
   ) {}
 
   ngOnInit(): void {
@@ -138,8 +138,13 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
-      .subscribe((examCycles: any) => {
-        this.examCycleList = examCycles.examCyclesList;
+      .subscribe({
+        next: (examCycles: any) => {
+          this.examCycleList = examCycles.examCyclesList;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.showToastr(err, 'Error', 'error', '')
+        }
       })
   }
 
@@ -210,11 +215,35 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   }
 
   downloadProof(event: any) {
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(event.row.dispatchProofFileLocation);
-    this.downloadPdf = true;
-    setTimeout(() => {
-      this.downloadPdf = false
-    }, 500);
+    const fileLocation = event.row.dispatchProofFileLocation;
+    this.baseService.downloadPdf$(fileLocation)
+    .subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = event.row.instituteName + '_' + event.row.exam + '_dispatch_proof.pdf';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      window.URL.revokeObjectURL(url);
+      this.dialog.open(ConformationDialogComponent, {
+        data: {
+          dialogType: 'success',
+          description: ['Dispatch proof downloaded successfully'],
+          buttons: [
+            {
+              btnText: 'Ok',
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
+          ],
+        },
+        width: '700px',
+        height: '400px',
+        maxWidth: '90vw',
+        maxHeight: '90vh'
+      })
+    });
 
   }
 
