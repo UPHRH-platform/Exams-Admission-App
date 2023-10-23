@@ -59,7 +59,7 @@ export class HallTicketComponent implements OnInit {
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
-    console.log(this.stateData.data)
+    console.log(this.stateData?.data)
   }
   //#endregion
 
@@ -70,8 +70,8 @@ export class HallTicketComponent implements OnInit {
   //#region (intialisation)
 
   intialisation() {
-    this.hallTicketDetails = this.stateData.data;
-    this.examTableData  =  this.stateData.data.exams;
+    this.hallTicketDetails = this.stateData?.data;
+    this.examTableData  =  this.stateData?.data.exams;
   }
 
 

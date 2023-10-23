@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { BaseService } from 'src/app/service/base.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class UploadResultsInstituteComponent {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private _http:HttpClient){}
+    private baseService: BaseService){}
     
 
    file:any;
@@ -25,15 +26,6 @@ export class UploadResultsInstituteComponent {
    listOfFiles: any[] = [];
    files: any[] = [];
 
-
-   formatBytes(bytes: any, decimals = 2) {
-    if (!+bytes) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
 
   public changeListener(event: any){
     this.fileUploadError = '';
@@ -47,7 +39,7 @@ export class UploadResultsInstituteComponent {
           if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
             this.files.push(selectedFile);
             this.listOfFiles.push(
-              selectedFile.name.concat(this.formatBytes(selectedFile.size))
+              selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
             );
           } else {
             console.log('file already exists');

@@ -71,6 +71,10 @@
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
         },
+        "ATTENDENCE":{
+            "GET_BY_EXAM_CYCLE": "/v1/attendance/getByExamCycle/",
+            "BULK_UPLOAD": "/v1/attendance/bulkUpload"
+        },
         "USER_INSTITUTE_MAPPING": {
             "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user",
             "EXAM_CENTER_VERIFIED": "/v1/admin/examCenter/verified"
