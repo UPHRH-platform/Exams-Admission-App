@@ -15,7 +15,6 @@ import { ConfigService, RequestParam, ServerResponse } from '../shared';
 })
 export class BaseService extends HttpService {
 
-
   token: string;
   override baseUrl: string;
   headers = {
@@ -63,6 +62,16 @@ export class BaseService extends HttpService {
   downloadPdf$(pdfUrl: string) {
     return this.httpClient.get(pdfUrl, { responseType: 'blob' });
   }
+
+  formatBytes(bytes: any, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  }
+  
   //#endregion
 
 
@@ -599,8 +608,31 @@ export class BaseService extends HttpService {
     return this.get(requestParam);
   }
     /**************************** hall ticket services ends ****************************/
+ /**************************** attendence services starts ****************************/
 
-     /**************************** fee management services ends ****************************/
+    getAttendenceByExamCycle$(examCycleId: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.ATTENDENCE.GET_BY_EXAM_CYCLE+`${examCycleId}`,
+        data: {},
+      }
+      return this.get(requestParam);
+    }
+
+    bulkupload$(formdata: FormData): Observable<ServerResponse> {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.ATTENDENCE.BULK_UPLOAD,
+        data: formdata,
+        header: {
+          'Accept': '*/*',
+          'x-authenticated-user-token': this.token
+        }
+      }
+      return this.multipartPost(requestParam);
+    }
+
+     /**************************** attendence services ends ****************************/
+
+     /**************************** fee management services starts ****************************/
      payFees(feeDetails?: any): Observable<any> {
 
       const requestParam: RequestParam = {

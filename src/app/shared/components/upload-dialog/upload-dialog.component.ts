@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BaseService } from 'src/app/service/base.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class UploadDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<UploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private baseService: BaseService
   ) {
     this.dialogDetails = data;
     this.dialogDetails.acceptFiles = data.acceptFiles ? data.acceptFiles : '.csv';
@@ -36,14 +38,6 @@ export class UploadDialogComponent implements OnInit {
   }
   
 
-  formatBytes(bytes: any, decimals = 2) {
-   if (!+bytes) return '0 Bytes';
-   const k = 1024;
-   const dm = decimals < 0 ? 0 : decimals;
-   const sizes = ['Bytes', 'KB', 'MB'];
-   const i = Math.floor(Math.log(bytes) / Math.log(k));
-   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
- }
 
  public changeListener(event: any, btn: any){
    this.fileUploadError = '';
@@ -57,7 +51,7 @@ export class UploadDialogComponent implements OnInit {
          if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
            this.files.push(selectedFile);
            this.listOfFiles.push(
-             selectedFile.name.concat(this.formatBytes(selectedFile.size))
+             selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
            );
          } else {
            console.log('file already exists');

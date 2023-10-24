@@ -15,6 +15,7 @@ import { ConfigService } from './services/config/config.service';
 import { SharedSkeletonLoadingComponent } from './components/shared-skeleton-loading/shared-skeleton-loading.component';
 import { UploadDialogComponent } from './components/upload-dialog/upload-dialog.component';
 import { SharedQuestionPaperComponent } from './components/shared-ques-paper/shared-ques.component';
+import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-select/shared-exam-cycle-select.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SharedQuestionPaperComponent } from './components/shared-ques-paper/sha
     ConformationDialogComponent,
     UploadDialogComponent,
     SharedQuestionPaperComponent,
+    SharedExamCycleSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +48,8 @@ import { SharedQuestionPaperComponent } from './components/shared-ques-paper/sha
     HeaderComponent,
     SharedTableComponent,
     HttpClientModule,
-    SharedQuestionPaperComponent
+    SharedQuestionPaperComponent,
+    SharedExamCycleSelectComponent
   ],
   providers: [ConfigService]
 })

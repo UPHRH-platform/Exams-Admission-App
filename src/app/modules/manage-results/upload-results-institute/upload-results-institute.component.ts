@@ -37,15 +37,6 @@ export class UploadResultsInstituteComponent implements OnInit{
   }
     
 
-   formatBytes(bytes: any, decimals = 2) {
-    if (!+bytes) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
-
   public changeListener(event: any){
     this.fileUploadError = '';
       let selectedFile = event.target.files[0];
@@ -58,7 +49,7 @@ export class UploadResultsInstituteComponent implements OnInit{
           if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
             this.files.push(selectedFile);
             this.listOfFiles.push(
-              selectedFile.name.concat(this.formatBytes(selectedFile.size))
+              selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
             );
           } else {
             console.log('file already exists');

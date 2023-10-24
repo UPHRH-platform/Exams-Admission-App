@@ -9,14 +9,19 @@
       margin-top: 24px;
     "
   >
-    <mat-form-field class="exam-form" appearance="outline">
+<!--     <mat-form-field class="exam-form" appearance="outline">
       <mat-label class="label">Exam cycle</mat-label>
       <mat-select>
         <mat-option *ngFor="let course of courses" [value]="course.value">
           {{ course.viewValue }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
+    <app-shared-exam-cycle-select
+    [examCycleFormControl]="examCycleFormControl"
+    [examCycleList]="examCycleList"
+    (selectedExamcycleId)="getSelectedExamcycleId($event)" >
+    </app-shared-exam-cycle-select>
     <div class="buttons">
       <div>
         <button class="btn-2" (click)="goToUpload()">
