@@ -22,10 +22,8 @@ export class SharedQuestionPaperComponent {
    listOfFiles: any[] = [];
    files: any[] = [];
    currentDate = new Date();
-   currentTime = new Date().getMinutes();
   formattedDate: any;
   currentRoute: any;
-  lessTime = new Date(this.currentDate).getMinutes() - 30;
   @Input() examCycleList : string[] ;
   @Input() examCycleControl: FormControl;
   @Input() questionPapersList : QuestionPaper[];
@@ -50,8 +48,6 @@ export class SharedQuestionPaperComponent {
    if(this.router.url === '/student-registration/institute') {
     this.downloadComponent = false;
    }
-   console.log(this.lessTime)
-   console.log(this.currentTime);
   }
 
   getTime(timeString: any) {

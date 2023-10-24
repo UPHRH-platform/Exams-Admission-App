@@ -75,7 +75,7 @@ export class RegisterStudentsComponent {
 
   regNewStdnts(exam: QuestionPaper) {
     if (this.examCycleControl.valid) {
-    this.router.navigate(['student-registration/add-new-students-regn'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
+    this.router.navigate([`student-registration/add-new-students-regn/${this.examCycle}/${exam.examName}`]);
     }
   }
 

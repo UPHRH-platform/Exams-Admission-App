@@ -130,6 +130,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   }
 
   getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
+    this.enrollmentTableData = [];
   let request = {
     instituteId: instituteId !== undefined? instituteId : '',
     courseId: courseId !== undefined? courseId : '',

@@ -7,6 +7,7 @@ import { ConfirmStudentRegistrationComponent } from '../dialogs/confirm-student-
 import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-new-regn',
@@ -14,8 +15,6 @@ import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.serv
   styleUrls: ['./add-new-regn.component.scss']
 })
 export class AddNewRegnComponent {
-
-
   stateData : any;  
   searcKey: string = '';
   studentsToRegister: any = [];
@@ -23,25 +22,27 @@ export class AddNewRegnComponent {
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ]
+  examCycleId: any;
   enrollmentData: any[] = [];
+  examName: string;
+  finalRegistrationRequest: any[] = [];
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private authService: AuthServiceService,
     private baseService: BaseService,
-    private toastr: ToastrServiceService
+    private toastr: ToastrServiceService,
+    private route: ActivatedRoute
     ){
-      this.stateData = this.router?.getCurrentNavigation()?.extras.state;
-      if (!this.stateData) {
-        this.router.navigateByUrl('/student-registration/institute')
-      }
+        this.route.params.subscribe((params => {
+          this.examCycleId = params['id'];
+          this.examName = params['examName'];
+        }))
   }
  
   viewStudentsTableColumns: TableColumn[] = [];
   isDataLoading: boolean = false;
   regdStudents : RegdStudentsTableData[] = [];
-  
-  examList =  ["Exam1", "Exam2","Exam3", "Exam4","Exam5", "Exam6"];
   ngOnInit(): void {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.initializeColumns();
@@ -53,26 +54,17 @@ export class AddNewRegnComponent {
     this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
       next: (res) => {
         const instituteId = res.responseData[0].id;
-        this.getEnrollmentData(instituteId);
+        this.getUnregisteredList(this.examCycleId, instituteId);
+        // this.getEnrollmentData(instituteId);
       }
     })
   }
   // get enrollment based on institute
-  getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
-    let request = {
-      instituteId: instituteId !== undefined? instituteId : '',
-      courseId: courseId !== undefined? courseId : '',
-      academicYear: academicYear !== undefined? academicYear: '',
-      verificationStatus: ''
-    }
+  getUnregisteredList(examCycleId: string, instituteId: string, ) {
     this.isDataLoading = true;
-    this.baseService.getEnrollmentList(request).subscribe({
+    this.baseService.getRegistrationPendingStudents(examCycleId, instituteId).subscribe({
       next: (res) => {
         this.isDataLoading = false;
-        res.responseData.map((obj: any) => {
-          obj.courseName = obj.course.courseName;
-        })
-        console.log("RES ===>", res);
         this.enrollmentData = res.responseData;
       },
       error: (error: any) => {
@@ -83,50 +75,9 @@ export class AddNewRegnComponent {
     }
 
   onSelectedRows(value: any) {
-    this.studentsToRegister = value
-  }
-
-  getRegdStudents(examId: number, examCycle: string){
-    this.isDataLoading = false;
-    this.regdStudents = [
-      {
-        id: 0,
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName: []
-      },
-      {
-        id: 1,
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName: []
-
-      },
-      {
-        id: 2,
-        name: "Adhi",
-        rollNo: "12345",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName: []
-      },
-      {
-        id: 3,
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName: []
-      }
-    ]
+    console.log("value ===>", value);
+    this.studentsToRegister = value;
+    console.log("studentstoregister =>", this.studentsToRegister);
   }
 
   initializeColumns(): void {
@@ -147,11 +98,11 @@ export class AddNewRegnComponent {
         cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
       },
       {
-        columnDef: 'provisionalEnrollmentNumber',
-        header: 'Provisional Enrollment Number',
+        columnDef: 'enrollmentNumber',
+        header: 'Enrollment Number',
         isSortable: false,
         isLink: false,
-        cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
+        cell: (element: Record<string, any>) => `${element['enrollmentNumber']}`
       },
       {
         columnDef: 'marks',
@@ -168,54 +119,31 @@ export class AddNewRegnComponent {
         cell: (element: Record<string, any>) => `${element['courseName']}`
       },
       {
-        columnDef: 'admissionYear',
+        columnDef: 'numberOfExams',
+        header: 'No of Exams',
+        isSortable: true,
+        cell: (element: Record<string, any>) => `${element['numberOfExams']}`
+      },
+      {
+        columnDef: 'session',
         header: 'Admission Year',
         isSortable: false,
         isLink: false,
-        cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
+        cell: (element: Record<string, any>) => `${element['session']}`
       },
-      // {
-      //   columnDef: 'name',
-      //   header: 'Name',
-      //   isSortable: true,
-      //   cell: (element: Record<string, any>) => `${element['name']}`
-      // },
-      // {
-      //   columnDef: 'rollNo',
-      //   header: 'Roll no',
-      //   isSortable: true,
-      //   cell: (element: Record<string, any>) => `${element['rollNo']}`
-      // },
-      // {
-      //   columnDef: 'course',
-      //   header: 'Course',
-      //   isSortable: true,
-      //   cell: (element: Record<string, any>) => `${element['course']}`
-      // },
-      // {
-      //   columnDef: 'admissionYr',
-      //   header: 'Year Of Admission',
-      //   isSortable: true,
-      //   cell: (element: Record<string, any>) => `${element['admissionYr']}`
-      // },
-      // {
-      //   columnDef: 'noOfExam',
-      //   header: 'No of Exam',
-      //   isSortable: true,
-      //   cell: (element: Record<string, any>) => `${element['noOfExam']}`
-      // },
-      // {
-      //   columnDef: 'examName',
-      //   header: 'Exam Name',
-      //   isCheckBox: false,
-      //   isDropdown: true,
-      //   cell: (element: Record<string, any>) => ``
-      // }, 
+       {
+        columnDef: 'exams',
+        header: 'Exam Name',
+        isCheckBox: false,
+        isDropdown: true,
+        cell: (element: Record<string, any>) => ``
+      }, 
 
     ];
   }
 
   openRegistrationPopup() {
+    alert("1");
     const registrationPopupData = {
       examDetails: this.stateData,
       tableColumns: this.initializeRegistrationTableColumns(),
@@ -231,7 +159,33 @@ export class AddNewRegnComponent {
       })
 
       dialogRef.afterClosed().subscribe((response: any) => {
-        if(response) {}
+        if(response) {
+          if(response === true) {
+          let request: any;
+          const requestObjArray: any = [];
+          this.finalRegistrationRequest.forEach((obj) => {
+              request = {
+              examIds: obj.examIds,
+              studentId: obj.id,
+              examCycleId: this.examCycleId,
+              status: "REGISTERED",
+              remarks: "Payment. "
+            }
+            requestObjArray.push(request);
+          })
+        
+          this.baseService.registerStudentsToExams(requestObjArray).subscribe({
+            next: (res) => {
+              this.toastr.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '');
+              this.router.navigate(['/student-registration/institute']);
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              this.toastr.showToastr('Error while registering student to exams', 'Error', 'error', '');
+            }
+          })
+        }
+      }
       })
     }
   }
@@ -249,10 +203,10 @@ export class AddNewRegnComponent {
         },
       },
       {
-        columnDef: 'rollNo',
-        header: 'Roll no',
+        columnDef: 'enrollmentNumber',
+        header: 'Enrollment No',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`,
+        cell: (element: Record<string, any>) => `${element['enrollmentNumber']}`,
         cellStyle: {
           'background-color': '#0000000a',
           'color': '#00000099'
@@ -303,18 +257,31 @@ export class AddNewRegnComponent {
   }
 
   getStudentsToRegister() {
-    const StudentsToRegisterList: { id: any; name: any; rollNo: any; course: any; admissionYr: any; noOfExam: any; examNames: any; }[] = []
+    this.finalRegistrationRequest = [];
+    const StudentsToRegisterList: any[] = []
+    let details: any = {};
+    console.log("register =>", this.studentsToRegister);
+    const examNames: any = [];
+    const examIds: any = [];
     this.studentsToRegister.forEach((studentDetails: any) => {
-      const details = {
+      details = {
         id: studentDetails.id,
-        name: studentDetails.name,
-        rollNo: studentDetails.rollNo,
-        course: studentDetails.course,
-        admissionYr: studentDetails.admissionYr,
-        noOfExam: studentDetails.noOfExam,
-        examNames: studentDetails.examName.join(", "),
+        name: studentDetails.firstName + ' ' + studentDetails.surname,
+        course: studentDetails.courseName,
+        admissionYr: studentDetails.session,
+        enrollmentNumber: studentDetails.enrollmentNumber,
+        noOfExam: studentDetails.examName.length,
+        // examNames: studentDetails.examName.join(", "),
       }
-      StudentsToRegisterList.push(details)
+      // to map exam names
+      studentDetails.examName.map((obj: any) => {
+       examNames.push(obj.name);
+       examIds.push(obj.id);
+      })
+      details['examNames'] = examNames.join();
+      details['examIds'] = examIds;
+      StudentsToRegisterList.push(details);
+      this.finalRegistrationRequest.push(details);
     })
     return StudentsToRegisterList
   }

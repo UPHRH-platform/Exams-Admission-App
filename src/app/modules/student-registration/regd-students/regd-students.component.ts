@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthServiceService } from 'src/app/core/services';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 
@@ -10,11 +11,13 @@ import { BaseService } from 'src/app/service/base.service';
 })
 export class RegdStudentsComponent {
   examCycleId: string;
+  instituteId: string;
+  registeredStudents: any=[];
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
   constructor(
-    private router: Router, private baseService: BaseService, private route: ActivatedRoute){
+    private router: Router, private baseService: BaseService, private route: ActivatedRoute, private authService: AuthServiceService){
       this.route.params.subscribe((param => {
         this.examCycleId = param['id'];
       }))
@@ -26,16 +29,42 @@ export class RegdStudentsComponent {
   
   ngOnInit(): void {
     this.initializeColumns();
-    if(this.examCycleId !== undefined) {
-    this.getRegdStudents(this.examCycleId);
-    }
+    this.getInstituteDetailByUserId();
   }
 
-  getRegdStudents(examCycle: string){
-    this.isDataLoading = true;
-    this.baseService.getStudentRegistrationByExamCycle(this.examCycleId).subscribe({
+  getInstituteDetailByUserId() {
+    const loggedInUserId = this.authService.getUserRepresentation().id;
+    this.baseService.getInstituteDetailsByUser(loggedInUserId).subscribe({
       next: (res) => {
-        console.log("res ==>", res);
+        if(this.examCycleId !== undefined) {
+        this.getRegdStudents(res.responseData[0].id);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  getRegdStudents(instituteId: string | number){
+    this.isDataLoading = true;
+    this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId).subscribe({
+      next: (res) => {
+        this.isDataLoading = false;
+        this.regdStudents = res.responseData;
+        if(this.regdStudents.length > 0) {
+          this.regdStudents.map((obj: any) => {
+            const courseNames: any = [];
+           obj.exams.forEach((exam: any) => {
+            courseNames.push(exam.name);
+           })
+           obj.examName = courseNames.join();
+          })
+        }
+        console.log(this.regdStudents);
+      },
+      error: (err) => {
+        console.log(err);
         this.isDataLoading = false;
       }
     })
@@ -44,34 +73,34 @@ export class RegdStudentsComponent {
   initializeColumns(): void {
     this.viewStudentsTableColumns = [
       {
-        columnDef: 'name',
+        columnDef: 'firstName',
         header: 'Name',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['name']}`
+        cell: (element: Record<string, any>) => `${element['firstName']}`
       },
       {
-        columnDef: 'rollNo',
-        header: 'Roll no',
+        columnDef: 'enrollmentNumber',
+        header: 'Roll No',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`
+        cell: (element: Record<string, any>) => `${element['enrollmentNumber']}`
       },
       {
-        columnDef: 'course',
+        columnDef: 'courseName',
         header: 'Course',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['course']}`
+        cell: (element: Record<string, any>) => `${element['courseName']}`
       },
       {
-        columnDef: 'admissionYr',
+        columnDef: 'session',
         header: 'Year Of Admission',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['admissionYr']}`
+        cell: (element: Record<string, any>) => `${element['session']}`
       },
       {
-        columnDef: 'noOfExam',
+        columnDef: 'numberOfExams',
         header: 'No of Exam',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['noOfExam']}`
+        cell: (element: Record<string, any>) => `${element['numberOfExams']}`
       },
       {
         columnDef: 'examName',
