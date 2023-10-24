@@ -66,7 +66,7 @@ export class BaseService extends HttpService {
   //#endregion
 
 
-  getInstitutesResultData$(): Observable<any> {
+  getInstitutesResultData$(examCycleId: string): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
 
     const result = {
@@ -75,27 +75,27 @@ export class BaseService extends HttpService {
           instituteName: 'NEW COLLEGE OF NURSING',
           instituteId: '123',
           course: 'xxxx',
-          internalMarksProvided: true,
-          finalMarksProvided: true,
-          revisedFinalMarksProvided: true,
+          hasInternalMarks: true,
+          hasFinalMarks: true,
+          hasRevisedFinalMarks: true,
          
         },
         {
           instituteName: 'OLD COLLEGE OF NURSING',
           instituteId: '123',
           course: 'xxxx',
-          internalMarksProvided:false,
-          finalMarksProvided: false,
-          revisedfinalMarksProvided: false,
+          hasInternalMarks:false,
+          hasFinalMarks: false,
+          hasRevisedFinalMarks: false,
        
         },
         {
           instituteName: 'MODERN COLLEGE OF NURSING',
           instituteId: '123',
           course: 'xxxx',
-          internalMarksProvided: true,
-          finalMarksProvided: false,
-          revisedfinalMarksProvided: true,
+          hasInternalMarks: true,
+          hasFinalMarks: false,
+          hasRevisedFinalMarks: true,
       
         },
       
@@ -105,80 +105,10 @@ export class BaseService extends HttpService {
     return of( result )
 
     // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}`,
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}?examCycle=${examCycleId}`,
     //   data: {}
     // }
     // return this.get(requestParam)
-  }
-
-  getStudentResultData$():Observable<any>{
-    return of( {
-      responseData: [
-        {
-          studentName: 'Devaprathap Nagendra',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '23',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Madison',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '48',
-          externalMarks: '23',
-          revisedMarks: '50'
-          
-        },
-        {
-          studentName: 'Ravi',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '47',
-          externalMarks: '43',
-          revisedMarks: '32'
-          
-        },
-        {
-          studentName: 'Kanaka Rao',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '34',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Arun',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '40',
-          revisedMarks: '35'
-          
-        },
-        {
-          studentName: 'Aman',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '30',
-          revisedMarks: '46'
-          
-        },
-        {
-          studentName: 'Devaprathap N.',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '44',
-          externalMarks: '45',
-          revisedMarks: '50'
-          
-        },
-      ]
-    })
   }
 
   deleteResults(): Observable<any> {
@@ -885,10 +815,9 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   }
   return this.get(requestParam);
 }
-  //#region (candidate portal)
 
 
-  //#region (Results)
+  //#region (manage Results)
 
   getResults() {
     const response = [
@@ -913,6 +842,76 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
       },
     ]
     return of(response)
+  }
+
+  getStudentResultData$():Observable<any>{
+    return of( {
+      responseData: [
+        {
+          studentName: 'Devaprathap Nagendra',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '45',
+          externalMarks: '23',
+          revisedMarks: '45'
+          
+        },
+        {
+          studentName: 'Madison',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '48',
+          externalMarks: '23',
+          revisedMarks: '50'
+          
+        },
+        {
+          studentName: 'Ravi',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '47',
+          externalMarks: '43',
+          revisedMarks: '32'
+          
+        },
+        {
+          studentName: 'Kanaka Rao',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '49',
+          externalMarks: '34',
+          revisedMarks: '45'
+          
+        },
+        {
+          studentName: 'Arun',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '49',
+          externalMarks: '40',
+          revisedMarks: '35'
+          
+        },
+        {
+          studentName: 'Aman',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '45',
+          externalMarks: '30',
+          revisedMarks: '46'
+          
+        },
+        {
+          studentName: 'Devaprathap N.',
+          courseName: 'XXXX',
+          exams: 'Exam 1',
+          internalMarks: '44',
+          externalMarks: '45',
+          revisedMarks: '50'
+          
+        },
+      ]
+    })
   }
 
   publishResults$(request: any) {
@@ -966,7 +965,36 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.multipartPost(requestParam)
   }
 
+  downloadResultsTemplate(): Observable<Blob> {
+    return this.httpClient.get('assets/templates/instituteResultTemplate.xlsx', { responseType: 'blob' });
+  }
+
+  getInternalMarksOfExam$(formBody: any) {
+    return of({
+      responseData: [
+        {
+          "firstName": "jay",
+          "courseName": "Mechanical Engineering",
+          "exam": "Data Structure",
+          "internalMark": 13,
+          "lastName": "singh",
+          enrolementNumber: 'EN2023 ABC37',
+        },
+        {
+          "firstName": "jay",
+          "courseName": "Mechanical Engineering",
+          "exam": "Data Structure",
+          "internalMark": 13,
+          "lastName": "singh",
+          enrolementNumber: 'EN2023 ABC37',
+        },
+      ]
+    })
+  }
+
   //#endregion
+
+  //#region (candidate portal)
 
   formateResultDetails() {
     const response = [

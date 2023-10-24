@@ -86,7 +86,7 @@
         "MANAGE_RESULTS": {
             "PUBLISH": "/v1/studentResults/publish",
             "MANAGE_RESULTS": "/v1/studentResults/manageResults",
-            "UPLOAD_EXTERNAL_MARKS": "",
+            "UPLOAD_EXTERNAL_MARKS": "/v1/studentResults/bulkUploadExternal",
             "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload"
         }
     }

@@ -7,12 +7,19 @@
                 <label class="examCycleLable">Exam cycle</label>
             </div>
             <mat-form-field class="exam-form" appearance="outline">
-                <mat-select>
-                <mat-option *ngFor="let year of years" [value]="year.value">
-                    {{ year.viewValue }}
-                </mat-option>
+                <mat-select [formControl]="examCycleControl">
+                  <ng-container *ngFor="let examCycle of examCycleList">
+                    <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                  </ng-container>
                 </mat-select>
-            </mat-form-field>
+              </mat-form-field>
+            <!-- <mat-form-field class="exam-form" appearance="outline">
+                <mat-select>
+                    <mat-option *ngFor="let year of years" [value]="year.value">
+                        {{ year.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> -->
         </div>
         <div style="display: flex;flex-direction: column;">
             <div class="mb1">
@@ -22,9 +29,9 @@
                 <mat-select>
                 <mat-option
                     *ngFor="let institute of institutes"
-                    [value]="institute.value"
+                    [value]="institute.id"
                 >
-                    {{ institute.viewValue }}
+                    {{ institute.instituteName }}
                 </mat-option>
                 </mat-select>
             </mat-form-field>
