@@ -58,6 +58,7 @@ export class ManageExamCycleListComponent {
     this.isDataLoading = true;
   this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
+      console.log("res =>", res);
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
       this.examCycleData.map((obj) => {
@@ -65,6 +66,7 @@ export class ManageExamCycleListComponent {
       });
     },
     error: (error: HttpErrorResponse) => {
+      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
       this.isDataLoading = false;
     }
   })
