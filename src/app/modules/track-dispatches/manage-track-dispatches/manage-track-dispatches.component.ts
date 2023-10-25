@@ -111,6 +111,9 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   // searchKey = ''
   showInstitutesTable = true
 
+  pdfUrl: any
+  downloadPdf = false;
+
   breadcrumbItems = [
     { label: 'Manage Track Dispatches', url: '' },
   ]

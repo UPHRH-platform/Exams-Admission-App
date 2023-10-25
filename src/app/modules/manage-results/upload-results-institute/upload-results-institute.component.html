@@ -24,17 +24,17 @@
             "
           >
             <span style="display: flex; flex-direction: row; gap: 16px;"
-              ><span style="font-weight: 550">Step 1:</span>  <span>Download CSV Template</span></span
+              ><span style="font-weight: 550">Step 1:</span>  <span>Download XLSX Template</span></span
             >
             <span style="display: flex; flex-direction: row; gap: 16px"
-              ><span style="font-weight: 550">Step 2:</span>  <span>Based on reference,create a CSV file</span></span
+              ><span style="font-weight: 550">Step 2:</span>  <span>Based on reference,create a XLSX file</span></span
             >
             <span style="display: flex; flex-direction: row; gap: 16px"
-              ><span style="font-weight: 550">Step 3:</span>  <span>Upload CSV file</span></span
+              ><span style="font-weight: 550">Step 3:</span>  <span>Upload XLSX file</span></span
             >
           </div>
           <div style="margin-top: 160px">
-            <button class="btn-3">Download template</button>
+            <button class="btn-3" (click)="DownloadTemplate()">Download template</button>
           </div>
         </div>
   
@@ -65,7 +65,7 @@
             </button>
 
   
-              <mat-hint>.csv files accepted</mat-hint>
+              <mat-hint>.xlsx files accepted</mat-hint>
               <span class="error" style="color: red;">{{ fileUploadError }}</span>
   
               <input
@@ -75,7 +75,7 @@
                 enctype="multipart/form-data"
                 (change)="changeListener($event)"
                 multiple="true"
-                accept=".csv"
+                accept=".xlsx"
               />
             </div>
   

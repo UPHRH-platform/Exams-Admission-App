@@ -1,6 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+import { mergeMap, of } from 'rxjs';
+import { AuthServiceService } from 'src/app/core/services';
+import { BaseService } from 'src/app/service/base.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-manage-result-institute',
@@ -13,44 +18,22 @@ export class ManageResultInstituteComponent {
   @Input() examTableData: any;
   @Input() isHallTicket: any;
 
-  cardList: any[] = [
-    {
-      title: 'Exam 1',
-      lable: 'Last date for Upload',
-      date: '25 Mar 2023',
-      status: 'Pending',
-      navigateUrlSecond: '/manage-result/institute/upload',
-    }, {
-      title: 'Exam 2',
-      lable: 'Last date for Upload',
-      date: '25 Mar 2023',
-      status: 'Uploaded',
-      navigateUrl: '/manage-result/institute/list',
-      navigateUrlSecond: '/manage-result/institute/upload',
+  cardList: any[] = [];
 
-    },
-  ];
-
-  examCycleList = [
-    {
-      examName: 'Exam Cycle 1',
-      value: '1'
-    },{
-      examName: 'Exam Cycle 2',
-      value: '2'
-    },{
-      examName: 'Exam Cycle 3',
-      value: '3'
-    },
-  ]
+  examCycleList = []
 
   examCycle = new FormControl('');
   breadcrumbItems = [
     {label: 'Manage Results', url: ''}
   ]
+  loggedInUserId: string | number;
+  instituteDetail: any
+
   constructor(
     private router: Router,
-    // private candidatePortalService: CandidatePortalService
+    private baseService: BaseService,
+    private authService: AuthServiceService,
+    private toasterService: ToastrServiceService,
   ) {}
 
   ngOnInit(): void {
@@ -58,23 +41,79 @@ export class ManageResultInstituteComponent {
   }
 
   intialisation() {
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.getExamCycles()
+    this.getInstituteByuserId()
+  }
+
+  getInstituteByuserId() {
+    this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      next: (res) => {
+        this.instituteDetail = res.responseData[0];
+      }
+    })
   }
 
   getExamCycles() {
-    // this.candidatePortalService.getExamCycles()
-    // .pipe(mergeMap((res: any) => {
-    //   return this.formateExamCycleDetails(res)
-    // })).subscribe((examDetails: any)) {
-    // }
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.baseService.formatExamCyclesForDropdown(res.responseData)
+    }))
+    .subscribe((examCucles: any) => {
+      this.examCycleList = examCucles.examCyclesList
+    })
   }
 
-  // formateExamCycleDetails(examData: any) {
-  //   let formatedData = examData
-  //   return formatedData;
-  // }
+  getExamDetails(examCycleId: string) {
+    if (this.instituteDetail) {
+      this.baseService.getExamDetailsByInstitute$(examCycleId, this.instituteDetail.id)
+      .pipe(mergeMap((res: any) => {
+        return this.formateExamDetails(res.responseData);
+      }))
+      .subscribe({
+        next: (res: any) => {
+          this.cardList = res
+        },
+        error: (error: HttpErrorResponse) => {
+          this.toasterService.showToastr(error, 'Error', 'error', '')
+        }
+      })
+    }
+  }
 
-  navigateToView(navigateUrl: string) {
-    this.router.navigateByUrl(navigateUrl)
+  formateExamDetails(res: any) {
+    const foramtedExamDetails: any = []
+    if (res && res.length > 0) {
+      res.forEach((element:any) => {
+        const formatedExam = {
+          examName: element.examName,
+          examId: element.examId,
+          lastDateToUplode: element.lastDateToUpload,
+          marksUploded: element.marksUploded
+        }
+        foramtedExamDetails.push(formatedExam)
+      })
+    }
+    return of(foramtedExamDetails)
+  }
+
+  navigateToUplode(examId: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        examId: examId,
+      },
+    }
+    this.router.navigate(['/manage-result/institute/upload'], navigationExtras);
+  }
+
+  navigateToView(examId: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        examId: examId,
+        instituteId: this.instituteDetail.id,
+        examCycleId: this.examCycle.value,
+      },
+    }
+    this.router.navigate(['/manage-result/institute/list'], navigationExtras);
   }
 }

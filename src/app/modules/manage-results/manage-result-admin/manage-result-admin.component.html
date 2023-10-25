@@ -10,36 +10,26 @@
               <label class="examCycleLable">Exam cycle</label>
             </div>
             <mat-form-field class="exam-form" appearance="outline">
-              <mat-select [formControl]="examCycleControl" (ngModelChange)="getExams($event)">
+              <mat-select [formControl]="examCycleControl" (ngModelChange)="getInstitutesData($event)">
                 <ng-container *ngFor="let examCycle of examCycleList">
                   <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
                 </ng-container>
               </mat-select>
             </mat-form-field>
           </div>
-          <div>
-            <div class="mb1">
-              <label class="examCycleLable">Exam</label>
-            </div>
-            <mat-form-field class="exam-form" appearance="outline">
-              <mat-select [formControl]="examControl">
-                <mat-option *ngFor="let course of courses" [value]="course.value">
-                  {{ course.viewValue }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
         </div>
-          <div
-            style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
-            *ngIf="!showInstitutesTable"
-          >
-            <div>
-              <button *ngIf="selectedCellDetails.columnDef === 'internalMarks'" mat-raised-button color="primary" (click)="downloadMarksHandler()">Downoad</button>
-            </div>
-            <div>
-              <button *ngIf="selectedCellDetails.columnDef === 'finalMarks'" mat-raised-button color="primary" (click)="deleteMarksHander()">Delete</button>
-            </div>
+          <div class="flex"
+            style="flex-direction: row; margin-top: 24px; gap: 16px; align-items: center;">
+          <ng-container *ngIf="showDownloadBtn">
+              <button mat-raised-button color="primary" class="btn downLoadBtn"(click)="downloadMarksHandler()">Download</button>
+          </ng-container>
+          <ng-container *ngIf="showDeleteBtn">
+              <button mat-raised-button color="Warn" class="btn deletBtn" (click)="deleteMarksHander()">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="showPublishBtn">
+              <!-- <button [disabled]="examCycleControl.value" mat-raised-button color="primary" class="btn downLoadBtn" (click)="openPublishConfirmation()">Publish</button> -->
+              <button mat-raised-button color="primary" class="btn downLoadBtn" (click)="openPublishConfirmation()">Publish</button>
+          </ng-container>
           </div>
       </div>
       

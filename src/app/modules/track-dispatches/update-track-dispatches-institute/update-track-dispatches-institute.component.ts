@@ -9,6 +9,7 @@ import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-pro
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthServiceService } from 'src/app/core/services';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
