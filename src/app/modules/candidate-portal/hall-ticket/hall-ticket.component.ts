@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
-import { BaseService } from '../../../service/base.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -48,17 +47,19 @@ export class HallTicketComponent implements OnInit {
   ]
 
   examTableData= []
-
+  isDataLoading: boolean = false;
   isHallTicket = true
+  stateData: any | undefined;
   //#endregion
 
   //#region (constructor)
   constructor(
     private router: Router,
-    private baseService: BaseService,
     private authService: AuthServiceService
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state;
+    console.log(this.stateData?.data)
   }
   //#endregion
 
@@ -67,46 +68,18 @@ export class HallTicketComponent implements OnInit {
   }
 
   //#region (intialisation)
+
   intialisation() {
-
-    this.baseService.getHallTicketData$(11).subscribe({
-      next: (res: any) => {
-
-        if (res && res[0]) {
-      
-        this.hallTicketDetails = res[0];
-
-        this.examTableData  = res[0]!.examCycle.exams;
-        }
-
-        
-      },
-      error: (error: any) => {
-        console.log(error.message)
-      }
-    })
- 
+    this.hallTicketDetails = this.stateData?.data;
+    this.examTableData  =  this.stateData?.data.exams;
   }
 
-  getHallTicketDetails() {
-    //this.candidatePortalService.getHallTicketDetails()
-    // .pipe(mergeMap((res: any) => {
-    //   return this.formateExamDetails(res)
-    // })).subscribe((examDetails: any)) {
-
-    // }
-  }
-
-  // formateExamDetails(examData: any) {
-  //   let formatedData = examData
-  //   return formatedData;
-  // }
 
   //#endregion
 
   //#region (navigate to modify)
   redirectToModifyHallticket() {
-    this.router.navigateByUrl('/candidate-portal/modify-hallticket')
+    this.router.navigate(['/candidate-portal/modify-hallticket'],{ state: this.hallTicketDetails })
   }
 
   cancel() {

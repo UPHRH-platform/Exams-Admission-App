@@ -31,6 +31,7 @@ export class ManageHallTicketsAdminListComponent {
   breadcrumbItems = [
     { label: 'Manage Hall Tickets', url: '' },
   ]
+  unformattedHallTickets: any;
   constructor(
     private baseService: BaseService,
     private router: Router,
@@ -208,12 +209,10 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getHallTickets() {
-    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTickets$()
       .pipe((mergeMap((response: any) => {
-        unformattedResponse = response.responseData;
-        console.log(unformattedResponse)
+        this.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
@@ -224,7 +223,6 @@ export class ManageHallTicketsAdminListComponent {
           this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
 
           this.isDataLoading = false;
-          this.baseService.setHallTicketData$(unformattedResponse)
         },
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;
@@ -280,12 +278,9 @@ export class ManageHallTicketsAdminListComponent {
 
   }
   getHallTicketsForDataCorrections() {
-    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTicketsForDataCorrections$()
       .pipe((mergeMap((response: any) => {
-        unformattedResponse = response.responseData;
-        console.log(unformattedResponse)
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
@@ -295,7 +290,6 @@ export class ManageHallTicketsAdminListComponent {
           this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
 
           this.isDataLoading = false;
-          this.baseService.setHallTicketData$(unformattedResponse)
         },
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;
@@ -383,7 +377,7 @@ export class ManageHallTicketsAdminListComponent {
 
   onViewClick(event: any) {
     console.log(event)
-    let r = event.row
-    this.router.navigate(['/hall-ticket-management/ticket-details', r.id]);
+    let hallTktDetails = this.unformattedHallTickets.filter((hallTicket: { id: string; }) => (hallTicket.id === event.row.id));
+    this.router.navigate(['/hall-ticket-management/ticket-details'], { state: { data: hallTktDetails[0] } });
   }
 }

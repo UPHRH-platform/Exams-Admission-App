@@ -58,6 +58,20 @@ export class BaseService extends HttpService {
     }
     return this.get(requestParam);
   }
+
+  downloadPdf$(pdfUrl: string) {
+    return this.httpClient.get(pdfUrl, { responseType: 'blob' });
+  }
+
+  formatBytes(bytes: any, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  }
+  
   //#endregion
 
 
@@ -80,7 +94,7 @@ export class BaseService extends HttpService {
           instituteId: '123',
           course: 'xxxx',
           internalMarksProvided:false,
-          finalMarksProvided: true,
+          finalMarksProvided: false,
           revisedfinalMarksProvided: false,
        
         },
@@ -105,14 +119,17 @@ export class BaseService extends HttpService {
     // }
     // return this.get(requestParam)
   }
+
   getStudentResultData$():Observable<any>{
-    return of(
-      [
+    return of( {
+      responseData: [
         {
           studentName: 'Devaprathap Nagendra',
           courseName: 'XXXX',
           exams: 'Exam 1',
           internalMarks: '45',
+          externalMarks: '23',
+          revisedMarks: '45'
           
         },
         {
@@ -120,6 +137,8 @@ export class BaseService extends HttpService {
           courseName: 'XXXX',
           exams: 'Exam 1',
           internalMarks: '48',
+          externalMarks: '23',
+          revisedMarks: '50'
           
         },
         {
@@ -127,6 +146,8 @@ export class BaseService extends HttpService {
           courseName: 'XXXX',
           exams: 'Exam 1',
           internalMarks: '47',
+          externalMarks: '43',
+          revisedMarks: '32'
           
         },
         {
@@ -134,33 +155,48 @@ export class BaseService extends HttpService {
           courseName: 'XXXX',
           exams: 'Exam 1',
           internalMarks: '49',
+          externalMarks: '34',
+          revisedMarks: '45'
           
         },
         {
           studentName: 'Arun',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '49'
+          internalMarks: '49',
+          externalMarks: '40',
+          revisedMarks: '35'
           
         },
         {
           studentName: 'Aman',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '45'
+          internalMarks: '45',
+          externalMarks: '30',
+          revisedMarks: '46'
           
         },
         {
           studentName: 'Devaprathap N.',
           courseName: 'XXXX',
           exams: 'Exam 1',
-          internalMarks: '44'
+          internalMarks: '44',
+          externalMarks: '45',
+          revisedMarks: '50'
           
         },
-    
-   
-      ])
-    }
+      ]
+    })
+  }
+
+  deleteResults(): Observable<any> {
+    return of({
+      statusInfo: {
+        statusMessage: 'deleted'
+      }
+    })
+  }
 
   getUserData$(): Observable<any>{
     return of([
@@ -585,10 +621,30 @@ export class BaseService extends HttpService {
     console.log(newData)
   }
 
-  getHallTicketData$(id: number) {
+/*   getHallTicketData$(id: number) {
     return this.hallTktData.asObservable();
+  } */
+
+  getHallTicketData$(studentId: number, examCycleId: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
+        data: {},
+      }
+      return this.get(requestParam);
   }
 
+  requestHallTicketModification$(reqbody: any) {
+    console.log(reqbody)
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION,
+      data: reqbody,
+      header: {
+        'Accept': '*/*',
+        'x-authenticated-user-token': this.token
+      }
+    }
+    return this.multipartPost(requestParam);
+  }
   
 
   approveHallTicket$(id: number): Observable<any> {
@@ -612,9 +668,41 @@ export class BaseService extends HttpService {
     return this.post(requestParam);
 
   }
-    /**************************** hall ticket services ends ****************************/
 
-     /**************************** fee management services ends ****************************/
+
+  downloadHallTicket(){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+'?dateOfBirth=1995-12-15&id=4',
+      data: {},
+    }
+    return this.get(requestParam);
+  }
+    /**************************** hall ticket services ends ****************************/
+ /**************************** attendence services starts ****************************/
+
+    getAttendenceByExamCycle$(examCycleId: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.ATTENDENCE.GET_BY_EXAM_CYCLE+`${examCycleId}`,
+        data: {},
+      }
+      return this.get(requestParam);
+    }
+
+    bulkupload$(formdata: FormData): Observable<ServerResponse> {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.ATTENDENCE.BULK_UPLOAD,
+        data: formdata,
+        header: {
+          'Accept': '*/*',
+          'x-authenticated-user-token': this.token
+        }
+      }
+      return this.multipartPost(requestParam);
+    }
+
+     /**************************** attendence services ends ****************************/
+
+     /**************************** fee management services starts ****************************/
      payFees(feeDetails?: any): Observable<any> {
 
       const requestParam: RequestParam = {
@@ -859,12 +947,55 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return of(response)
   }
 
-  publishResults(request: any) {
+  publishResults$(request: any) {
     const requestParam: RequestParam = {
       url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.PUBLISH}`,
       data: request
     }
     return this.post(requestParam);
+  }
+
+  uplodeExternalMarks$(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.UPLOAD_EXTERNAL_MARKS}`,
+      data: request,
+      header: {
+        Accept: "*/*",
+        'x-authenticated-user-token': this.token
+      }
+    }
+    return this.multipartPost(requestParam)
+  }
+
+  getExamDetailsByInstitute$(examCycleId: string, instituteId: number) {
+    return of({
+      responseData: [
+        {
+          examName: 'Exam 1',
+          examId: 1,
+          lastDateToUplode: '25 Mar 2023',
+          marksUploded: false,
+        }, {
+          examName: 'Exam 2',
+          examId: 2,
+          lastDateToUplode: '25 Mar 2023',
+          marksUploded: true,
+    
+        },
+      ]
+    })
+  }
+
+  uplodeInternalMarks$(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.UPLOAD_INTERNAL_MARKS}`,
+      data: request,
+      header: {
+        Accept: "*/*",
+        'x-authenticated-user-token': this.token
+      }
+    }
+    return this.multipartPost(requestParam)
   }
 
   //#endregion
@@ -1022,6 +1153,14 @@ getCoursesBasedOnInstitute(id: string | number): Observable<ServerResponse> {
 getInstituteDetailsByUser(id: string | number): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.GET_INSTITUTE_BY_USER+ `/${id}`,
+    data: {}
+  }
+  return this.get(requestParam);
+}
+
+getInstituteVerifiedDetails(instituteCode: string): Observable<ServerResponse> {
+  const requestParam: RequestParam = {
+    url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.EXAM_CENTER_VERIFIED+ `?instituteCode=${instituteCode}`,
     data: {}
   }
   return this.get(requestParam);

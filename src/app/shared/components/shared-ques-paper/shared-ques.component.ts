@@ -5,6 +5,7 @@ import { AuthServiceService } from 'src/app/core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformationDialogComponent } from '../conformation-dialog/conformation-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-shared-ques-paper',
@@ -15,7 +16,8 @@ export class SharedQuestionPaperComponent {
   examCycle: string;
   downloadComponent: boolean = true;
   constructor(
-    private authService: AuthServiceService, private router: Router
+    private authService: AuthServiceService, private router: Router,
+    private baseService: BaseService
   ) { }
   file:any;
    fileUploadError: string;
@@ -76,15 +78,6 @@ export class SharedQuestionPaperComponent {
     }
   }
 
-  formatBytes(bytes: any, decimals = 2) {
-    if (!+bytes) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
-
   emitUploadQuesPaper(event: any) {
     
     this.fileUploadError = '';
@@ -102,7 +95,7 @@ export class SharedQuestionPaperComponent {
           if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
             this.files.push(selectedFile);
             this.listOfFiles.push(
-              selectedFile.name.concat(this.formatBytes(selectedFile.size))
+              selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
             );
           } else {
             console.log('file already exists');

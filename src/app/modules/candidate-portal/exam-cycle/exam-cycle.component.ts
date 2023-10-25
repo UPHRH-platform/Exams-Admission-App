@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CandidatePortalService } from '../services/candidate-portal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { AuthServiceService } from 'src/app/core/services';
@@ -24,7 +23,7 @@ export class ExamCycleComponent {
 
   constructor(
     private router: Router,
-    private candidatePortalService: CandidatePortalService,
+    private renderer: Renderer2,
     private dialog: MatDialog,
     private authService: AuthServiceService,
     private baseService: BaseService,
@@ -35,8 +34,15 @@ export class ExamCycleComponent {
   }
 
   downloadHallTicket() {
-    this.candidatePortalService.downloadHallTicket('')
-    // .subscribe((data: any) => {
+    this.baseService.downloadHallTicket().subscribe((data: any) => {
+
+      console.log(data)
+      const link = this.renderer.createElement('a');
+      link.setAttribute('target', '_blank');
+      link.setAttribute('href', data.responseData);
+      link.click();
+      link.remove();
+
       const dialogRef = this.dialog.open(ConformationDialogComponent, {
         data: {
           dialogType: 'success',
@@ -60,7 +66,10 @@ export class ExamCycleComponent {
          this.router.navigateByUrl('/candidate-portal')
         }
       })
-    // })
+    })
+   
+   
+   
   }
 
   cancel() {

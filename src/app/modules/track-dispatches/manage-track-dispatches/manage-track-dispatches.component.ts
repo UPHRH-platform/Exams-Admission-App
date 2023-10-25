@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
+// import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
 import { BaseService } from 'src/app/service/base.service';
 import { mergeMap, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+// import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface Course {
   value: string;
@@ -89,11 +91,11 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       },
     },{
       header: '',
-      columnDef: 'viewProof',
+      columnDef: 'downloadProof',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['viewProof']}`,
+      cell: (element: Record<string, any>) => `${element['downloadProof']}`,
       cellStyle: {
-        'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
+        'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
       },
       isAction: true,
       showDeleteIcon: false,
@@ -103,7 +105,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   instituteTableData = []
   
   examCycleControl = new FormControl();
-  examControl = new FormControl('');
+  examControl = new FormControl();
 
   // searcControl = '';
   // searchKey = ''
@@ -133,8 +135,13 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
-      .subscribe((examCycles: any) => {
-        this.examCycleList = examCycles.examCyclesList;
+      .subscribe({
+        next: (examCycles: any) => {
+          this.examCycleList = examCycles.examCyclesList;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.showToastr(err, 'Error', 'error', '')
+        }
       })
   }
 
@@ -188,10 +195,12 @@ export class ManageTrackDispatchesComponent implements OnInit  {
           exam: element.examName,
           dispatchDate: element.updatedDate,
           dispatchStatus: element.proofUploaded ? 'Dispatched' : 'Pending',
-          viewProof: element.proofUploaded ? 'View proof' : '-',
+          downloadProof: element.proofUploaded ? 'Download proof' : '-',
+          // viewProof: element.proofUploaded ? 'View proof' : '-',
           dispatchProofFileLocation: element.dispatchProofFileLocation,
           classes: {
-            viewProof: ['color-blue'],
+            // viewProof: ['color-blue'],
+            downloadProof: ['color-blue'],
             dispatchStatus: element.proofUploaded ? ['color-green'] : ['color-blue'],
           }
         }
@@ -202,51 +211,84 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     return of(result);
   }
 
-  //#region (view proof)
-  viewProof(event: any) {
-    if (event.row.dispatchProofFileLocation && event.row.viewProof === 'View proof') {
-      this.dialog.open(ViewProofModalAdminComponent, {
+  downloadProof(event: any) {
+    const fileLocation = event.row.dispatchProofFileLocation;
+    this.baseService.downloadPdf$(fileLocation)
+    .subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = event.row.instituteName + '_' + event.row.exam + '_dispatch_proof.pdf';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      window.URL.revokeObjectURL(url);
+      this.dialog.open(ConformationDialogComponent, {
         data: {
-          documentLink: event.row.dispatchProofFileLocation,
+          dialogType: 'success',
+          description: ['Dispatch proof downloaded successfully'],
           buttons: [
             {
               btnText: 'Ok',
-              positionClass: 'left',
-              btnClass: 'btn-outline-gray',
-              type: 'close'
-            }
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
           ],
         },
         width: '700px',
+        height: '400px',
         maxWidth: '90vw',
         maxHeight: '90vh'
       })
-      // this.baseService.getDispatchesViewProof$(dispatchId)
-      // .subscribe((res: any) => {
-      //   const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
-      //     data: {
-      //       documentLink: res.responseData,
-      //       buttons: [
-      //         {
-      //           btnText: 'Cancel',
-      //           positionClass: 'left',
-      //           btnClass: 'btn-outline-gray',
-      //           type: 'close'
-      //         }
-      //       ],
-      //     },
-      //     width: '700px',
-      //     maxWidth: '90vw',
-      //     maxHeight: '90vh'
-      //   })
-    
-      //   dialogRef.afterClosed().subscribe((response: any) => {
-      //     if (response) {
-      //     }
-      //   })
-      // })
-    }
+    });
+
   }
+
+  //#region (view proof)
+  // viewProof(event: any) {
+  //   if (event.row.dispatchProofFileLocation && event.row.viewProof === 'View proof') {
+  //     this.dialog.open(ViewProofModalAdminComponent, {
+  //       data: {
+  //         documentLink: event.row.dispatchProofFileLocation,
+  //         buttons: [
+  //           {
+  //             btnText: 'Ok',
+  //             positionClass: 'left',
+  //             btnClass: 'btn-outline-gray',
+  //             type: 'close'
+  //           }
+  //         ],
+  //       },
+  //       width: '700px',
+  //       maxWidth: '90vw',
+  //       maxHeight: '90vh'
+  //     })
+  //     // this.baseService.getDispatchesViewProof$(dispatchId)
+  //     // .subscribe((res: any) => {
+  //     //   const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
+  //     //     data: {
+  //     //       documentLink: res.responseData,
+  //     //       buttons: [
+  //     //         {
+  //     //           btnText: 'Cancel',
+  //     //           positionClass: 'left',
+  //     //           btnClass: 'btn-outline-gray',
+  //     //           type: 'close'
+  //     //         }
+  //     //       ],
+  //     //     },
+  //     //     width: '700px',
+  //     //     maxWidth: '90vw',
+  //     //     maxHeight: '90vh'
+  //     //   })
+    
+  //     //   dialogRef.afterClosed().subscribe((response: any) => {
+  //     //     if (response) {
+  //     //     }
+  //     //   })
+  //     // })
+  //   }
+  // }
   //#endregion
 
 }
