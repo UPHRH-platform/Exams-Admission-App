@@ -217,167 +217,8 @@ export class BaseService extends HttpService {
   ])
   }
 
-  getInstituteFeeTableData$(): Observable<any>{
-    return of([
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '10',
-        paidStudentsCount: '10',
-        totalFeePaid: '10000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '30',
-        paidStudentsCount: '28',
-        totalFeePaid: '28000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '50',
-        paidStudentsCount: '40',
-        totalFeePaid: '40000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '30',
-        paidStudentsCount: '20',
-        totalFeePaid: '28000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '10',
-        paidStudentsCount: '10',
-        totalFeePaid: '10000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      }
-    ])
-  }
-  getStudentFeeTableData$(): Observable<any>{
-    return of([
-      {
-        studentName: '',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam ',
-        numberOfExams: '',
-        fee: '000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Madison Tran',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1,Exam 2,Exam 3 ',
-        numberOfExams: '3',
-        fee: '3000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Raci Verma',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 2',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Sumalatha Krishna',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 3',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Kanaka Rao',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1,Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Ravi Verma',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 2',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
 
 
-      {
-        studentName: 'Nancy Kurian',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Pending',
-      },{
-        studentName: 'Jordan Allen',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1, Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Pending'
-      },{
-        studentName: 'Purandara Das',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1, Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Pending'
-      },
-    ])
-  }
   getMarksForDashboard$(): Observable<any>{
     return of(
       [
@@ -703,6 +544,30 @@ export class BaseService extends HttpService {
      /**************************** attendence services ends ****************************/
 
      /**************************** fee management services starts ****************************/
+     
+
+     getInstituteFeeTableData$(examCycleId?: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.INSTITUTE_LIST,
+        data: {
+          "page": 0,
+          "size": 50,
+          "sort": {
+              "referenceNo": "desc"
+          }
+      },
+      }
+      return this.post(requestParam);
+    }
+
+    getStudentFeesListForInstitute$(paymentRefNo: string): Observable<any>{
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.STUDENT_LIST+`${paymentRefNo}/details`,
+        data: {},
+      }
+      return this.get(requestParam);
+    }
+     
      payFees(feeDetails?: any): Observable<any> {
 
       const requestParam: RequestParam = {
