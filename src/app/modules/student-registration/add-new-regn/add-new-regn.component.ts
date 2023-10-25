@@ -260,10 +260,9 @@ export class AddNewRegnComponent {
     this.finalRegistrationRequest = [];
     const StudentsToRegisterList: any[] = []
     let details: any = {};
-    console.log("register =>", this.studentsToRegister);
-    const examNames: any = [];
-    const examIds: any = [];
     this.studentsToRegister.forEach((studentDetails: any) => {
+      const examNames: any = [];
+    const examIds: any = [];
       details = {
         id: studentDetails.id,
         name: studentDetails.firstName + ' ' + studentDetails.surname,
@@ -271,7 +270,6 @@ export class AddNewRegnComponent {
         admissionYr: studentDetails.session,
         enrollmentNumber: studentDetails.enrollmentNumber,
         noOfExam: studentDetails.examName.length,
-        // examNames: studentDetails.examName.join(", "),
       }
       // to map exam names
       studentDetails.examName.map((obj: any) => {

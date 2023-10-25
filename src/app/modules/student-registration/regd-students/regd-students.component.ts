@@ -52,6 +52,7 @@ export class RegdStudentsComponent {
       next: (res) => {
         this.isDataLoading = false;
         this.regdStudents = res.responseData;
+        let compareArray:any = [];
         if(this.regdStudents.length > 0) {
           this.regdStudents.map((obj: any) => {
             const courseNames: any = [];
@@ -61,7 +62,20 @@ export class RegdStudentsComponent {
            obj.examName = courseNames.join();
           })
         }
-        console.log(this.regdStudents);
+        // let modifiedArray:any = [];
+        // this.regdStudents.map((obj: any, index) => {
+        //   index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
+        //   console.log(this.regdStudents[index].exams, this.regdStudents[index].rollNo);
+        //   const Obj = Object.assign({}, obj, obj.exams);
+        //   modifiedArray.push(Obj); 
+        // })
+        // console.log(modifiedArray);
+        // const unique = this.regdStudents.filter((obj:any, index) => {
+        //     this.regdStudents[index].exams = modifiedArray;
+        //   return index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
+        // })
+        // this.regdStudents = unique;
+        // console.log(this.regdStudents);
       },
       error: (err) => {
         console.log(err);

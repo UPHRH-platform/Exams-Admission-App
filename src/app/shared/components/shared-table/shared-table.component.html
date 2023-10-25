@@ -214,8 +214,23 @@
 
                 <span *ngIf="disCol?.isDropdown">
 
-                    <mat-form-field floatLabel="never">
+                    <mat-form-field floatLabel="never" *ngIf="element.exams">
+                        <mat-label>Choose exam(s)</mat-label>
+                        <mat-select [formControl]="examControl" multiple
 
+                         (selectionChange)="onExamChange($event, element)" required>
+                            <mat-option *ngFor="let exam of element.exams;let i = index" [value]="exam"
+
+                            selected>
+
+                                {{ exam.name }}
+
+                            </mat-option>
+
+                        </mat-select>
+
+                    </mat-form-field>
+                    <mat-form-field floatLabel="never" *ngIf="examsList && examsList.length > 0">
                         <mat-select [formControl]="examControl" multiple
 
                          (selectionChange)="onExamChange($event, element)" required>
@@ -229,7 +244,6 @@
                             </mat-option>
 
                         </mat-select>
-
                     </mat-form-field>
 
                 </span>
