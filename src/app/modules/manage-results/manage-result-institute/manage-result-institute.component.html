@@ -14,22 +14,27 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="cards-boxes">
-            <mat-card class="card" *ngFor="let item of cardList">
-                <mat-card-content class="content-container">
-                        <span class="title-section">{{item.examName}}</span>
-                        <span class="desc-section">Last date for Upload : {{item.lastDateToUplode}}</span>
-                        <div class="status-card">
-                            <span class="status" [ngStyle]="{'color': item.marksUploded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
-                        </div>
-                </mat-card-content>
-                <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                <button class="view-btn" (click)="navigateToUplode(item.examId)">{{ (item.marksUploded ? "Re-upload" : "Upload Internal Marks") }}</button>
-                <ng-container *ngIf="item.marksUploded">
-                    <button class="btn-2" (click)="navigateToView(item.examId)">View</button>
-                </ng-container>
-                </div>
-            </mat-card>
-        </div>
+        <ng-container *ngIf="cardList && cardList.length > 0; else examsStatus">
+            <div class="cards-boxes">
+                <mat-card class="card" *ngFor="let item of cardList">
+                    <mat-card-content class="content-container">
+                            <span class="title-section">{{item.examName}}</span>
+                            <span class="desc-section">Last date for Upload : {{item.lastDateToUplode}}</span>
+                            <div class="status-card">
+                                <span class="status" [ngStyle]="{'color': item.marksUploded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
+                            </div>
+                    </mat-card-content>
+                    <div style="display: flex; flex-direction: row; column-gap: 2px;">
+                    <button class="view-btn" (click)="navigateToUplode(item.examId)">{{ (item.marksUploded ? "Re-upload" : "Upload Internal Marks") }}</button>
+                    <ng-container *ngIf="item.marksUploded">
+                        <button class="btn-2" (click)="navigateToView(item.examId)">View</button>
+                    </ng-container>
+                    </div>
+                </mat-card>
+            </div>
+        </ng-container>
+        <ng-template #examsStatus>
+            <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
+        </ng-template>
     </div>
 

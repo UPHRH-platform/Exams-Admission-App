@@ -289,6 +289,96 @@ export class ManageResultAdminComponent {
   //#endregion
 
   downloadMarksHandler() {
+    const internalMarks = [
+      [
+        `First Name`, 
+        `Last Name`, 
+        `Enrolment Number`,
+        `Mother's Name`,
+        `Father's Name`,
+        `Course`,
+        `Exam Cycle`,
+        `Exam`,
+        `Internal Marks`,
+        `Passing Internal Marks`,
+        `Internal Marks Obtained`,
+        `Practical Marks`,
+        `Passing Practical Marks`,
+        `Practical Marks Obtained`,
+        `Other Marks`,
+        `Passing Other Marks`,
+        `Other Marks Obtained`,
+        `External Marks`,
+        `Passing External Marks`,
+        `External Marks Obtained`,
+        `Total Marks`,
+        `Passing Total Marks`,
+        `Total Marks Obtained`,
+        `Grade`,
+        `Result`,
+      ],
+    ];
+
+    if(this.studentMarksDetails.length > 0) {
+      this.studentMarksDetails.forEach((element: any) => {
+        const stuentMarks = [
+          element.firstName,
+          element.lastName,
+          element.enrollmentNumber,
+          element.motherName,
+          element.fatherName,
+          element.courseValue,
+          element.examCycleValue,
+          element.examValue,
+          element.internalMarks,
+          element.passingInternalMarks,
+          element.internalMarksObtained,
+          element.practicalMarks,
+          element.passingPracticalMarks,
+          element.practicalMarksObtained,
+          element.otherMarks,
+          element.passingOtherMarks,
+          element.otherMarksObtained,
+          element.externalMarks,
+          element.passingExternalMarks,
+          element.externalMarksObtained,
+          element.totalMarks,
+          element.passingTotalMarks,
+          element.totalMarksObtained,
+          element.grade,
+          element.result
+        ]
+        internalMarks.push(stuentMarks)
+      });
+    }
+
+    // Create a 2D array to hold the Excel data
+    const csvContent: any = [];
+    internalMarks.forEach((row: any) => {
+      csvContent.push(row.join(','));
+    });
+
+    // Convert the array to a CSV string
+    const csvString = csvContent.join('\n');
+
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvString], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Create a download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.selectedCellDetails.row.instituteName + '.xlsx';
+
+    // Append the download link to the body
+    document.body.appendChild(a);
+
+    // Trigger the download
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
     this.showInstituteTable();
   }
 
@@ -430,8 +520,8 @@ export class ManageResultAdminComponent {
 
   getStudentExamsTableData(){
     this.isDataLoading = true;
-    this.studentMarksDetails = []
-    this.baseService.getStudentResultData$()
+    this.studentMarksDetails = [];
+    this.baseService.getStudentResultData$(this.examCycleControl.value, this.selectedCellDetails.row.id)
     .subscribe({
       next:(res:any)=>{
         this.studentMarksDetails = res.responseData

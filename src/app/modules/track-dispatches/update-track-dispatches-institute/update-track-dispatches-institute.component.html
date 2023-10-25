@@ -35,10 +35,7 @@
         </ng-container>
 
         <ng-template #cctvVerificationStatus>
-            <mat-card  class="w-full cctv-verification-card flex p2 mb2">
-                <span>Your institution did not pass the CCCTV Verification for the selected exam cycle, and as a result, you do not have the authorization to serve as an examination center. Please reach out to the administration for additional details.</span>
-                <span></span>
-            </mat-card >
+            <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
         </ng-template>
     </div>
 </div>

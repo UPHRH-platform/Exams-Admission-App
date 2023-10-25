@@ -130,7 +130,7 @@ export class StudentEnrollmentFormComponent {
     const request = {
     startYear: startSession,
     endYear: endSession,
-    courseId: event.value.courseCode
+    courseCode: event.value.courseCode
     }
   this.baseService.getExamCycleByCourseAndAdmissionSession(request).subscribe({
     next: (res) => {

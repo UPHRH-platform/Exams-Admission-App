@@ -29,6 +29,8 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   dispatchesList = [];
   loggedInUserId: string | number;
   instituteDetail: any;
+  noResultMessage: string = 'Your institution did not pass the CCCTV Verification for the selected exam cycle, and as a result, you do not have the authorization to serve as an examination center. Please reach out to the administration for additional details.';
+
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
