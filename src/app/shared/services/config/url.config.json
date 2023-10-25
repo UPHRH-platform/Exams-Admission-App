@@ -55,6 +55,8 @@
         },
         "PAYMENT": {
             "FEES": "/v1/fee/initiate",
+            "INSTITUTE_LIST":"/v1/fee/all",
+            "STUDENT_LIST":"/v1/fee/",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all"
