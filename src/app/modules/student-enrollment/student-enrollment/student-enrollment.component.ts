@@ -118,12 +118,19 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   }
 
   initializeTabs() {
-    this.tabs = Tabs['student_enrollment'];
+    if(this.loggedInUserRole === 'exams_secretary') {
+      this.tabs = Tabs['Student_Enrollment_Secretary'];
+    }
+    else {
+      this.tabs = Tabs['student_enrollment'];
+      this.initializeColumns();
+    }
     this.selectedTab = this.tabs[0];
-    this.initializeColumns();
+    
   }
 
   getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
+    this.enrollmentTableData = [];
   let request = {
     instituteId: instituteId !== undefined? instituteId : '',
     courseId: courseId !== undefined? courseId : '',
@@ -259,6 +266,38 @@ constructor(private router: Router, private authService: AuthServiceService, pri
             isAction: true,
             classes: ['color-blue'],
             cell: (element: Record<string, any>) => `View Enrollment`,
+          },
+        ]
+        break;
+      case 'exams_secretary':
+        this.enrollmentTableColumns = [
+          {
+            columnDef: 'firstName',
+            header: 'Applicant Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
+          },
+          {
+            columnDef: 'provisionalEnrollmentNumber',
+            header: 'Provisional Enrollment Number',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
+          },
+          {
+            columnDef: 'course',
+            header: 'Course Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['courseName']}`
+          },
+          {
+            columnDef: 'createdDate',
+            header: 'Created Date',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['createdDate']}`
           },
         ]
         break;

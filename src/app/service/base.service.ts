@@ -1296,6 +1296,30 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     }
     return of(result);
   }
+
+  registerStudentsToExams(request: Array<object>): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_STUDENT_REGISTRATION.REGISTER_STUDENT,
+      data: request
+    }
+    return this.post(requestParam);
+  }
+
+  getStudentRegistrationByExamCycleAndInstId(examCycleId: string | number, instId: string | number): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_STUDENT_REGISTRATION.VIEW_REGISTERED_STUDENTS + `/${examCycleId}/${instId}`,
+      data: {}
+    }
+    return this.get(requestParam);
+  }
+
+  getRegistrationPendingStudents(examCycleId: string | number, instId: string | number): Observable<ServerResponse> {
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_STUDENT_REGISTRATION.GET_REGISTRATION_PENDING_STUDENTS + `?examCycleId=${examCycleId}&instituteId=${instId}`,
+      data: {}
+    }
+    return this.get(requestParam);
+  }
   //#endregion
 
 }

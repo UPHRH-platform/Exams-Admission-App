@@ -32,7 +32,10 @@
             "EXAM_CYCLE_SEARCH": "/v1/admin/examCycle/search"
         },
         "EXAM_STUDENT_REGISTRATION": {
-            "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
+            "GET_BY_EXAM_CYCLE":"/v1/studentExamRegistration",
+            "REGISTER_STUDENT": "/v1/studentExamRegistration/register",
+            "VIEW_REGISTERED_STUDENTS": "/v1/studentExamRegistration/getRegistrationDetail",
+            "GET_REGISTRATION_PENDING_STUDENTS": "/v1/studentExamRegistration/getVerifiedNotRegistered"
         },
         "COURSE": {
             "GET_ALL": "/v1/admin/courses/list"

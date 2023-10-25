@@ -67,3 +67,16 @@ export class StudentGuard implements CanActivate {
     }
   } 
 }
+
+export class SecretaryGuard implements CanActivate {
+  constructor(private authService: AuthServiceService, private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (this.authService.isLoggedIn() && this.authService.isSecretary()) {
+      return true;
+    } else {
+      this.router.navigate(['/']);
+      return false;
+    }
+  } 
+}

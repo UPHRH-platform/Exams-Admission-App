@@ -38,5 +38,11 @@ export const Tabs = {
             name: 'Paid'
         },
     ],
+    'Student_Enrollment_Secretary': [
+        { 
+            id: 1,
+            name: 'Pending for >21 days'
+        }
+    ]
 
 }

@@ -2,7 +2,7 @@
     <div class="secondary-container">
     <div class="header-container">
         <div class="head-details">
-            <h2>{{this.stateData?.examName | uppercase}}</h2>
+            <h2>{{examName | uppercase}}</h2>
 
         </div>
     </div>
@@ -23,9 +23,7 @@
     </app-shared-skeleton-loading>
     <app-shared-table *ngIf="!isDataLoading" 
     [tableColumns]="viewStudentsTableColumns" 
-
-    [tableData]="regdStudents"
-    [examList] = "examList"
+    [tableData]="enrollmentData"
     [isPageable]="true" 
     (checkBoxAction)="onSelectedRows($event)">
     </app-shared-table>
