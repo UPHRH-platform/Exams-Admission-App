@@ -23,11 +23,17 @@
      <!--        </form> -->
            
         </div>
+        <div *ngIf="cctvVerified !== undefined">
+            <mat-card class="w-full cctv-verification-card flex py1 mb2">
+                <span>CCTV Verification Status: {{cctvVerified}}</span>
+                <!-- <span [ngClass]="{'verified': cctvVerified === true}">CCTV Verification Status: {{cctvVerified === true? 'Verified': ''}}</span> -->
+            </mat-card >
+        </div>
 
         <mat-card style="margin-top: 38px;" *ngFor="let questionPpr of questionPapersList">
            <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
             <mat-card-content>
-                <ng-container *ngIf="loggedInUserRole ==='exams_admin' ; else instituteRole">
+                <ng-container *ngIf="loggedInUserRole ==='exams_admin'">
                     <div class="button-group" style="display: flex;flex-direction: column; gap: 4px;">
                         <button class="button" mat-raised-button color="primary">
                             <label for="fileUpload1" class="custom-file-upload">
@@ -47,14 +53,14 @@
               <span class="error" style="color: red;">{{ fileUploadError }}</span>
                     </div>
                 </ng-container>
-                <ng-template #instituteRole>
+                <div *ngIf="downloadComponent === false">
                     <div class="button-group">
                         <button type="submit" class="button" mat-stroked-button color="primary"
                             (click)="emitViewRegdStdnts(questionPpr)">View registered students</button>
                         <button class="button" mat-raised-button color="primary" (click)="emitRegNewStdnts(questionPpr)"><mat-icon
                                 matSuffix>arrow_right_alt</mat-icon>Register New Students</button>
                     </div>
-                </ng-template>
+                </div>
             </mat-card-content> 
             <p>
                 <mat-card-content>
@@ -98,30 +104,33 @@
                     </mat-grid-tile>
                     <mat-grid-tile>
 
-                        <div> {{questionPpr.examStartTime}} </div>
+                        <div> {{questionPpr.startTime}} </div>
                     </mat-grid-tile>
                     <mat-grid-tile>
 
-                        <div> {{questionPpr.marks}} Marks</div>
+                        <div> {{questionPpr.maximumMark}} Marks</div>
                     </mat-grid-tile>
                 </mat-grid-list>
             </p>
          
             <mat-card-content *ngIf="showCardDetails">
                 <p>
-                    <mat-list role="list" *ngIf="questionPpr.examStartTime !== '12.00 A.M.'  ;  else notYetexamTime">
+                    <mat-list role="list" *ngIf="((loggedInUserRole === 'exams_institute' && (questionPpr.examDate === formattedDate )) || loggedInUserRole ==='exams_admin') ;  else notYetexamTime">
                         <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
-                            *ngFor="let qp of questionPpr.questionPaperList" >
-                            <div style="display: flex; flex-direction:row; justify-content: space-between;"> 
-                                <span>{{qp.name}}</span>
+                            *ngFor="let qp of questionPpr.questionPapers">
+                            <div *ngIf="questionPpr.questionPapers.length > 0; else noQuestionPaperFound" style="display: flex; flex-direction:row; justify-content: space-between;"> 
+                                <span>{{qp.fileName}}</span>
                                 <span class="button-group" style="display: flex; flex-direction: row; gap: 4px;" >
                                     <button type="button" class="cancel-button" mat-stroked-button
-                                        color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
-                                    <button class="next-button" mat-raised-button color="primary"
+                                    color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
+                                    <button class="next-button" *ngIf="loggedInUserRole === 'exams_institute'" mat-raised-button color="primary"
                                         (click)="emitDownloadQuestionPaper(qp)">Download</button>
+                                        <button class="next-button" *ngIf="loggedInUserRole === 'exams_admin'" mat-raised-button color="primary"
+                                        (click)="emitDownloadQuestionPaper(qp)">Delete</button>
                                 </span>
             
                             </div>
+                            <p #noQuestionPaperFound>No question papers found for this exam</p>
                         </mat-list-item>
                         <mat-divider></mat-divider>
                     </mat-list>
@@ -135,7 +144,6 @@
                     </ng-template>
                 </p>
             </mat-card-content>
-
         </mat-card>
 
 

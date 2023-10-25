@@ -107,7 +107,7 @@ export class UploadFileComponent implements OnInit {
 
   uploadExamCycle() {
     const formData = new FormData();
-    formData.append('file', this.files[0].name);
+    formData.append('file', this.files[0], this.files[0].name);
     formData.append('fileType', 'csv');
     this.closeDialog('close');
     this.baseService.examcyclebulkupload(formData).subscribe({

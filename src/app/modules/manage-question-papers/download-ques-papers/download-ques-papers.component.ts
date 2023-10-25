@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { QuestionPaper } from 'src/app/interfaces/interfaces';
+import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from 'src/app/service/base.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-download-ques-papers',
@@ -10,39 +12,75 @@ import { BaseService } from 'src/app/service/base.service';
 })
 export class DownloadQuesPapersComponent {
   selectedExamCycleId: any;
-  cctvVerificationStatus = 'Verified'
+  loggedInUserId: string | number;
+  cctvVerified: string;
   examDetails: any[] = [];
-  constructor(
-    private baseService: BaseService,
-  ) {
-  }
-  ngOnInit() {
-    this.baseService.getExamsAndQuestionPapersList$().subscribe({
-      next: (res) => {
-        this.examDetails = res;
-      }
-    });
-  }
   examCycleControl = new FormControl();
-  examCycleList = [
-    {
-      id: 1,
-      examCycleName:'examCycle1'
-    },
-    {
-      id: 2,
-      examCycleName:'examCycle2'
-    },
-    {
-      id: 3,
-      examCycleName:'examCycle3'
-    }];
+  examCycleList:any = [];
+  questionPapersList: any[] = [];
+  examCycleValue: any;
+  instituteId: string;
   breadcrumbItems = [
     {label: 'Download Question Papers', url: ''}
   ]
+  constructor(
+    private baseService: BaseService,private authService: AuthServiceService, private toastrService: ToastrServiceService
+  ) {
+  }
+  ngOnInit() {
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
+    this.getExamCycleData();
+    this.getInstituteData();
+  }
+
+  getInstituteData() {
+    this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      next: (res) => {
+       this.instituteId = res.responseData[0].id;
+      }
+    })
+  }
+
+  getcctvVerificationStatus(examcycleId: string | number) {
+    this.baseService.getCCTVVerificationStatus(examcycleId, this.instituteId).subscribe({
+      next: (res) => {
+        if(res) {
+          this.cctvVerified = res.responseData[0].ApprovalStatus;
+        }
+      },
+      error: (err) => {
+        this.toastrService.showToastr(err, 'Error', 'error', '');
+      }
+    })
+  }
+
+  getExamCycleData() {
+    this.baseService.getExamCycleList$().subscribe({
+    next: (res) => {
+      this.examCycleList = res.responseData;
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.examCycleList = [];
+    }
+  })
+  }
+
+  getQuestionPapersByExamCycle() {
+    this.questionPapersList = [];
+    this.baseService.getQuestionPapersByExamCycle(this.examCycleValue).subscribe({
+      next: (res) => {
+        this.questionPapersList = res.responseData.exams;
+        console.log("questionPaperList =>", this.questionPapersList);
+      }
+    })
+  }
+
   examCycleSelected(e: Event) {
-    console.log(e)
-    
+    console.log(e) 
+    this.examCycleValue = e;
+    this.getcctvVerificationStatus(this.examCycleValue);
+    this.getQuestionPapersByExamCycle();
   }
 
   downloadQuestionPaper(questionPaperId: any) {

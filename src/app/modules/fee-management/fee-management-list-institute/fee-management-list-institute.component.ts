@@ -164,14 +164,14 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   getStudentsFeeDetails() {
-    this.baseService.getStudentFeeTableData$()
+   /*  this.baseService.getStudentFeeTableData$()
     .pipe((mergeMap((response: any) => {
       return this.formateStudentFeeDetails(response);
     })))
     .subscribe((feeDetails: any) => {
       this.paidFeeTableData = feeDetails.paidFeeDetails
       this.pendingFeeTableData = feeDetails.pendingFeeDetails
-    })
+    }) */
   }
 
   formateStudentFeeDetails(response: any) {

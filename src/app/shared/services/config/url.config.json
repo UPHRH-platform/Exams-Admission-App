@@ -32,7 +32,10 @@
             "EXAM_CYCLE_SEARCH": "/v1/admin/examCycle/search"
         },
         "EXAM_STUDENT_REGISTRATION": {
-            "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
+            "GET_BY_EXAM_CYCLE":"/v1/studentExamRegistration",
+            "REGISTER_STUDENT": "/v1/studentExamRegistration/register",
+            "VIEW_REGISTERED_STUDENTS": "/v1/studentExamRegistration/getRegistrationDetail",
+            "GET_REGISTRATION_PENDING_STUDENTS": "/v1/studentExamRegistration/getVerifiedNotRegistered"
         },
         "COURSE": {
             "GET_ALL": "/v1/admin/courses/list"
@@ -55,6 +58,8 @@
         },
         "PAYMENT": {
             "FEES": "/v1/fee/initiate",
+            "INSTITUTE_LIST":"/v1/fee/all",
+            "STUDENT_LIST":"/v1/fee/",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all"

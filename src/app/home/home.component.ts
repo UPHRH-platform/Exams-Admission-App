@@ -125,6 +125,12 @@ export class HomeComponent {
       url: '/dashboard',
       visibility: 'exams_admin'
     },
+    {
+      title: 'Student Enrollment',
+      type: 'student-enrollment-secretary',
+      url: '/student-enrollment/secretary',
+      visibility: 'exams_secretary'
+    },
     
    
     

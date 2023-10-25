@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthServiceService } from 'src/app/core/services';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
+import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-regd-students',
@@ -8,14 +10,17 @@ import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interface
   styleUrls: ['./regd-students.component.scss']
 })
 export class RegdStudentsComponent {
-  stateData : any; 
+  examCycleId: string;
+  instituteId: string;
+  registeredStudents: any=[];
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
   constructor(
-    private router: Router){
-      this.stateData = this.router?.getCurrentNavigation()?.extras.state;
-      console.log( this.stateData)
+    private router: Router, private baseService: BaseService, private route: ActivatedRoute, private authService: AuthServiceService){
+      this.route.params.subscribe((param => {
+        this.examCycleId = param['id'];
+      }))
   }
  
   viewStudentsTableColumns: TableColumn[] = [];
@@ -23,85 +28,93 @@ export class RegdStudentsComponent {
   regdStudents : RegdStudentsTableData[] = [];
   
   ngOnInit(): void {
-  
     this.initializeColumns();
-    this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
+    this.getInstituteDetailByUserId();
   }
 
-  getRegdStudents(examId: number, examCycle: string){
-    this.isDataLoading = false;
-    this.regdStudents = [
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
+  getInstituteDetailByUserId() {
+    const loggedInUserId = this.authService.getUserRepresentation().id;
+    this.baseService.getInstituteDetailsByUser(loggedInUserId).subscribe({
+      next: (res) => {
+        if(this.examCycleId !== undefined) {
+        this.getRegdStudents(res.responseData[0].id);
+        }
       },
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
-      },
-      {
-        name: "Adhi",
-        rollNo: "12345",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
-      },
-      {
-        name: "Vidhu",
-        rollNo: "1234",
-        course:"BSC GNM",
-        admissionYr:"2020",
-        noOfExam:"3",
-        examName:["Exam1, Exam2"]
-
+      error: (err) => {
+        console.log(err);
       }
-    ]
+    })
+  }
 
+  getRegdStudents(instituteId: string | number){
+    this.isDataLoading = true;
+    this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId).subscribe({
+      next: (res) => {
+        this.isDataLoading = false;
+        this.regdStudents = res.responseData;
+        let compareArray:any = [];
+        if(this.regdStudents.length > 0) {
+          this.regdStudents.map((obj: any) => {
+            const courseNames: any = [];
+           obj.exams.forEach((exam: any) => {
+            courseNames.push(exam.name);
+           })
+           obj.examName = courseNames.join();
+          })
+        }
+        // let modifiedArray:any = [];
+        // this.regdStudents.map((obj: any, index) => {
+        //   index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
+        //   console.log(this.regdStudents[index].exams, this.regdStudents[index].rollNo);
+        //   const Obj = Object.assign({}, obj, obj.exams);
+        //   modifiedArray.push(Obj); 
+        // })
+        // console.log(modifiedArray);
+        // const unique = this.regdStudents.filter((obj:any, index) => {
+        //     this.regdStudents[index].exams = modifiedArray;
+        //   return index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
+        // })
+        // this.regdStudents = unique;
+        // console.log(this.regdStudents);
+      },
+      error: (err) => {
+        console.log(err);
+        this.isDataLoading = false;
+      }
+    })
   }
 
   initializeColumns(): void {
     this.viewStudentsTableColumns = [
       {
-        columnDef: 'name',
+        columnDef: 'firstName',
         header: 'Name',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['name']}`
+        cell: (element: Record<string, any>) => `${element['firstName']}`
       },
       {
-        columnDef: 'rollNo',
-        header: 'Roll no',
+        columnDef: 'enrollmentNumber',
+        header: 'Roll No',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['rollNo']}`
+        cell: (element: Record<string, any>) => `${element['enrollmentNumber']}`
       },
       {
-        columnDef: 'course',
+        columnDef: 'courseName',
         header: 'Course',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['course']}`
+        cell: (element: Record<string, any>) => `${element['courseName']}`
       },
       {
-        columnDef: 'admissionYr',
+        columnDef: 'session',
         header: 'Year Of Admission',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['admissionYr']}`
+        cell: (element: Record<string, any>) => `${element['session']}`
       },
       {
-        columnDef: 'noOfExam',
+        columnDef: 'numberOfExams',
         header: 'No of Exam',
         isSortable: true,
-        cell: (element: Record<string, any>) => `${element['noOfExam']}`
+        cell: (element: Record<string, any>) => `${element['numberOfExams']}`
       },
       {
         columnDef: 'examName',
