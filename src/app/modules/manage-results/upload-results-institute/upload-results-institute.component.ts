@@ -68,6 +68,8 @@ export class UploadResultsInstituteComponent implements OnInit{
   uplodeInternalMarks(file:File) {
     const formData = new FormData();
         formData.append("file", file);
+        formData.append("fileType", 'excel');
+        formData.append('','')
       this.baseService.uplodeInternalMarks$(formData)
       .subscribe({
         next: (result) => {

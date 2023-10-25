@@ -16,6 +16,7 @@ import { SharedSkeletonLoadingComponent } from './components/shared-skeleton-loa
 import { UploadDialogComponent } from './components/upload-dialog/upload-dialog.component';
 import { SharedQuestionPaperComponent } from './components/shared-ques-paper/shared-ques.component';
 import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-select/shared-exam-cycle-select.component';
+import { SharedNoResultCardComponent } from './components/shared-no-result-card/shared-no-result-card.component';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-s
     UploadDialogComponent,
     SharedQuestionPaperComponent,
     SharedExamCycleSelectComponent,
+    SharedNoResultCardComponent,
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-s
     SharedTableComponent,
     HttpClientModule,
     SharedQuestionPaperComponent,
-    SharedExamCycleSelectComponent
+    SharedExamCycleSelectComponent,
+    SharedNoResultCardComponent
   ],
   providers: [ConfigService]
 })

@@ -20,14 +20,15 @@ export class ManageResultInstituteComponent {
 
   cardList: any[] = [];
 
-  examCycleList = []
+  examCycleList: any = []
 
   examCycle = new FormControl('');
   breadcrumbItems = [
     {label: 'Manage Results', url: ''}
   ]
   loggedInUserId: string | number;
-  instituteDetail: any
+  instituteDetail: any;
+  noResultMessage = 'Your institution did not have any exams for the selected exam cycle, and as a result, you do not have any exam to uplode results. Please reach out to the administration for additional details.';
 
   constructor(
     private router: Router,
@@ -61,12 +62,13 @@ export class ManageResultInstituteComponent {
     }))
     .subscribe((examCucles: any) => {
       this.examCycleList = examCucles.examCyclesList
+      this.examCycle.patchValue(this.examCycleList[this.examCycleList.length - 1].id)
     })
   }
 
   getExamDetails(examCycleId: string) {
     if (this.instituteDetail) {
-      this.baseService.getExamDetailsByInstitute$(examCycleId, this.instituteDetail.id)
+      this.baseService.getExamsByInstitute$(examCycleId, this.instituteDetail.id)
       .pipe(mergeMap((res: any) => {
         return this.formateExamDetails(res.responseData);
       }))

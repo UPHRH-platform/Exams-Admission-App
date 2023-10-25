@@ -67,7 +67,12 @@ export class ManageResultInstituteListComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoutes.queryParams.subscribe((params: any) => {
       if(params && params.examId) {
-        this.getInternalMarksOfExam(params)
+        const formBody = {
+          examCycle: params.examCycleId,
+          exam: params.examId,
+          institute: params.instituteId
+        }
+        this.getInternalMarksOfExam(formBody)
       } else {
         this.goToList()
       }

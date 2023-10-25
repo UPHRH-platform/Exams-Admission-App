@@ -78,46 +78,46 @@ export class BaseService extends HttpService {
   getInstitutesResultData$(examCycleId: string): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
 
-    const result = {
-      responseData: [
-        {
-          instituteName: 'NEW COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          hasInternalMarks: true,
-          hasFinalMarks: true,
-          hasRevisedFinalMarks: true,
+    // const result = {
+    //   responseData: [
+    //     {
+    //       instituteName: 'NEW COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks: true,
+    //       hasFinalMarks: true,
+    //       hasRevisedFinalMarks: true,
          
-        },
-        {
-          instituteName: 'OLD COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          hasInternalMarks:false,
-          hasFinalMarks: false,
-          hasRevisedFinalMarks: false,
+    //     },
+    //     {
+    //       instituteName: 'OLD COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks:false,
+    //       hasFinalMarks: false,
+    //       hasRevisedFinalMarks: false,
        
-        },
-        {
-          instituteName: 'MODERN COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          hasInternalMarks: true,
-          hasFinalMarks: false,
-          hasRevisedFinalMarks: true,
+    //     },
+    //     {
+    //       instituteName: 'MODERN COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks: true,
+    //       hasFinalMarks: false,
+    //       hasRevisedFinalMarks: true,
       
-        },
+    //     },
       
      
-      ]
-    }
-    return of( result )
-
-    // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}?examCycle=${examCycleId}`,
-    //   data: {}
+    //   ]
     // }
-    // return this.get(requestParam)
+    // return of( result )
+
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}?examCycle=${examCycleId}`,
+      data: {}
+    }
+    return this.get(requestParam)
   }
 
   deleteResults(): Observable<any> {
@@ -126,6 +126,7 @@ export class BaseService extends HttpService {
         statusMessage: 'deleted'
       }
     })
+    
   }
 
   getUserData$(): Observable<any>{
@@ -741,71 +742,45 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return of(response)
   }
 
-  getStudentResultData$():Observable<any>{
+  getStudentResultData$(examCycleId: any, instituteId: string):Observable<any>{
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RESULTS_BY_INSTITUTE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
+    //   data: {},
+    // }
+    // return this.get(requestParam);
     return of( {
       responseData: [
         {
-          studentName: 'Devaprathap Nagendra',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '23',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Madison',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '48',
-          externalMarks: '23',
-          revisedMarks: '50'
-          
-        },
-        {
-          studentName: 'Ravi',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '47',
-          externalMarks: '43',
-          revisedMarks: '32'
-          
-        },
-        {
-          studentName: 'Kanaka Rao',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '34',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Arun',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '40',
-          revisedMarks: '35'
-          
-        },
-        {
-          studentName: 'Aman',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '30',
-          revisedMarks: '46'
-          
-        },
-        {
-          studentName: 'Devaprathap N.',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '44',
-          externalMarks: '45',
-          revisedMarks: '50'
-          
+          "id": 2,
+                "instituteName": "IIT",
+                "instituteId": 8,
+                "firstName": 'John',
+                "lastName": 'Smith',
+                "enrollmentNumber": 'Enrolment Number',
+                "motherName": 'Mary',
+                "fatherName": 'Robert',
+                "courseValue": 'ANM1',
+                "examCycleValue": 'Fall 2023',
+                "examValue": 'Exam',
+                "internalMarks": 30,
+                "passingInternalMarks": 12,
+                "internalMarksObtained": 13,
+                "practicalMarks": 23,
+                "passingPracticalMarks": 12,
+                "practicalMarksObtained": 12,
+                "otherMarks": 12,
+                "passingOtherMarks": 12,
+                "otherMarksObtained": 12,
+                "externalMarks": 12,
+                "passingExternalMarks": 12,
+                "externalMarksObtained": 12,
+                "totalMarks": 12,
+                "passingTotalMarks": 12,
+                "totalMarksObtained": 12,
+                "grade": 'c',
+                "result": 'PASS',
+                "status": 12,
+                "published": false
         },
       ]
     })
@@ -831,23 +806,28 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.multipartPost(requestParam)
   }
 
-  getExamDetailsByInstitute$(examCycleId: string, instituteId: number) {
-    return of({
-      responseData: [
-        {
-          examName: 'Exam 1',
-          examId: 1,
-          lastDateToUplode: '25 Mar 2023',
-          marksUploded: false,
-        }, {
-          examName: 'Exam 2',
-          examId: 2,
-          lastDateToUplode: '25 Mar 2023',
-          marksUploded: true,
+  getExamsByInstitute$(examCycleId: string, instituteId: number) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAMS_OF_INSTITUTE_EXMACYCLE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
+      data: {},
+    }
+    return this.get(requestParam);
+    // return of({
+    //   responseData: [
+    //     {
+    //       examName: 'Exam 1',
+    //       examId: 1,
+    //       lastDateToUplode: '25 Mar 2023',
+    //       marksUploded: false,
+    //     }, {
+    //       examName: 'Exam 2',
+    //       examId: 2,
+    //       lastDateToUplode: '25 Mar 2023',
+    //       marksUploded: true,
     
-        },
-      ]
-    })
+    //     },
+    //   ]
+    // })
   }
 
   uplodeInternalMarks$(request: any) {
@@ -867,6 +847,11 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   }
 
   getInternalMarksOfExam$(formBody: any) {
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAM_MARKS_BY_INSTITUTE}`,
+    //   data: formBody
+    // }
+    // return this.get(requestParam);
     return of({
       responseData: [
         {
