@@ -21,6 +21,7 @@ export class UploadResultsInstituteComponent implements OnInit{
    fileUploadError: string;
    listOfFiles: any[] = [];
    files: any[] = [];
+   instituteId = ''
 
   constructor(
     private dialog: MatDialog,
@@ -31,8 +32,8 @@ export class UploadResultsInstituteComponent implements OnInit{
     ){}
   
   ngOnInit(): void {
-    this.activateRoute.queryParams.subscribe(params => {
-      console.log('params', params)
+    this.activateRoute.queryParams.subscribe((params: any) => {
+      this.instituteId = params.instituteId
     })
   }
     
@@ -69,7 +70,7 @@ export class UploadResultsInstituteComponent implements OnInit{
     const formData = new FormData();
         formData.append("file", file);
         formData.append("fileType", 'excel');
-        formData.append('','')
+        formData.append('instituteId', this.instituteId)
       this.baseService.uplodeInternalMarks$(formData)
       .subscribe({
         next: (result) => {

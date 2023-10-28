@@ -28,7 +28,7 @@ export class ManageResultInstituteComponent {
   ]
   loggedInUserId: string | number;
   instituteDetail: any;
-  noResultMessage = 'Your institution did not have any exams for the selected exam cycle, and as a result, you do not have any exam to uplode results. Please reach out to the administration for additional details.';
+  noResultMessage = 'Your institution did not have any exams for the selected exam cycle, and as a result, you do not have any exam to upload results. Please reach out to the administration for additional details.';
 
   constructor(
     private router: Router,
@@ -43,7 +43,6 @@ export class ManageResultInstituteComponent {
 
   intialisation() {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
-    this.getExamCycles()
     this.getInstituteByuserId()
   }
 
@@ -51,6 +50,7 @@ export class ManageResultInstituteComponent {
     this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
       next: (res) => {
         this.instituteDetail = res.responseData[0];
+        this.getExamCycles()
       }
     })
   }
@@ -90,8 +90,8 @@ export class ManageResultInstituteComponent {
         const formatedExam = {
           examName: element.examName,
           examId: element.examId,
-          lastDateToUplode: element.lastDateToUpload,
-          marksUploded: element.marksUploded
+          lastDateToUpload: element.lastDateToUploadInternalMarks,
+          marksUploaded: element.internalMarksUploadStatus
         }
         foramtedExamDetails.push(formatedExam)
       })
@@ -99,10 +99,10 @@ export class ManageResultInstituteComponent {
     return of(foramtedExamDetails)
   }
 
-  navigateToUplode(examId: string) {
+  navigateToUpload(examId: string) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
-        examId: examId,
+        instituteId: this.instituteDetail.id,
       },
     }
     this.router.navigate(['/manage-result/institute/upload'], navigationExtras);

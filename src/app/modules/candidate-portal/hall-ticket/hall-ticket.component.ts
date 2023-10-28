@@ -11,7 +11,7 @@ export class HallTicketComponent implements OnInit {
 
   //#region (global variables)
 
-  hallTicketDetails: any
+  studentDetails: any
 
   examTableHeader = [
     {
@@ -59,7 +59,6 @@ export class HallTicketComponent implements OnInit {
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
-    console.log(this.stateData?.data)
   }
   //#endregion
 
@@ -70,8 +69,20 @@ export class HallTicketComponent implements OnInit {
   //#region (intialisation)
 
   intialisation() {
-    this.hallTicketDetails = this.stateData?.data;
-    this.examTableData  =  this.stateData?.data.exams;
+    if (this.stateData) {
+      this.studentDetails = {
+        examCyclename: this.stateData?.data.examCycle.examCyclename,
+        firstName: this.stateData?.data.firstName,
+        lastName: this.stateData?.data.lastName,
+        studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
+        dob: this.stateData?.data.dob,
+        courseName: this.stateData?.data.courseName,
+        courseYear: this.stateData?.data.courseYear,
+      };
+      this.examTableData  =  this.stateData?.data.examCycle.exams;
+    } else {
+      this.router.navigateByUrl('candidate-portal')
+    }
   }
 
 
@@ -79,7 +90,12 @@ export class HallTicketComponent implements OnInit {
 
   //#region (navigate to modify)
   redirectToModifyHallticket() {
-    this.router.navigate(['/candidate-portal/modify-hallticket'],{ state: this.hallTicketDetails })
+    this.router.navigate(['/candidate-portal/modify-hallticket'],{ 
+      state: {
+        studentDetails: this.studentDetails,
+        exams: this.examTableData
+      }
+    })
   }
 
   cancel() {

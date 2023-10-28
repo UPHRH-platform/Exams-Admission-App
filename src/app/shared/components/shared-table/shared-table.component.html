@@ -87,7 +87,7 @@
 
                     <th [ngStyle]="disCol?.cellStyle" mat-header-cell *matHeaderCellDef>
 
-                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                        <mat-checkbox (change)="$event ? masterToggle(disCol?.isDropdown) : null"
 
                             [checked]="selection.hasValue() && isAllSelected()"
 
@@ -129,7 +129,7 @@
 
                 <span *ngIf="disCol?.isCheckBox">
 
-                    <mat-checkbox (click)="logSelection()" (change)="$event ? selection.toggle(element) : null"
+                    <mat-checkbox (click)="logSelection(disCol?.isDropdown)" (change)="$event ? selection.toggle(element) : null"
 
                         [checked]="selection.isSelected(element)">
 
@@ -218,7 +218,7 @@
                         <mat-label>Choose exam(s)</mat-label>
                         <mat-select [formControl]="examControl" multiple
 
-                         (selectionChange)="onExamChange($event, element)" required>
+                         (selectionChange)="onExamChange($event, element, disCol?.isDropdown)" required>
                             <mat-option *ngFor="let exam of element.exams;let i = index" [value]="exam"
 
                             selected>
@@ -233,7 +233,7 @@
                     <mat-form-field floatLabel="never" *ngIf="examsList && examsList.length > 0">
                         <mat-select [formControl]="examControl" multiple
 
-                         (selectionChange)="onExamChange($event, element)" required>
+                         (selectionChange)="onExamChange($event, element, disCol?.isDropdown)" required>
 
                             <mat-option *ngFor="let exam of examList;let i = index" [value]="exam"
 

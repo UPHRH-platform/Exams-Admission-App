@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ExamCycleComponent {
   loggedInUserRole: string;
 
-  @Input() hallTicketDetails: any;
+  @Input() studentDetails: any;
   @Input() examTableHeader: any;
   @Input() examTableData: any;
   @Input() isHallTicket: any;

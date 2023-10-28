@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { mergeMap, of } from 'rxjs';
-import { BaseService } from 'src/app/service/base.service';
 
 @Component({
   selector: 'app-results',
@@ -11,19 +9,7 @@ import { BaseService } from 'src/app/service/base.service';
 export class ResultsComponent implements OnInit {
 
   //#region (global variables)
-  hallTicketDetails = {
-    exmaCycleName: 'Exam Cycle 1',
-    studentDetails: {
-      firstName: 'Rajash',
-      lastName: 'Kumaravel',
-      roolNumber: '12345 89078',
-      DOB: '24-01-1998',
-    }, 
-    hallTicketDetqails: {
-      courseName: 'M. Sc. Nursing',
-      courseYear: '2022 - 2023'
-    }
-  }
+  studentDetails ={}
 
   examTableHeader = [
     {
@@ -57,8 +43,8 @@ export class ResultsComponent implements OnInit {
       }
     },{
       header: 'Status',
-      columnDef: 'status',
-      cell: (element: Record<string, any>) => `${element['status']}`,
+      columnDef: 'result',
+      cell: (element: Record<string, any>) => `${element['result']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
@@ -68,13 +54,15 @@ export class ResultsComponent implements OnInit {
   examTableData= []
 
   isHallTicket = true
+  resultsDetails: any
   //#endregion
 
   //#region (constructor)
   constructor(
-    private router: Router,
-    private baseService: BaseService
-  ) {}
+    private router: Router
+  ) {
+    this.resultsDetails = this.router?.getCurrentNavigation()?.extras.state;
+  }
   //#endregion
 
   ngOnInit(): void {
@@ -83,63 +71,33 @@ export class ResultsComponent implements OnInit {
 
   //#region (intialisation)
   intialisation() {
-    this.getExamResults()
-  }
-
-  getExamResults() {
-    this.baseService.getResults()
-    .pipe(mergeMap((res: any) => {
-      return this.formateResultDetails(res)
-    })).subscribe((results: any) => {
-      this.examTableData = results.examResults
-    })
-  }
-
-  formateResultDetails(results: any) {
-    const exams: {
-      examResults: {
-        examName: string,
-        internalMarks: string,
-        externalMarks: string,
-        totalMarks: string,
-        status: string,
-        hasStyle: boolean,
-        cellStyle: {
-          status: {
-            color: string
-          }
-        },
-      }[]
-    } = {
-      examResults: []
+    if (this.resultsDetails) {
+      console.log('data', this.resultsDetails)
+      this.studentDetails = {
+        examCyclename: this.resultsDetails?.data.examCyclename,
+        firstName: this.resultsDetails?.data.firstName,
+        lastName: this.resultsDetails?.data.lastName,
+        studentEnrollmentNumber: this.resultsDetails?.data.enrollmentNumber,
+        dob: this.resultsDetails?.data.dob,
+        courseName: this.resultsDetails?.data.courseName,
+        courseYear: this.resultsDetails?.data.courseYear,
+      };
+      this.examTableData  =  this.resultsDetails?.data.examDetails;
+    } else {
+      this.router.navigateByUrl('candidate-portal')
     }
-
-    if (results) {
-      results.forEach((result: any) => {
-        const examResult = {
-          examName: result.examName,
-          internalMarks: result.internalMarks,
-          externalMarks: result.externalMarks,
-          totalMarks: result.totalMarks,
-          status: result.status,
-          hasStyle: true,
-          cellStyle: {
-            status: {
-              color: result.status === 'Fail' ? 'red' : 'green'
-            }
-          },
-        }
-        exams.examResults.push(examResult)
-      })
-    }
-    return of(exams);
   }
 
   //#endregion
 
   //#region (navigate to modify)
   redirectToRequestRevalution() {
-    this.router.navigateByUrl('/candidate-portal/request-revalution')
+    this.router.navigate(['/candidate-portal/request-revalution'],{ 
+      state: {
+        studentDetails: this.studentDetails,
+        exams: this.examTableData
+      }
+    })
   }
   //#endregion
 

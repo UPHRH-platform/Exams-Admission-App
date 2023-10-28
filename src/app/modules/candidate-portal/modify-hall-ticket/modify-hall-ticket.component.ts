@@ -14,19 +14,7 @@ import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.serv
 })
 export class ModifyHallTicketComponent implements OnInit {
   //#region (global variables)
-  hallTicketDetails = {
-    exmaCycleName: '',
-    studentDetails: {
-      firstName: '',
-      lastName: '',
-      roolNumber: '',
-      DOB: '',
-    },
-    hallTicketDetqails: {
-      courseName: '',
-      courseYear: ''
-    }
-  }
+  disableModification = true
   examTableHeader = [
     {
       header: 'Name of exam',
@@ -97,17 +85,19 @@ export class ModifyHallTicketComponent implements OnInit {
 
   setHallTicketDetails() {
     if (this.stateData) {
-      console.log(this.stateData)
+      console.log('modify hall ticket', this.stateData)
+      const studentDetails = this.stateData.studentDetails
       this.studentDetails.setValue({
-        firstName: this.stateData.firstName,
-        lastName: this.stateData.lastName,
-        roolNumber: this.stateData.enrollmentNumber,
-        DOB: new Date(this.stateData.dateOfBirth),
-        courseName: this.stateData.courseName,
-        courseYear: this.stateData.courseYear
+        firstName: studentDetails.firstName,
+        lastName: studentDetails.lastName,
+        roolNumber: studentDetails.studentEnrollmentNumber,
+        DOB: new Date(studentDetails.dob),
+        courseName: studentDetails.courseName,
+        courseYear: studentDetails.courseYear
       })
-      this.hallTicketDetails.exmaCycleName = this.stateData.examCycle.examCyclename;
       this.examTableData = this.stateData.exams;
+    } else {
+      this.router.navigateByUrl('candidate-portal')
     }
   }
 
@@ -159,6 +149,7 @@ export class ModifyHallTicketComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.uplodedDocuments.push(result.files[0])
+        this.disableModification = false
       }
     })
   }
@@ -198,6 +189,7 @@ export class ModifyHallTicketComponent implements OnInit {
   removeAttacment(index: number) {
     if (this.uplodedDocuments.length > 0) {
       this.uplodedDocuments.splice(index, 1)
+      this.disableModification = this.uplodedDocuments.length < 1
     }
   }
 

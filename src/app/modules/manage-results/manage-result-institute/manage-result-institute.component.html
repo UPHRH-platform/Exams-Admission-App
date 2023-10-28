@@ -19,14 +19,14 @@
                 <mat-card class="card" *ngFor="let item of cardList">
                     <mat-card-content class="content-container">
                             <span class="title-section">{{item.examName}}</span>
-                            <span class="desc-section">Last date for Upload : {{item.lastDateToUplode}}</span>
+                            <span class="desc-section">Last date for Upload : {{item.lastDateToUpload}}</span>
                             <div class="status-card">
-                                <span class="status" [ngStyle]="{'color': item.marksUploded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
+                                <span class="status" [ngStyle]="{'color': item.marksUploaded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
                             </div>
                     </mat-card-content>
                     <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                    <button class="view-btn" (click)="navigateToUplode(item.examId)">{{ (item.marksUploded ? "Re-upload" : "Upload Internal Marks") }}</button>
-                    <ng-container *ngIf="item.marksUploded">
+                    <button class="view-btn" (click)="navigateToUpload(item.examId)">{{ (item.marksUploaded ? "Re-upload" : "Upload Internal Marks") }}</button>
+                    <ng-container *ngIf="item.marksUploaded">
                         <button class="btn-2" (click)="navigateToView(item.examId)">View</button>
                     </ng-container>
                     </div>

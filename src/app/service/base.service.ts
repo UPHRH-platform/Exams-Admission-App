@@ -397,12 +397,92 @@ export class BaseService extends HttpService {
     return this.hallTktData.asObservable();
   } */
 
-  getHallTicketData$(studentId: number, examCycleId: number) {
-      const requestParam: RequestParam = {
-        url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
-        data: {},
-      }
-      return this.get(requestParam);
+  getHallTicketData$(studentId: string, examCycleId: number) {
+      // const requestParam: RequestParam = {
+      //   url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
+      //   data: {},
+      // }
+      // return this.get(requestParam);
+
+      return of({
+        responseData: {
+            "firstName": "jay",
+            "lastName": "singh",
+            "courseYear": '2013',
+            "courseName": "Mechanical Engineering",
+            "hallTicketStatus": "PENDING",
+            "examCycle": {
+                "examCyclename": "gjhg",
+                "exams": [
+                    {
+                        "examDate": "2023-08-23",
+                        "createdBy": null,
+                        "examName": "asdfd sdf",
+                        "isResultsPublished": false,
+                        "obsolete": 0,
+                        "startTime": "09:00:00",
+                        "modifiedBy": null,
+                        "endTime": "12:00:00"
+                    },
+                    {
+                        "examDate": "2023-08-26",
+                        "createdBy": null,
+                        "examName": "asdf",
+                        "isResultsPublished": false,
+                        "obsolete": 0,
+                        "startTime": "14:00:00",
+                        "modifiedBy": null,
+                        "endTime": "17:00:00"
+                    }
+                ],
+                "endDate": "2023-06-11",
+                "createdBy": null,
+                "obsolete": 0,
+                "modifiedBy": null,
+                "id": 64,
+                "startDate": "2023-06-02",
+                "status": "DRAFT"
+            },
+            "enrollmentNumber": "EN2023 ABC36",
+            "dateOfBirth": "1995-12-15"
+        }
+      })
+  }
+
+  getStudentResults$(enrolmentNumber: string, dateOfBirth: string, examCycleID: string) {
+    // const formBody = {
+    //   enrolmentNumber: enrolmentNumber,
+    //   dateOfBirth: dateOfBirth,
+    //   examCycleID: examCycleID
+    // }
+    // const requestParam: RequestParam = {
+    //   url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}`,
+    //   data: formBody
+    // }
+    // return this.get(requestParam)
+
+    return of({
+      responseData: {
+        "firstName": "jay",
+            "lastName": "singh",
+            "enrollmentNumber": "EN2023 ABC36",
+            "dateOfBirth": "1995-12-15",
+            "courseName": "Mathematics",
+            "courseYear": '2013',
+            "examDetails": [
+                {
+                    "examName": "Data Structure",
+                    "internalMarks": 30,
+                    "externalMarks": 12,
+                    "totalMarks": 100,
+                    "grade": "D",
+                    "result": "pass",
+                    "status": "ENTERED",
+                    "id": "2"
+                }
+            ]
+        },
+    })
   }
 
   requestHallTicketModification$(reqbody: any) {
@@ -720,19 +800,19 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   getResults() {
     const response = [
       {
-        examName: 'Exam 1', 
+        examNames: 'Exam 1', 
         internalMarks: '45', 
         externalMarks: '45',
         totalMarks: '90',
         status: 'Pass'
       },{
-        examName: 'Exam 2', 
+        examNames: 'Exam 2', 
         internalMarks: '45', 
         externalMarks: '45',
         totalMarks: '95',
         status: 'Pass',
       },{
-        examName: 'Exam 3', 
+        examNames: 'Exam 3', 
         internalMarks: '25', 
         externalMarks: '5',
         totalMarks: '30',
@@ -872,6 +952,14 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
         },
       ]
     })
+  }
+
+  requestRetotalling(formBody: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RETOTALLING_REQUEST}`,
+      param: formBody
+    }
+    return this.post(requestParam)
   }
 
   //#endregion

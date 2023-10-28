@@ -3,35 +3,25 @@
         <h2 class="title-header">Candidate portal</h2>
         <app-shared-skeleton-loading [isLoading]="isDataLoading">
         </app-shared-skeleton-loading>
-        <form [formGroup]="candidateFormGroup" (ngSubmit)="onCandidateFormGroupSubmit(candidateFormGroup.value)">
-            <div>
-                <div>
-                        <span class="exam-lable">Exam Cycle</span>
-                    </div>
-                    <mat-form-field appearance="outline" class="exam-form">
-                    <mat-select formControlName="examCycleFormControl" >
-                            <ng-container *ngFor="let examCycle of examCycleList">
-                                <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
-                            </ng-container>
-                            <mat-option style="display: none;" value="">Select here</mat-option>
-                        </mat-select>
-                       
-                    </mat-form-field>
-                </div>
-                <div class="cards-boxes" >
-                    <mat-card class="card" *ngFor="let item of cardList">
-                        <mat-card-content class="content-container">
-                                <span class="title-section">{{item.title}}</span>
-                                <span class="desc-section">{{item.lable}} : {{item.date}}</span>
-                                <div class="status-card">
-                                    <span class="status">status: {{item.status}}</span>
-                                </div>
-                        </mat-card-content>
-                        <button  class="view-btn">View</button>
-                    </mat-card>
-                </div>
-        </form>
-       
+        <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
+            (selectedExamcycleId)="getResultAndHallticketDetails($event)">
+        </app-shared-exam-cycle-select>
+        <ng-container *ngIf="cardList && cardList.length > 0; else dataNotfound">
+            <div class="cards-boxes">
+                <mat-card class="card" *ngFor="let item of cardList">
+                    <mat-card-content class="content-container">
+                        <span class="title-section">{{item.title}}</span>
+                        <span class="desc-section">{{item.lable}} : {{item.date}}</span>
+                        <div class="status-card">
+                            <span class="status">status: {{item.status}}</span>
+                        </div>
+                    </mat-card-content>
+                    <button class="view-btn" (click)="viewDetails(item.title)">View</button>
+                </mat-card>
+            </div>
+        </ng-container>
+        <ng-template #dataNotfound>
+            <app-shared-no-result-card></app-shared-no-result-card>
+        </ng-template>
     </div>
 </div>
-

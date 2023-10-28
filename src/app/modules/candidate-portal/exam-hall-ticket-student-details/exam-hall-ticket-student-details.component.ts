@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ExamHallTicketStudentDetailsComponent {
 
-  @Input() hallTicketDetails: any;
+  @Input() studentDetails: any;
 
   constructor() { }
 
