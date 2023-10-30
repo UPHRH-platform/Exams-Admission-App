@@ -62,4 +62,15 @@ export class AttendanceRecordUploadListComponent {
   goToAttendanceList() {
     this.router.navigate(['manage-attendance'])
   }
+
+  downloadTemplate() {
+    this.baseService.downloadResultsTemplate().subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'attendance.xlsx';
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    });
+  }
 }
