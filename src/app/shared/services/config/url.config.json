@@ -5,11 +5,11 @@
         "QUESTION_PAPER": {
             "GET_ALL": "/v1/questionPaper/list",
             "UPLOAD": "/questionPaper/upload",
-            "DOWNLOAD": "/v1/questionPaper/download",
+            "DOWNLOAD": "/questionPaper/download",
             "GET_BY_ID": "/v1/questionPaper",
             "GET_PREVIEW_URL": "/questionPaper/preview",
-            "DELETE": "/v1/questionPaper/delete",
-            "GET_QUESTIONPAPER_BY_EXAMCYCLE": "/questionPaper/examCycle"
+            "GET_QUESTIONPAPER_BY_EXAMCYCLE": "/questionPaper/examCycle",
+            "DELETE_QUESTION_PAPER": "/questionPaper/delete"
         },
         "STUDENT_ENROLLMENT": {
             "CREATE": "/v1/students/add",

@@ -38,6 +38,7 @@ export class SharedQuestionPaperComponent {
   @Output() uploadQuesPaper: EventEmitter<any> = new EventEmitter<any>();//upload ques paper
   @Output() viewQuestionPaper: EventEmitter<any> = new EventEmitter<any>();//view ques paper
   @Output() downloadQuestionPaper: EventEmitter<any> = new EventEmitter<any>();//download ques paper
+  @Output() deleteQuestionPaper: EventEmitter<any> = new EventEmitter<any>();//delete ques paper
   @Output() examCycleSelection: EventEmitter<any> = new EventEmitter<any>();
   
   loggedInUserRole: string;
@@ -120,5 +121,9 @@ export class SharedQuestionPaperComponent {
   emitDownloadQuestionPaper(event: QuestionPaper) {
     this.downloadQuestionPaper.emit(event);
 }
+
+  emitDeleteQuestionPaper(event: QuestionPaper) {
+    this.deleteQuestionPaper.emit(event);
+  }
 
 }

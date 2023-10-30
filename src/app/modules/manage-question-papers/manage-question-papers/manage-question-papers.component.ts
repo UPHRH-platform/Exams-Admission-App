@@ -127,13 +127,44 @@ export class ManageQuestionPapersComponent {
       }
     
 
-  downloadQuestionPaper(questionPaperId: any) {
-    this.baseService.downloadQuestionPaper(questionPaperId).subscribe({
+  downloadQuestionPaper(questionPaper: any) {
+    this.baseService.downloadQuestionPaper(questionPaper.id).subscribe({
       next: (response) => {
         console.log("Download question paper response", response);
       },
       error: (error) => {
         console.log("Download question paper error", error);
+      }
+    });
+  }
+
+  deleteQuestionPaper(questionPaper: any) {
+    this.baseService.deleteQuestionPaper(questionPaper.id).subscribe({
+      next: (response) => {
+        const dialogRef = this.dialog.open(ConformationDialogComponent, {
+          data: {
+            dialogType: 'success',
+            description: [response.responseData],
+            buttons: [
+              {
+                btnText: 'Ok',
+                positionClass: 'center',
+                btnClass: 'btn-full',
+                response: true,
+  
+              },
+            ],
+          },
+          width: '700px',
+          height: '400px',
+          maxWidth: '90vw',
+          maxHeight: '90vh'
+        })
+        dialogRef.afterClosed().subscribe(res => {
+          this.getQuestionPapersByExamCycle();
+        })
+      },
+      error: (error) => {
       }
     });
   }

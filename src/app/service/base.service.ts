@@ -762,7 +762,7 @@ downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
     url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DOWNLOAD}`,
     data: payloadData
   }
- return this.post(reqParam);
+ return this.get(reqParam);
 }
 
 getQuestionPaperById(questionPaperId: any): Observable<ServerResponse>  {
@@ -781,7 +781,7 @@ getQuestionPaperPreviewUrl(questionPaperId: any): Observable<ServerResponse>  {
 
 deleteQuestionPaper(questionPaperId: any): Observable<ServerResponse>  {
   const  reqParam: RequestParam = { 
-    url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DELETE}/${questionPaperId}`
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DELETE_QUESTION_PAPER}/${questionPaperId}`
   }
   return this.delete(reqParam);
 }
