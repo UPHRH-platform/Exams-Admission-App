@@ -24,15 +24,15 @@
     <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
       <mat-select (selectionChange)="getSelectedAcademicYear($event)">
-        <mat-option *ngFor="let year of years" [value]="year.value">
-          {{ year.viewValue }}
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
         </mat-option>
       </mat-select>
       </mat-form-field>
   </div>
 <div class="buttons flex" style="justify-content: end;" *ngIf="loggedInUserRole === 'exams_institute'">
     <div >
-      <button class="btn-1">Download List</button>
+      <button class="btn-1" (click)="downLoadStudentList()">Download List</button>
     </div>
     <div>
       <button class="btn-2" (click)="addNewEnrollment()">New Student Enrolment</button>

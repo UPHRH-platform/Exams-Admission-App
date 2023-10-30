@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {NgFor} from '@angular/common';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { NgFor } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services';
 import { Tabs } from 'src/app/shared/config';
@@ -12,6 +12,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from 'src/app/service/base.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
+import { map } from 'rxjs/internal/operators/map';
+import { mergeMap } from 'rxjs/internal/operators/mergeMap';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { combineLatest } from 'rxjs';
+import { of } from 'rxjs/internal/observable/of';
 
 interface Course {
   value: string;
@@ -38,7 +47,7 @@ interface InstituteDetail {
 })
 
 export class StudentEnrollmentComponent {
-  isDataLoading:boolean = false;
+  isDataLoading: boolean = false;
   loggedInUserRole: string;
   tabs: any[] = [];
   enrollmentTableColumns: TableColumn[] = [];
@@ -58,20 +67,22 @@ export class StudentEnrollmentComponent {
   years: string[] = [];
   isHallTicket: boolean = true;
   instituteDetail: InstituteDetail;
-  currentFY:string;
-constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService, private toastrService: ToastrServiceService){}
+  selectedCourse: any;
+  selectedAcademicYear: any;
+  constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
+    this.years = this.baseService.getAdmissionSessionList()
     this.initializeTabs();
     this.initializeSearchForm();
     // courses to be fetched based on institute
-    if(this.loggedInUserRole === 'exams_institute') {
+    if (this.loggedInUserRole === 'exams_institute') {
       this.getInstituteByuserId();
     }
-    else if(this.loggedInUserRole === 'exams_secretary') {
-      
+    else if (this.loggedInUserRole === 'exams_secretary') {
+
     }
     else {
       this.getAllCourses();
@@ -80,30 +91,13 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     }
   }
 
-  getAdmissionSessionList() {
-    const thisYear = (new Date()).getFullYear();
-    this.currentFY = [0].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`).join();
-    console.log(this.currentFY);
-    const yesterYears = [0, 1, 2, 3, 4].map((count) => `${thisYear - count - 1}-${(thisYear - count)}`);
-    const aheadYears = [0, -1, -2, -3].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`)
-    this.years.push(...yesterYears, ...aheadYears);
-    this.years.sort((a, b) => {
-      if(a > b) {
-        return 1
-      }
-      else {
-        return - 1;
-      }
-    })
-    console.log(this.years);
-}
 
   getPendingEnrollment() {
 
   }
   initializeSearchForm() {
-    this.searchForm =  new FormGroup({
-      searchData:  new FormControl('')
+    this.searchForm = new FormGroup({
+      searchData: new FormControl('')
     })
   }
 
@@ -122,22 +116,22 @@ constructor(private router: Router, private authService: AuthServiceService, pri
 
   getAllInstitutes() {
     this.baseService.getAllInstitutes$().subscribe({
-     next: (res: any) => {
-       this.instituteList = res.responseData;
-     },
-     error: (error: HttpErrorResponse) => {
-       console.log(error.message)
-     }
-   })
- }
+      next: (res: any) => {
+        this.instituteList = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
 
   onClickItem(e: any) {
     const id = e?.id;
-    this.router.navigate(['/student-enrollment/view-enrollment/'+id])
+    this.router.navigate(['/student-enrollment/view-enrollment/' + id])
   }
 
   initializeTabs() {
-    if(this.loggedInUserRole === 'exams_secretary') {
+    if (this.loggedInUserRole === 'exams_secretary') {
       this.tabs = Tabs['Student_Enrollment_Secretary'];
     }
     else {
@@ -145,94 +139,97 @@ constructor(private router: Router, private authService: AuthServiceService, pri
       this.initializeColumns();
     }
     this.selectedTab = this.tabs[0];
-    
+
   }
 
   getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
     this.enrollmentTableData = [];
-  let request = {
-    instituteId: instituteId !== undefined? instituteId : '',
-    courseId: courseId !== undefined? courseId : '',
-    academicYear: academicYear !== undefined? academicYear: '',
-    verificationStatus: this.selectedTab.name === 'Approved'? 'VERIFIED' : this.selectedTab.name.toUpperCase()
-  }
- if(this.loggedInUserRole === 'exams_institute') {
-    request['instituteId']= this.instituteDetail?.id.toString();
- } 
-  this.isDataLoading = true;
-  this.baseService.getEnrollmentList(request).subscribe({
-    next: (res) => {
-      this.isDataLoading = false;
-      res.responseData.map((obj: any) => {
-        obj.courseName = obj.course.courseName;
-      })
-      this.enrollmentTableData = res.responseData;
-    },
-    error: (error: any) => {
-      this.isDataLoading = false;
-      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+    let request = {
+      instituteId: instituteId !== undefined ? instituteId : '',
+      courseId: courseId !== undefined ? courseId : '',
+      academicYear: academicYear !== undefined ? academicYear : '',
+      verificationStatus: this.selectedTab.name === 'Approved' ? 'VERIFIED' : this.selectedTab.name.toUpperCase()
     }
-  })
+    if (this.loggedInUserRole === 'exams_institute') {
+      request['instituteId'] = this.instituteDetail?.id.toString();
+    }
+    this.isDataLoading = true;
+    this.baseService.getEnrollmentList(request).subscribe({
+      next: (res) => {
+        this.isDataLoading = false;
+        res.responseData.map((obj: any) => {
+          obj.courseName = obj.course.courseName;
+        })
+        console.log(res.responseData)
+        this.enrollmentTableData = res.responseData;
+      },
+      error: (error: any) => {
+        this.isDataLoading = false;
+        this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+      }
+    })
   }
 
-  applySearch(searchterms:any){ 
-     this.searchParams = searchterms;
+  applySearch(searchterms: any) {
+    this.searchParams = searchterms;
   }
 
   initializeColumns(): void {
     this.enrollmentTableColumns = [];
-    switch(this.loggedInUserRole) {
-      case 'exams_institute': 
-      this.enrollmentTableColumns = [
-        {
-          columnDef: 'firstName',
-          header: 'Applicant Name',
-          isSortable: false,
-          isLink: false,
-          cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
-        },
-        {
-          columnDef: 'provisionalEnrollmentNumber',
-          header: 'Provisional Enrollment Number',
-          isSortable: false,
-          isLink: false,
-          cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
-        },
-        {
-          columnDef: 'course',
-          header: 'Course Name',
-          isSortable: false,
-          isLink: false,
-          cell: (element: Record<string, any>) => `${element['courseName']}`
-        },
-        {
-          columnDef: 'enrollmentDate',
-          header: 'Admission Date',
-          isSortable: false,
-          isLink: false,
-          cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
-        },
-        // {
-        //   columnDef: 'viewStudentEnrollment',
-        //   header: '',
-        //   isSortable: false,
-        //   isLink: true,
-        //   isAction: false,
-        //   cell: (element: Record<string, any>) => `View Enrollment`,
-        //   cellStyle: {
-        //     'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
-        //   },
-        {
-          columnDef: 'viewStudentEnrollment',
-          header: '',
-          isSortable: false,
-          isLink: true,
-          isAction: true,
-          cell: (element: Record<string, any>) => `View Enrollment`,
-          classes: ['color-blue'],
-        },
-      ]
-      break;
+    switch (this.loggedInUserRole) {
+      case 'exams_institute':
+        this.enrollmentTableColumns = [
+          {
+            columnDef: 'firstName',
+            header: 'Applicant Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
+          },
+          {
+            columnDef: 'provisionalEnrollmentNumber',
+            header: 'Provisional Enrollment Number',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
+          },
+          {
+            columnDef: 'course',
+            header: 'Course Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['courseName']}`
+          },
+          {
+            columnDef: 'enrollmentDate',
+            header: 'Admission Date',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => {
+              return this.baseService.reverseDate(element['enrollmentDate'])
+            }
+          },
+          // {
+          //   columnDef: 'viewStudentEnrollment',
+          //   header: '',
+          //   isSortable: false,
+          //   isLink: true,
+          //   isAction: false,
+          //   cell: (element: Record<string, any>) => `View Enrollment`,
+          //   cellStyle: {
+          //     'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
+          //   },
+          {
+            columnDef: 'viewStudentEnrollment',
+            header: '',
+            isSortable: false,
+            isLink: true,
+            isAction: true,
+            cell: (element: Record<string, any>) => `View Enrollment`,
+            classes: ['color-blue'],
+          },
+        ]
+        break;
       case 'exams_admin':
         this.enrollmentTableColumns = [
           {
@@ -321,7 +318,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
         ]
         break;
     }
-    
+
   }
 
   addNewEnrollment() {
@@ -334,13 +331,13 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   }
 
   getSelectedCourse(event: any) {
-    const selectedCourse = event.value;
-    this.getEnrollmentData('', selectedCourse, '');
+    this.selectedCourse = event.value
+    this.getEnrollmentData('', this.selectedCourse, '');
   }
 
   getSelectedAcademicYear(event: any) {
-    const selectedAcademicYear = event.value;
-    this.getEnrollmentData('','',selectedAcademicYear);
+    this.selectedAcademicYear = event.value;
+    this.getEnrollmentData('', '', this.selectedAcademicYear);
   }
 
   onTabChange(event: MatTabChangeEvent) {
@@ -350,7 +347,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   }
 
   getInstituteByuserId() {
-    if(this.loggedInUserRole === 'exams_institute') {
+    if (this.loggedInUserRole === 'exams_institute') {
       console.log(this.loggedInUserRole);
       this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
         next: (res) => {
@@ -366,9 +363,137 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   getCoursesByInstitute(id: string | number) {
     const instituteId = id;
     this.baseService.getCoursesBasedOnInstitute(instituteId).subscribe({
-      next: (res)=> {
+      next: (res) => {
         this.courses = res.responseData[0].institute.courses;
       }
     })
+  }
+
+  downLoadStudentList() {
+
+    const request = {
+      instituteId: this.instituteDetail.id,
+      courseId: this.selectedCourse || '',
+      academicYear: this.selectedAcademicYear || '',
+    }
+    console.log(request)
+    const toAppendPending = {
+      "verificationStatus": "PENDING"
+    }
+    const toAppendapproved = {
+      "verificationStatus": "VERIFIED"
+    }
+    const toAppendrejected = {
+      "verificationStatus": "REJECTED"
+    }
+    const toAppendclosed = {
+      "verificationStatus": "CLOSED"
+    }
+
+    const pendingRequest = { ...toAppendPending, ...request };
+    const approvedRequest = { ...toAppendapproved, ...request };
+    const rejectedRequest = { ...toAppendrejected, ...request };
+    const closedRequest = { ...toAppendclosed, ...request };
+    let completeData: any = [];
+
+
+    forkJoin([
+       this.baseService.getEnrollmentList(pendingRequest).pipe(catchError(error => of(error))), 
+       this.baseService.getEnrollmentList(approvedRequest).pipe(catchError(error => of(error))),
+      this.baseService.getEnrollmentList(rejectedRequest).pipe(catchError(error => of(error))),
+       this.baseService.getEnrollmentList(closedRequest).pipe(catchError(error => of(error))),
+      ]) 
+    .subscribe({
+      next: (res: any) => {
+            //this will return list of array of the result
+          
+            for(let i in res){
+              if(res[i].responseData){
+                console.log(res[i].responseData)
+                completeData.unshift(res[i].responseData)
+              }
+             
+            }
+            this.generatePDf(completeData.flat())
+       
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+      
+        }
+      }
+    )
+    //this multiple calls approach needs to be relooked,.. doing it now for the sake of delivery
+    /* this.baseService.getEnrollmentList(pendingRequest)
+      .subscribe({
+        next: (res: any) => {
+          completeData = res.responseData;
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      })
+
+    this.baseService.getEnrollmentList(approvedRequest)
+      .subscribe({
+        next: (res: any) => {
+          completeData.unshift(res.responseData);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      })
+
+    this.baseService.getEnrollmentList(rejectedRequest)
+      .subscribe({
+        next: (res: any) => {
+          completeData.unshift(res.responseData);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      })
+
+    this.baseService.getEnrollmentList(closedRequest)
+      .subscribe({
+        next: (res: any) => {
+          completeData.unshift(res.responseData);
+          this.generatePDf(completeData.flat())
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+          this.generatePDf(completeData.flat())
+        }
+      }) */
+
+  }
+
+  generatePDf(data: any) {
+    let docBody: any = []
+    for (let item of data) {
+      docBody.push(
+        [
+          item.firstName + " " + item.surname,
+          item.provisionalEnrollmentNumber || "-",
+          item.enrollmentNumber || "-",
+          item.course.courseName,
+          this.baseService.reverseDate(item.admissionDate),
+          item.verificationStatus
+        ]
+
+      )
+    }
+    const doc = new jsPDF()
+    autoTable(doc, {
+      margin: { top: 50 },
+      rowPageBreak: 'auto',
+      bodyStyles: { valign: 'top' },
+      columnStyles: {
+        1: { cellWidth: 20 },
+      },
+      head: [['Applicant Name', 'Provisional Enrollment Number', 'Enrollment Number', 'Course Name', 'Admission Date', 'Verification Status']],
+      body: docBody,
+    });
+    doc.save('Student_Enrollment.pdf')
   }
 }
