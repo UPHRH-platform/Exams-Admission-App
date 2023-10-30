@@ -5,6 +5,8 @@ import { LoadingDialogComponent } from '../loading-dialog/loading-dialog.compone
 import { BaseService } from 'src/app/service/base.service';
 import { Tabs } from 'src/app/shared';
 import { mergeMap, of } from 'rxjs';
+import { AuthServiceService } from 'src/app/core/services';
+import { ActivatedRoute } from '@angular/router';
 
 interface Course {
   value: string;
@@ -88,8 +90,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
     }
   ]
 
-  pendingFeeTableData= [
-  ]
+  pendingFeeTableData= []
 
   paidFeeTableHeader = [
     {
@@ -141,9 +142,15 @@ export class FeeManagementListInstituteComponent implements OnInit {
   breadcrumbItems = [
     { label: 'Fee Management', url: '' },
   ]
+  examCycleId: string ;
+  isDataLoading: boolean;
+  loggedInUserId: any;
+  instituteId: any;
   constructor(
     private dialog: MatDialog,
-    private baseService: BaseService
+    private baseService: BaseService,
+    private authService: AuthServiceService,
+    private route: ActivatedRoute
   ) {
     this.filterForm = new FormGroup({
       search: new FormControl(''),
@@ -160,37 +167,76 @@ export class FeeManagementListInstituteComponent implements OnInit {
   intialisation() {
     // this.initializeTabs()
     // this.initializeTableColumns()
-    this.getStudentsFeeDetails()
+   
+    this.examCycleId = this?.route?.snapshot?.paramMap?.get('id')||'0'; 
+    this.getInstituteDetailsByUser()
   }
 
-  getStudentsFeeDetails() {
-   /*  this.baseService.getStudentFeeTableData$()
+  getInstituteDetailsByUser() {
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
+    console.log( this.loggedInUserId)
+    this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      next: (res) => {
+        if(this.examCycleId !== undefined) {
+        this.getRegdStudents(res.responseData[0].id);
+        this.instituteId=res.responseData[0].id;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  getRegdStudents(instituteId: any) {
+    this.isDataLoading = true;
+    this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId)
     .pipe((mergeMap((response: any) => {
-      return this.formateStudentFeeDetails(response);
+      this.isDataLoading = false;
+      console.log(response.responseData)
+      return this.formateStudentFeeDetails(response.responseData);
     })))
     .subscribe((feeDetails: any) => {
       this.paidFeeTableData = feeDetails.paidFeeDetails
       this.pendingFeeTableData = feeDetails.pendingFeeDetails
-    }) */
+    })
+    
   }
 
   formateStudentFeeDetails(response: any) {
-    const studentsFeeDetails: {
-      // studentFeeDetails: any[],
-      pendingFeeDetails: any[],
-      paidFeeDetails: any[]
-    } = {
-      // studentFeeDetails: [],
-      pendingFeeDetails: [],
-      paidFeeDetails: []
-    }
-
+    let studentsFeeDetails:any={
+      paidFeeDetails:[],
+      pendingFeeDetails:[]
+    };
+    let foramtedFeeDetails: any
+     response = [
+        {firstName: 'mansur 2', surname: 'tom', 
+        exams:[
+          {id: 8, name: 'Mathematics 101'},
+          {id: 9, name: 'Mathematics 10'}
+        ],
+        fee:1000,
+        status:"Paid",
+        enrollmentNumber: 'EN202312', courseName: 'Mathematics', session: '2023-2024'},
+        {firstName: 'mansur', 
+        exams:[
+          {id: 8, name: 'Mathematics 101'},
+          {id: 9, name: 'Mathematics 10'}
+        ],
+        fee:1000,
+        status:"Pending",
+        surname: 'tom', enrollmentNumber: 'EN202311', courseName: 'Mathematics', session: '2023-2024' }
+        ] 
     if (response) {
       response.forEach((feeDetails: any) => {
-        let foramtedFeeDetails: any = {
-          studentName: feeDetails.studentName,
-          examNames: feeDetails.exams,
-          noOfExams: feeDetails.numberOfExams,
+        let examsArray = [];
+        for (let exam of feeDetails.exams) {
+          examsArray.push(exam.name)
+        }
+        foramtedFeeDetails = {
+          studentName: feeDetails.firstName,
+          examNames: examsArray,
+          noOfExams: examsArray.length,
           fee: feeDetails.fee,
           status: feeDetails.status,
         }
@@ -209,12 +255,11 @@ export class FeeManagementListInstituteComponent implements OnInit {
             studentsFeeDetails.pendingFeeDetails.push(foramtedFeeDetails)
             break;
           }
-          // studentsFeeDetails.studentFeeDetails.push(foramtedFeeDetails)
         }
       })
-    }
-
-    return of(studentsFeeDetails)
+    
+    } 
+      return of(studentsFeeDetails)
   }
 
   // initializeTabs() {
@@ -301,8 +346,24 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   payFee() {
+    const reqBody:any = {
+      "examCycleId": this.examCycleId,
+      "instituteId": this.instituteId,
+      "studentExam": {
+          "5": {
+              "15": 2000.00
+          },
+          "6": {
+              "15": 2000.00
+          }
+      },
+      "amount": 2200.00,
+      "payerType": "EXAM",
+      "createdBy": this.loggedInUserId
+    }
+    
  
-     this.baseService.payFees()
+     this.baseService.payFees(reqBody)
      .subscribe((result: any) => {
       console.log(result.responseData.redirectUrl)
        window.open(result.responseData.redirectUrl, "_blank");

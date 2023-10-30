@@ -190,10 +190,6 @@ export class StudentEnrollmentComponent {
     })
   }
 
-
-
-
-
   setEnrollmentTableColumns() {
     if (this.enrollmentTableColumns.length > 0) {
       this.enrollmentTableColumns[1].header = this.selectedTab.name === 'Approved' ? 'Enrollment Number' : 'Provisional Enrollment Number'

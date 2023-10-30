@@ -557,16 +557,36 @@ export class BaseService extends HttpService {
      /**************************** fee management services starts ****************************/
      
 
-     getInstituteFeeTableData$(examCycleId?: number) {
+     getAdminFeeTableData$(examCycleId?: number) {
       const requestParam: RequestParam = {
         url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.INSTITUTE_LIST,
         data: {
           "page": 0,
-          "size": 50,
+          "size": 5,
+          "filter": {
+              "examCycle": 8
+          },
           "sort": {
               "referenceNo": "desc"
           }
-      },
+      }
+      }
+      return this.post(requestParam);
+    }
+
+    getFeeTableData$(examCycleId?: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.INSTITUTE_LIST,
+        data: {
+          "page": 0,
+          "size": 5,
+          "filter": {
+              "examCycle": 8
+          },
+          "sort": {
+              "referenceNo": "desc"
+          }
+      }
       }
       return this.post(requestParam);
     }
@@ -583,8 +603,9 @@ export class BaseService extends HttpService {
 
       const requestParam: RequestParam = {
         url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.FEES,
-        data: {
-          "examCycleId": 18,
+        data: feeDetails
+     /*    {
+          "examCycleId": "18",
         "instituteId": 5,
         "studentExam": {
             "5": {
@@ -596,7 +617,7 @@ export class BaseService extends HttpService {
         },
         "amount": 2200.00,
         "payerType": "EXAM",
-        "createdBy": "64bf323c-0cfd-440d-aa0e-be24d148b006"},
+        "createdBy": "64bf323c-0cfd-440d-aa0e-be24d148b006"} */,
       }
       return this.post(requestParam);
   
