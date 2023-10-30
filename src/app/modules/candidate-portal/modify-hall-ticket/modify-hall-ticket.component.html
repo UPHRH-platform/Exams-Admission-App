@@ -45,7 +45,7 @@
             <mat-card-actions>
                 <div class="footer">
                     <button class="cancel-btn" (click)="cancel()">Cancel</button>
-                    <button class="request-modify-btn" [ngClass]="{'disabled': disableModification}" type="submit" [disabled]="disableModification" (click)="makeDataCorrectionRequest()">Request modify</button>
+                    <button class="request-modify-btn" [ngClass]="{'disabled-btn': disableModification}" type="submit" [disabled]="disableModification" (click)="makeDataCorrectionRequest()">Request modify</button>
                 </div>
             </mat-card-actions>
         </mat-card>

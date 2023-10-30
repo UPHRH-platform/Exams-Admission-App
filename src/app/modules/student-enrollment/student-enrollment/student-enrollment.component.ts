@@ -162,6 +162,7 @@ constructor(private router: Router, private authService: AuthServiceService, pri
   this.isDataLoading = true;
   this.baseService.getEnrollmentList(request).subscribe({
     next: (res) => {
+      this.setEnrollmentTableColumns();
       this.isDataLoading = false;
       res.responseData.map((obj: any) => {
         obj.courseName = obj.course.courseName;
@@ -173,6 +174,12 @@ constructor(private router: Router, private authService: AuthServiceService, pri
       this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
     }
   })
+  }
+
+  setEnrollmentTableColumns() {
+    if (this.enrollmentTableColumns.length > 0 && this.loggedInUserRole === 'exams_institute') {
+      this.enrollmentTableColumns[1].header = this.selectedTab.name === 'Approved' ? 'Enrollment Number' : 'Provisional Enrollment Number'
+    }
   }
 
   applySearch(searchterms:any){ 
