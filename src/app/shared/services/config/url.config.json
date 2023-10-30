@@ -100,7 +100,9 @@
             "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload",
             "RESULTS_BY_INSTITUTE": "/v1/studentResults/resultsByInstitute",
             "EXAMS_OF_INSTITUTE_EXMACYCLE": "/v1/studentResults/resultUploadStatusForInstitute",
-            "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute"
+            "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute",
+            "STUDENT_RESULTS": "/v1/studentResults/results",
+            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling"
         }
     }
 }

@@ -14,6 +14,7 @@ import { ModifyHallTicketComponent } from './modify-hall-ticket/modify-hall-tick
 import { EditHallticketComponent } from './edit-hallticket/edit-hallticket.component';
 import { CandidatePortalService } from './services/candidate-portal.service';
 import { RequestRevalutionComponent } from './request-revalution/request-revalution.component';
+import { GenerateResultsPdfComponent } from './generate-results-pdf/generate-results-pdf.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { RequestRevalutionComponent } from './request-revalution/request-revalut
     ModifyHallTicketComponent,
     EditHallticketComponent,
     RequestRevalutionComponent,
+    GenerateResultsPdfComponent,
   ],
   imports: [
     CommonModule,

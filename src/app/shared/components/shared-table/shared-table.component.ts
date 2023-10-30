@@ -145,10 +145,12 @@ export class SharedTableComponent implements AfterViewInit {
     console.log(e);
   }
 
-  onExamChange(event: any, row: any) {
-    this.selectedExamNames[row.id] = event.value;
-    console.log(event.value);
-    this.logSelection();
+  onExamChange(event: any, row: any, isDropdown: boolean) {
+    if (isDropdown) {
+      this.selectedExamNames[row.id] = event.value;
+      console.log(event.value);
+      this.logSelection(isDropdown);
+    }
   }
 
   setTableDataSource(data: any) {
@@ -178,16 +180,18 @@ export class SharedTableComponent implements AfterViewInit {
     console.log(data)
     this.cellClickAction.emit(data);
   }
-  updateExamNames() {
+  updateExamNames(isDropdown: boolean) {
+    if(isDropdown) {
     this.selection.selected.forEach((s) => {
       const selectedExamNamesForRow = this.selectedExamNames[s.id] || [];
       s.examName = selectedExamNamesForRow; // Update the examName array
     });
   }
+  }
 
-  logSelection() {    
+  logSelection(isDropdown: boolean) { 
     const selectedRows: any[] = [];
-    this.updateExamNames();
+    this.updateExamNames(isDropdown);
     this.selection.selected.forEach((s) => {
       selectedRows.push(s);
     });
@@ -233,15 +237,17 @@ export class SharedTableComponent implements AfterViewInit {
     }
   
     /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
+    masterToggle(isDropdown: boolean) {
+      if (isDropdown) {
       console.log("masterTogglemasterToggle")
       this.isAllSelected() ?
           this.selection.clear() :
           this.dataSource.data.forEach(row =>
             {
               this.selection.select(row);
-              this.logSelection()
+              this.logSelection(isDropdown)
             } );
+          }
     }
     isSelected(optionValue: string) {
       // Return true for options that you want to select by default

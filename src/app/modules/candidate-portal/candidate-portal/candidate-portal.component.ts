@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, forkJoin, mergeMap, of } from 'rxjs';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-candidate-portal',
@@ -10,70 +12,84 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./candidate-portal.component.scss']
 })
 export class CandidatePortalComponent implements OnInit {
-  cardList: any[] = [
-    {
-      title: 'Results',
-      lable: 'Published on',
-      date: '25 Mar 2023',
-      status: 'Published',
-      navigateUrl: '/candidate-portal/view-results',
-    }
-  ];
+  cardList: any[] = [];
 
   examCycleList = []
 
-  candidateFormGroup: FormGroup;
+  examCycleFormControl = new FormControl();
   selectedExamCycle: any;
   hallTicketDetails: any;
   isDataLoading: boolean = false;
+  studentID = '1';
+  studentDetails: any = {};
+  studentResultsDetails: any = {}
 
 
   constructor(
     private router: Router,
     private baseService: BaseService,
-    private formBuilder: FormBuilder
+    private toasterService: ToastrServiceService
   ) { }
 
   ngOnInit(): void {
-
-    this.initiateCandidateForm();
-  }
-  initiateCandidateForm() {
-
-    this.candidateFormGroup = this.formBuilder.group({
-      examCycleFormControl: new FormControl('', [
-        Validators.required]),
-    })
     this.getExamCycles()
+    this.getResultAndHallticketDetails(3) // remove when apis working
   }
 
-  onCandidateFormGroupSubmit(value: any) {
-    if (this.candidateFormGroup.valid) {
-      this.router.navigate(['/candidate-portal/view-hallticket'], { state: { data: this.hallTicketDetails } });
-    }
-  }
-
-  getHallTicketDetails(studentId: number, examCycleId: number) {
-    this.isDataLoading = true;
-    this.baseService.getHallTicketData$(studentId, examCycleId).subscribe({
-      next: (res: any) => {
-        if (res && res.responseData) {
-          this.hallTicketDetails = res.responseData;
-          this.hallTicketDetails.dob = this.reverseDate(res.responseData.dateOfBirth)
+  getExamCycles() {
+    this.baseService.getExamCycleList$()
+    // .pipe((mergeMap((res) => {
+    //   return this.baseService.formatExamCyclesForDropdown(res.responseData)
+    // })))
+      .subscribe({
+        next: (res: any) => {
+          this.examCycleList = res.responseData;
+          const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
+          this.examCycleFormControl.patchValue(lastIndexSelected.id);
+          this.getResultAndHallticketDetails(lastIndexSelected.id)
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
         }
-        console.log( this.hallTicketDetails)
+      })
+  }
+
+  getResultAndHallticketDetails(event: any) {
+    this.cardList = [];
+    this.isDataLoading = true;
+    let hallTicketDetail = this.baseService.getHallTicketData$(this.studentID, event);
+    let studentResults = this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)
+    forkJoin([hallTicketDetail, studentResults])
+    .pipe(
+      catchError(error => {
+        this.toasterService.showToastr(error, 'Error', 'error')
+        return of([])
+      })
+    )
+    .subscribe((res) => {
+      if(res[0] && res[0].responseData) {
+        this.hallTicketDetails = res[0].responseData;
+        this.hallTicketDetails.dob = this.reverseDate(res[0].responseData.dateOfBirth);
         this.cardList.push({
           title: 'Hall Ticket',
           lable: 'Generated on',
           date: this.reverseDate(this.hallTicketDetails.hallTicketGenerationDate),
           status: this.hallTicketDetails.hallTicketStatus,
         })
-        this.isDataLoading = false;
-      },
-      error: (error: any) => {
-        console.log(error.message)
-        this.isDataLoading = false;
       }
+      if(res[1] && res[1].responseData) {
+        this.studentResultsDetails = res[1].responseData;
+        this.studentResultsDetails.dob = this.reverseDate(res[1].responseData.dateOfBirth)
+        const examCycle: any = this.examCycleList.find(((element: any) => element.id === event))
+        this.studentResultsDetails['examCyclename'] = examCycle ? examCycle.examCycleName : '';
+        this.cardList.push({
+          title: 'Results',
+          lable: 'Published on',
+          date: this.reverseDate(this.studentResultsDetails.publishedDate),
+          status: this.studentResultsDetails.publishStatus,
+        })
+      }
+      this.isDataLoading = false;
     })
   }
 
@@ -82,24 +98,12 @@ export class CandidatePortalComponent implements OnInit {
     return Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
   }
 
-
-  getExamCycles() {
-    this.baseService.getExamCycleList$()
-      .subscribe({
-        next: (res: any) => {
-          this.examCycleList = res.responseData;
-          const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
-          this.candidateFormGroup.patchValue({
-            examCycleFormControl: lastIndexSelected.id
-          });
-          if(!this.hallTicketDetails){
-            this.getHallTicketDetails(12, 5)
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error);
-        }
-      })
+  viewDetails(title: any) {
+    if(title === 'Results') {
+      this.router.navigate(['/candidate-portal/view-results'],{state: { data: this.studentResultsDetails}})
+    } else if (title === 'Hall Ticket') {
+      this.router.navigate(['/candidate-portal/view-hallticket'],{state: { data: this.hallTicketDetails}})
+    }
   }
 
 }
