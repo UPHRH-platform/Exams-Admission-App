@@ -926,6 +926,10 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.httpClient.get('assets/templates/instituteResultTemplate.xlsx', { responseType: 'blob' });
   }
 
+  downloadTemplate(url: string): Observable<Blob> {
+    return this.httpClient.get(url, { responseType: 'blob' });
+  }
+
   getInternalMarksOfExam$(formBody: any) {
     // const requestParam: RequestParam = {
     //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAM_MARKS_BY_INSTITUTE}`,

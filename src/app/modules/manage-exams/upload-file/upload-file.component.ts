@@ -193,4 +193,16 @@ export class UploadFileComponent implements OnInit {
     }
     return JSON.stringify(jsonArray, null, 2);
   }
+
+  downloadTemplate() {
+    this.baseService.downloadTemplate('assets/templates/Exam_cycle_template.csv')
+    .subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'examCyclesAndExams.csv';
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    });
+  }
 }
