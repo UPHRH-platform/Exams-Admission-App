@@ -125,7 +125,7 @@ export class FeeManagementAdminComponent implements OnInit {
 }
   instituteTableData() {
     this.isDataLoading = true;
-    this.baseService.getInstituteFeeTableData$()
+    this.baseService.getFeeTableData$()
   /*   .pipe((mergeMap((response: any) => {
       return this.formateInstituteTableData(response)
     }))) */

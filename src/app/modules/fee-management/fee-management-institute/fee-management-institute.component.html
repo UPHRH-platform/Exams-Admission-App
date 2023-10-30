@@ -2,12 +2,12 @@
 <div class="secondary-container">
     <h2 class="title-header">{{'Fee Management'}}</h2>
     <div class="cards-boxes">
-        <mat-card class="example-card" *ngFor="let item of cardList">
+        <mat-card class="example-card" *ngFor="let item of examCycleData">
             <mat-card-content class="content-container">
-                    <span class="title-section">{{item.title}}</span>
-                    <span class="desc-section">{{item.type}}</span>
+                    <span class="title-section">{{item.examCycleName}}</span>
+                    <span class="desc-section">Last date for payment : {{item.type || "NA"}}</span>
             </mat-card-content>
-            <button class="btn-1" (click)="reDirectToFeemanagement(item.examId)">Pay exam fee</button>
+            <button class="btn-1" (click)="reDirectToFeemanagement(item)">Pay exam fee</button>
             </mat-card>
     </div>
 </div>
