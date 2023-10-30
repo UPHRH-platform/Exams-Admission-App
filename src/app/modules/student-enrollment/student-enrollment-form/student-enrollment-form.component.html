@@ -22,11 +22,11 @@
         <span class="span" [ngStyle]="enrollmentDetails?.verificationStatus === 'VERIFIED'? {'color': 'green'} : enrollmentDetails?.verificationStatus === 'REJECTED' ? {'color': 'red'}: ''">Status: {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'Approved' : enrollmentDetails?.verificationStatus === 'REJECTED'? 'Rejected': ''}}</span>
       </p>
       <p>{{enrollmentDetails?.adminRemarks}}</p>
-    </div>
+      </div>
       <div class="px2 py2 outer-bg" [ngClass]="enrollmentDetails?.verificationStatus !== 'PENDING' ? 'mt2': ''">
         <div class="content-container">
           <div class="content-details">
-            <form enctype="multipart/form-data" [formGroup]="basicDetailsForm" *ngIf="selectedLink === 'Basic Details'">
+            <form [ngClass]="{'disableFields': !iseditable}" enctype="multipart/form-data" [formGroup]="basicDetailsForm" *ngIf="selectedLink === 'Basic Details'">
               <div class="clearfix">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-6">
                   <h4 class="w-full mat-label">First Name*</h4>
@@ -391,9 +391,9 @@
                 </div>
               </div>
             </form>
-            <form
+            <form [ngClass]="{'disableFields': !iseditable}"
               [formGroup]="educationalDetailsForm"
-              *ngIf="selectedLink === 'Educational Details'"
+              *ngIf="selectedLink === 'Educational Details'" 
             >
               <div class="clearfix">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-6">
