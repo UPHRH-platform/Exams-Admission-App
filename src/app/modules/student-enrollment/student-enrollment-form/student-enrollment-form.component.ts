@@ -8,6 +8,7 @@ import { BaseService } from 'src/app/service/base.service';
 import { CctvApprovalPopupComponent } from '../../../shared/components/cctv-approval-popup/cctv-approval-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 interface InstituteDetail {
   id: number | string,
@@ -56,7 +57,14 @@ export class StudentEnrollmentFormComponent {
   filteredExamCycleList: any = [];
   selectedFile: any;
   examCycleList: any = [];
-  constructor(private formBuilder: FormBuilder, private baseService: BaseService, private authService: AuthServiceService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
+  constructor(
+    private formBuilder: FormBuilder, 
+    private baseService: BaseService, 
+    private authService: AuthServiceService, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private dialog: MatDialog,
+    private toasterService: ToastrServiceService) {
     this.route.params.subscribe((param) => {
       if(param['id']) {
         this.enrollmentId = param['id'];
@@ -357,9 +365,11 @@ export class StudentEnrollmentFormComponent {
            else {
             //console.log('file already exists');
             this.fileUploadError = 'Please upload files with size less than 5MB';
+            this.toasterService.showToastr(this.fileUploadError, 'Error', 'error')
           }
         } else {
           this.fileUploadError = `Please upload ${allowedExtensions.join(', ')} files`;
+          this.toasterService.showToastr(this.fileUploadError, 'Error', 'error')
         }
         console.log(this.educationalDetailsForm.value);
       }
