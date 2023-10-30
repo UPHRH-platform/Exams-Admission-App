@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { GenerateResultsPdfComponent } from '../generate-results-pdf/generate-results-pdf.component';
 
 @Component({
   selector: 'app-results',
@@ -59,7 +61,8 @@ export class ResultsComponent implements OnInit {
 
   //#region (constructor)
   constructor(
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.resultsDetails = this.router?.getCurrentNavigation()?.extras.state;
   }
@@ -101,4 +104,14 @@ export class ResultsComponent implements OnInit {
   }
   //#endregion
 
+  dwonloadResults(event: boolean) {
+    if (event) {
+      const dialogRef = this.dialog.open(GenerateResultsPdfComponent, {
+        data: {
+          studentDetails: this.studentDetails,
+          examTableData: this.examTableData,
+        }
+      })
+    }
+  }
 }

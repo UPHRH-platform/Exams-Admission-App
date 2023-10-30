@@ -1,0 +1,16 @@
+<div id="pdf-content" class="main-container">
+    <mat-card class="container">
+        <div class="secondary-container">
+            <mat-card-content>
+                <div >
+                    <app-exam-hall-ticket-student-details
+                        [studentDetails]="studentDetails"></app-exam-hall-ticket-student-details>
+                </div>
+                <div class="mt2">
+                    <app-shared-table [tableColumns]="examTableHeader" [tableData]="examTableData"
+                        [isHallTicket]="isHallTicket"></app-shared-table>
+                </div>
+            </mat-card-content>
+        </div>
+    </mat-card>
+</div>

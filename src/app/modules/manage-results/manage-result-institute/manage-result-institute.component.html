@@ -1,40 +1,44 @@
 <app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
     <div class="secondary-container">
         <h2 class="title-header">Manage Results</h2>
-        <div>
+        <app-shared-skeleton-loading [isLoading]="isDataLoading">
+        </app-shared-skeleton-loading>
+        <ng-container *ngIf="!isDataLoading">
             <div>
-                <span class="exam-lable">Exam Cycle</span>
+                <div>
+                    <span class="exam-lable">Exam Cycle</span>
+                </div>
+                <mat-form-field appearance="outline" class="exam-form">
+                    <mat-select [formControl]="examCycle" (ngModelChange)="getExamDetails($event)">
+                        <ng-container *ngFor="let examCycle of examCycleList">
+                            <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                        </ng-container>
+                        <mat-option style="display: none;" value="">Select here</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
-            <mat-form-field appearance="outline" class="exam-form">
-                <mat-select [formControl]="examCycle" (ngModelChange)="getExamDetails($event)">
-                    <ng-container *ngFor="let examCycle of examCycleList">
-                        <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
-                      </ng-container>
-                    <mat-option style="display: none;" value="">Select here</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <ng-container *ngIf="cardList && cardList.length > 0; else examsStatus">
-            <div class="cards-boxes">
-                <mat-card class="card" *ngFor="let item of cardList">
-                    <mat-card-content class="content-container">
-                            <span class="title-section">{{item.examName}}</span>
-                            <span class="desc-section">Last date for Upload : {{item.lastDateToUpload}}</span>
-                            <div class="status-card">
-                                <span class="status" [ngStyle]="{'color': item.marksUploaded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
-                            </div>
-                    </mat-card-content>
-                    <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                    <button class="view-btn" (click)="navigateToUpload(item.examId)">{{ (item.marksUploaded ? "Re-upload" : "Upload Internal Marks") }}</button>
-                    <ng-container *ngIf="item.marksUploaded">
-                        <button class="btn-2" (click)="navigateToView(item.examId)">View</button>
-                    </ng-container>
-                    </div>
-                </mat-card>
-            </div>
+            <ng-container *ngIf="cardList && cardList.length > 0; else examsStatus">
+                <div class="cards-boxes">
+                    <mat-card class="card" *ngFor="let item of cardList">
+                        <mat-card-content class="content-container">
+                                <span class="title-section">{{item.examName}}</span>
+                                <span class="desc-section">Last date for Upload : {{item.lastDateToUpload}}</span>
+                                <div class="status-card">
+                                    <span class="status" [ngStyle]="{'color': item.marksUploaded ? '#E99E38' : '#1D8923'}">Status: {{item.status}}</span>
+                                </div>
+                        </mat-card-content>
+                        <div style="display: flex; flex-direction: row; column-gap: 2px;">
+                        <button class="view-btn" (click)="navigateToUpload(item.examId)">{{ (item.marksUploaded ? "Re-upload" : "Upload Internal Marks") }}</button>
+                        <ng-container *ngIf="item.marksUploaded">
+                            <button class="btn-2" (click)="navigateToView(item.examId)">View</button>
+                        </ng-container>
+                        </div>
+                    </mat-card>
+                </div>
+            </ng-container>
+            <ng-template #examsStatus>
+                <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
+            </ng-template>
         </ng-container>
-        <ng-template #examsStatus>
-            <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
-        </ng-template>
     </div>
 

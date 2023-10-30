@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
+import { BaseService } from 'src/app/service/base.service';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -55,7 +58,10 @@ export class HallTicketComponent implements OnInit {
   //#region (constructor)
   constructor(
     private router: Router,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private baseService: BaseService,
+    private dialog: MatDialog,
+    private renderer: Renderer2,
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
@@ -102,5 +108,41 @@ export class HallTicketComponent implements OnInit {
     this.router.navigateByUrl('/hall-ticket-management')
   }
   //#endregion
+
+  downloadHallTicket(event: boolean) {
+    this.baseService.downloadHallTicket().subscribe((data: any) => {
+
+      console.log(data)
+      const link = this.renderer.createElement('a');
+      link.setAttribute('target', '_blank');
+      link.setAttribute('href', data.responseData);
+      link.click();
+      link.remove();
+
+      const dialogRef = this.dialog.open(ConformationDialogComponent, {
+        data: {
+          dialogType: 'success',
+          description: ['Hall ticket downloaded successfully'],
+          buttons: [
+            {
+              btnText: 'Ok',
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
+          ],
+        },
+        width: '700px',
+        height: '400px',
+        maxWidth: '90vw',
+        maxHeight: '90vh'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+         this.router.navigateByUrl('/candidate-portal')
+        }
+      })
+    })
+  }
 
 }

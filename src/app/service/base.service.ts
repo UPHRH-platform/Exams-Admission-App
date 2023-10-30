@@ -463,7 +463,7 @@ export class BaseService extends HttpService {
 
     return of({
       responseData: {
-        "firstName": "jay",
+        "firstName": "jay (static data)",
             "lastName": "singh",
             "enrollmentNumber": "EN2023 ABC36",
             "dateOfBirth": "1995-12-15",
@@ -935,7 +935,7 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return of({
       responseData: [
         {
-          "firstName": "jay",
+          "firstName": "jay (static data)",
           "courseName": "Mechanical Engineering",
           "exam": "Data Structure",
           "internalMark": 13,

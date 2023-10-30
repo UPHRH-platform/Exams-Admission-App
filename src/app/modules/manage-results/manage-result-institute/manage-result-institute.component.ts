@@ -29,6 +29,7 @@ export class ManageResultInstituteComponent {
   loggedInUserId: string | number;
   instituteDetail: any;
   noResultMessage = 'Your institution did not have any exams for the selected exam cycle, and as a result, you do not have any exam to upload results. Please reach out to the administration for additional details.';
+  isDataLoading = true;
 
   constructor(
     private router: Router,
@@ -61,6 +62,7 @@ export class ManageResultInstituteComponent {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
     .subscribe((examCucles: any) => {
+      this.isDataLoading = false;
       this.examCycleList = examCucles.examCyclesList
       this.examCycle.patchValue(this.examCycleList[this.examCycleList.length - 1].id)
     })
@@ -68,6 +70,8 @@ export class ManageResultInstituteComponent {
 
   getExamDetails(examCycleId: string) {
     if (this.instituteDetail) {
+      this.isDataLoading = true;
+      this.cardList = [];
       this.baseService.getExamsByInstitute$(examCycleId, this.instituteDetail.id)
       .pipe(mergeMap((res: any) => {
         return this.formateExamDetails(res.responseData);
@@ -75,9 +79,11 @@ export class ManageResultInstituteComponent {
       .subscribe({
         next: (res: any) => {
           this.cardList = res
+          this.isDataLoading = false;
         },
         error: (error: HttpErrorResponse) => {
           this.toasterService.showToastr(error, 'Error', 'error', '')
+          this.isDataLoading = false;
         }
       })
     }

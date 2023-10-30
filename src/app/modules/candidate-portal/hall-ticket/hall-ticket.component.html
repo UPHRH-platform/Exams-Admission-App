@@ -9,6 +9,6 @@
       </div>
       <app-exam-cycle [studentDetails]="studentDetails" 
       [examTableHeader]="examTableHeader" [examTableData]="examTableData"
-      [isHallTicket]="isHallTicket"></app-exam-cycle>
+      [isHallTicket]="isHallTicket" (download)="downloadHallTicket($event)"></app-exam-cycle>
     </div>
 </div>

@@ -1,7 +1,6 @@
-import { Component, Input, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from '../../../service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
@@ -21,9 +20,10 @@ export class ExamCycleComponent {
   @Input() examTableData: any;
   @Input() isHallTicket: any;
 
+  @Output() download: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   constructor(
     private router: Router,
-    private renderer: Renderer2,
     private dialog: MatDialog,
     private authService: AuthServiceService,
     private baseService: BaseService,
@@ -34,42 +34,7 @@ export class ExamCycleComponent {
   }
 
   downloadHallTicket() {
-    this.baseService.downloadHallTicket().subscribe((data: any) => {
-
-      console.log(data)
-      const link = this.renderer.createElement('a');
-      link.setAttribute('target', '_blank');
-      link.setAttribute('href', data.responseData);
-      link.click();
-      link.remove();
-
-      const dialogRef = this.dialog.open(ConformationDialogComponent, {
-        data: {
-          dialogType: 'success',
-          description: ['Hall ticket downloaded successfully'],
-          buttons: [
-            {
-              btnText: 'Ok',
-              positionClass: 'center',
-              btnClass: 'btn-full',
-              response: true
-            },
-          ],
-        },
-        width: '700px',
-        height: '400px',
-        maxWidth: '90vw',
-        maxHeight: '90vh'
-      })
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-         this.router.navigateByUrl('/candidate-portal')
-        }
-      })
-    })
-   
-   
-   
+    this.download.emit(true)
   }
 
   cancel() {
