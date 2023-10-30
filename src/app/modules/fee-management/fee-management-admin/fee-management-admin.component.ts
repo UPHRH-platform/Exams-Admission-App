@@ -44,17 +44,19 @@ export class FeeManagementAdminComponent implements OnInit {
 
   constructor(
     private baseService : BaseService
-  ) {this.instituteTableData()}
+  ) {}
+
+  examCycleFormControl = new FormControl();
 
   ngOnInit(): void {
     this.intialisation()
+    this.getExamCycles();
   }
 
   intialisation() {
     // this.getExamCycles()
     // this.getInstitutesData()
     this.initializeColumns();
-    this.instituteTableData();
     this.initializeStudentColumns();
     // this.studentExamsTableData();
   }
@@ -64,9 +66,9 @@ export class FeeManagementAdminComponent implements OnInit {
    this.instituteTableHeader = [
     {
       header: 'Institute name',
-      columnDef: 'institute.instituteName',
+      columnDef: 'instituteName',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['institute.instituteName']}`,
+      cell: (element: Record<string, any>) => `${element['instituteName']}`,
       cellStyle: {
         'background-color': '#0000000a',
         'color': '#00000099'
@@ -105,9 +107,9 @@ export class FeeManagementAdminComponent implements OnInit {
       },
     },{
       header: 'Total fee paid',
-      columnDef: 'amount',
+      columnDef: 'totalFeePaid',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['amount']}`,
+      cell: (element: Record<string, any>) => `${element['totalFeePaid']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
       },
@@ -123,17 +125,16 @@ export class FeeManagementAdminComponent implements OnInit {
     },
     ]
 }
-  instituteTableData() {
+  instituteTableData(examCycleId: number) {
     this.isDataLoading = true;
-    this.baseService.getFeeTableData$()
-  /*   .pipe((mergeMap((response: any) => {
-      return this.formateInstituteTableData(response)
-    }))) */
+    this.baseService.getFeeTableData$(examCycleId)
+    .pipe((mergeMap((response: any) => {
+      return this.formateInstituteTableData(response.responseData)
+    })))
     .subscribe({
       next:(res:any)=>{
-       // this.instituteData = res.formatedInstituteTableDataList
-       console.log(res.responseData.examFees)
-       this.instituteData = res.responseData.examFees
+       console.log(res.formatedInstituteTableDataList)
+       this.instituteData = res.formatedInstituteTableDataList
        this.isDataLoading = false;
       },
       error: (error: HttpErrorResponse) => {
@@ -146,21 +147,26 @@ export class FeeManagementAdminComponent implements OnInit {
   }
 
   formateInstituteTableData(response: any) {
-    const formatedInstituteTableData: {
-      formatedInstituteTableDataList: any[]
-    } = {
+    const formatedInstituteTableData:any = {
       formatedInstituteTableDataList: []
-    }
+    } 
+  /*   = {
+      formatedInstituteTableDataList: []examCycle
+: 
+    } */
 
     if (response) {
-      response.forEach((instituteData: any) => {
+      console.log(response.examFees)
+let r = response.examFees
+      r.forEach((instituteData: any) => {
+        console.log(instituteData)
         const formatedInstitutesData = {
-          instituteName: instituteData.instituteName,
-          courseName: instituteData.courseName,
-          instituteCode: instituteData.instituteCode,
-          registerStudentsCount: instituteData.registerStudentsCount,
-          paidStudentsCount: instituteData.paidStudentsCount,
-          totalFeePaid: instituteData.totalFeePaid,
+          instituteName: instituteData.institute.instituteName,
+          courseName: instituteData.examCycle.course.courseName,
+          instituteCode: instituteData.institute.instituteCode,
+          registerStudentsCount: instituteData.totalStudentsCount,
+          paidStudentsCount: instituteData.totalPaidCount,
+          totalFeePaid: instituteData.totalPaidAmount,
           viewList: instituteData.viewList,
           classes: {
             viewList: ['cursor-pointer', 'color-blue']
@@ -285,14 +291,27 @@ export class FeeManagementAdminComponent implements OnInit {
 
   }
   
- 
-  
+  getSelectedExamcycleId(e: any) {
+    this.getFeeDetailsByExamCycle(e)
+  }
+  getFeeDetailsByExamCycle(e: any) {
+    console.log(e)
+    this.instituteTableData(e);
+  }
 
   getExamCycles() {
-    // this.feeManagementService.getExamCycles()
-    // .subscribe((examCucles: any) => {
-    //   this.examCycleList = examCucles
-    // })
+    this.baseService.getExamCycleList$()
+      .subscribe({
+        next: (res: any) => {
+          this.examCycleList = res.responseData;
+          const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
+          this.examCycleFormControl.setValue(lastIndexSelected.id)
+          this.getFeeDetailsByExamCycle(lastIndexSelected.id)
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        }
+      })
   }
 
   getInstitutesData(searchKey: string = '') {
