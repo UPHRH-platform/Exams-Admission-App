@@ -116,22 +116,26 @@
             <mat-card-content *ngIf="showCardDetails">
                 <p>
                     <mat-list role="list" *ngIf="((loggedInUserRole === 'exams_institute' && (questionPpr.examDate === formattedDate )) || loggedInUserRole ==='exams_admin') ;  else notYetexamTime">
-                        <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
-                            *ngFor="let qp of questionPpr.questionPapers">
-                            <div *ngIf="questionPpr.questionPapers.length > 0; else noQuestionPaperFound" style="display: flex; flex-direction:row; justify-content: space-between;"> 
-                                <span>{{qp.fileName}}</span>
-                                <span class="button-group" style="display: flex; flex-direction: row; gap: 4px;" >
-                                    <button type="button" class="cancel-button" mat-stroked-button
-                                    color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
-                                    <button class="next-button" *ngIf="loggedInUserRole === 'exams_institute'" mat-raised-button color="primary"
-                                        (click)="emitDownloadQuestionPaper(qp)">Download</button>
-                                        <button class="next-button" *ngIf="loggedInUserRole === 'exams_admin'" mat-raised-button color="primary"
-                                        (click)="emitDownloadQuestionPaper(qp)">Delete</button>
-                                </span>
-            
-                            </div>
-                            <p #noQuestionPaperFound>No question papers found for this exam</p>
-                        </mat-list-item>
+                        <ng-container *ngIf="questionPpr.questionPapers.length > 0; else noQuestionPaperFound">
+                            <mat-list-item style="background-color: #f4f4f4; margin-bottom: 1rem;" role="listitem"
+                                *ngFor="let qp of questionPpr.questionPapers">
+                                <div style="display: flex; flex-direction:row; justify-content: space-between;"> 
+                                    <span>{{qp.fileName}}</span>
+                                    <span class="button-group" style="display: flex; flex-direction: row; gap: 4px;" >
+                                        <button type="button" class="cancel-button" mat-stroked-button
+                                        color="primary" (click)="emitViewQuestionPaper(qp)">View</button>
+                                        <button class="next-button" *ngIf="loggedInUserRole === 'exams_institute'" mat-raised-button color="primary"
+                                            (click)="emitDownloadQuestionPaper(qp)">Download</button>
+                                            <button class="next-button" *ngIf="loggedInUserRole === 'exams_admin'" mat-raised-button color="primary"
+                                            (click)="emitDeleteQuestionPaper(qp)">Delete</button>
+                                    </span>
+                
+                                </div>
+                            </mat-list-item>
+                        </ng-container>
+                        <ng-template #noQuestionPaperFound>
+                            <p>No question papers found for this exam</p>
+                        </ng-template>
                         <mat-divider></mat-divider>
                     </mat-list>
                     <ng-template #notYetexamTime>
