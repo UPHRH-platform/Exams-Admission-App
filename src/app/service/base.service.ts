@@ -1290,6 +1290,29 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     }
     return this.get(requestParam);
   }
+
+  reverseDate(date: string) {
+    let Dob = new Date(date);
+    return Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
+  }
+
+  getAdmissionSessionList() {
+    const thisYear = (new Date()).getFullYear();
+    let years:any =[];
+    //let currentFY = [0].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`).join();
+    const yesterYears = [0, 1, 2, 3, 4].map((count) => `${thisYear - count - 1}-${(thisYear - count)}`);
+    const aheadYears = [0, -1, -2, -3].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`)
+    years.push(...yesterYears, ...aheadYears);
+    years.sort((a:any, b:any) => {
+      if (a > b) {
+        return 1
+      }
+      else {
+        return - 1;
+      }
+    })
+    return years;
+  }
   //#endregion
 
 }

@@ -69,23 +69,23 @@ export class CandidatePortalComponent implements OnInit {
     .subscribe((res) => {
       if(res[0] && res[0].responseData) {
         this.hallTicketDetails = res[0].responseData;
-        this.hallTicketDetails.dob = this.reverseDate(res[0].responseData.dateOfBirth);
+        this.hallTicketDetails.dob = this.baseService.reverseDate(res[0].responseData.dateOfBirth);
         this.cardList.push({
           title: 'Hall Ticket',
           lable: 'Generated on',
-          date: this.reverseDate(this.hallTicketDetails.hallTicketGenerationDate),
+          date: this.baseService.reverseDate(this.hallTicketDetails.hallTicketGenerationDate),
           status: this.hallTicketDetails.hallTicketStatus,
         })
       }
       if(res[1] && res[1].responseData) {
         this.studentResultsDetails = res[1].responseData;
-        this.studentResultsDetails.dob = this.reverseDate(res[1].responseData.dateOfBirth)
+        this.studentResultsDetails.dob = this.baseService.reverseDate(res[1].responseData.dateOfBirth)
         const examCycle: any = this.examCycleList.find(((element: any) => element.id === event))
         this.studentResultsDetails['examCyclename'] = examCycle ? examCycle.examCycleName : '';
         this.cardList.push({
           title: 'Results',
           lable: 'Published on',
-          date: this.reverseDate(this.studentResultsDetails.publishedDate),
+          date: this.baseService.reverseDate(this.studentResultsDetails.publishedDate),
           status: this.studentResultsDetails.publishStatus,
         })
       }
@@ -93,10 +93,7 @@ export class CandidatePortalComponent implements OnInit {
     })
   }
 
-  reverseDate(date: string) {
-    let Dob = new Date(date);
-    return Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
-  }
+
 
   viewDetails(title: any) {
     if(title === 'Results') {

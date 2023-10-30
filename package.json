@@ -23,6 +23,7 @@
     "basscss": "^8.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.7.0",
     "material-icons": "^1.13.10",
     "ngx-cookie-service": "^15.0.0",
     "ngx-toastr": "^15.2.2",
