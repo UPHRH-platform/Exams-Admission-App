@@ -193,11 +193,6 @@ export class StudentEnrollmentComponent {
 
 
 
-  setEnrollmentTableColumns() {
-    if (this.enrollmentTableColumns.length > 0 && this.loggedInUserRole === 'exams_institute') {
-      this.enrollmentTableColumns[1].header = this.selectedTab.name === 'Approved' ? 'Enrollment Number' : 'Provisional Enrollment Number'
-    }
-  }
 
   setEnrollmentTableColumns() {
     if (this.enrollmentTableColumns.length > 0 && this.loggedInUserRole === 'exams_institute') {
