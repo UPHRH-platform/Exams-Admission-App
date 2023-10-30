@@ -75,119 +75,49 @@ export class BaseService extends HttpService {
   //#endregion
 
 
-  getInstitutesResultData$(): Observable<any> {
+  getInstitutesResultData$(examCycleId: string): Observable<any> {
     // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
 
-    const result = {
-      responseData: [
-        {
-          instituteName: 'NEW COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          internalMarksProvided: true,
-          finalMarksProvided: true,
-          revisedFinalMarksProvided: true,
+    // const result = {
+    //   responseData: [
+    //     {
+    //       instituteName: 'NEW COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks: true,
+    //       hasFinalMarks: true,
+    //       hasRevisedFinalMarks: true,
          
-        },
-        {
-          instituteName: 'OLD COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          internalMarksProvided:false,
-          finalMarksProvided: false,
-          revisedfinalMarksProvided: false,
+    //     },
+    //     {
+    //       instituteName: 'OLD COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks:false,
+    //       hasFinalMarks: false,
+    //       hasRevisedFinalMarks: false,
        
-        },
-        {
-          instituteName: 'MODERN COLLEGE OF NURSING',
-          instituteId: '123',
-          course: 'xxxx',
-          internalMarksProvided: true,
-          finalMarksProvided: false,
-          revisedfinalMarksProvided: true,
+    //     },
+    //     {
+    //       instituteName: 'MODERN COLLEGE OF NURSING',
+    //       instituteId: '123',
+    //       course: 'xxxx',
+    //       hasInternalMarks: true,
+    //       hasFinalMarks: false,
+    //       hasRevisedFinalMarks: true,
       
-        },
+    //     },
       
      
-      ]
-    }
-    return of( result )
-
-    // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}`,
-    //   data: {}
+    //   ]
     // }
-    // return this.get(requestParam)
-  }
+    // return of( result )
 
-  getStudentResultData$():Observable<any>{
-    return of( {
-      responseData: [
-        {
-          studentName: 'Devaprathap Nagendra',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '23',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Madison',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '48',
-          externalMarks: '23',
-          revisedMarks: '50'
-          
-        },
-        {
-          studentName: 'Ravi',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '47',
-          externalMarks: '43',
-          revisedMarks: '32'
-          
-        },
-        {
-          studentName: 'Kanaka Rao',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '34',
-          revisedMarks: '45'
-          
-        },
-        {
-          studentName: 'Arun',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '49',
-          externalMarks: '40',
-          revisedMarks: '35'
-          
-        },
-        {
-          studentName: 'Aman',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '45',
-          externalMarks: '30',
-          revisedMarks: '46'
-          
-        },
-        {
-          studentName: 'Devaprathap N.',
-          courseName: 'XXXX',
-          exams: 'Exam 1',
-          internalMarks: '44',
-          externalMarks: '45',
-          revisedMarks: '50'
-          
-        },
-      ]
-    })
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}?examCycle=${examCycleId}`,
+      data: {}
+    }
+    return this.get(requestParam)
   }
 
   deleteResults(): Observable<any> {
@@ -196,6 +126,7 @@ export class BaseService extends HttpService {
         statusMessage: 'deleted'
       }
     })
+    
   }
 
   getUserData$(): Observable<any>{
@@ -217,167 +148,8 @@ export class BaseService extends HttpService {
   ])
   }
 
-  getInstituteFeeTableData$(): Observable<any>{
-    return of([
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '10',
-        paidStudentsCount: '10',
-        totalFeePaid: '10000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '30',
-        paidStudentsCount: '28',
-        totalFeePaid: '28000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '50',
-        paidStudentsCount: '40',
-        totalFeePaid: '40000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '30',
-        paidStudentsCount: '20',
-        totalFeePaid: '28000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '10',
-        paidStudentsCount: '10',
-        totalFeePaid: '10000',
-        viewList: 'View list'
-      },
-      {
-        instituteName: 'NEW COLLEGE OF NURSING',
-        courseName: 'xxxx',
-        instituteCode: 'xxxx',
-        registerStudentsCount: '25',
-        paidStudentsCount: '25',
-        totalFeePaid: '25000',
-        viewList: 'View list'
-      }
-    ])
-  }
-  getStudentFeeTableData$(): Observable<any>{
-    return of([
-      {
-        studentName: '',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam ',
-        numberOfExams: '',
-        fee: '000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Madison Tran',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1,Exam 2,Exam 3 ',
-        numberOfExams: '3',
-        fee: '3000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Raci Verma',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 2',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Sumalatha Krishna',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 3',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Kanaka Rao',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1,Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Paid'
-      },
-      {
-        studentName: 'Ravi Verma',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 2',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Paid'
-      },
 
 
-      {
-        studentName: 'Nancy Kurian',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1',
-        numberOfExams: '1',
-        fee: '1000',
-        status: 'Pending',
-      },{
-        studentName: 'Jordan Allen',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1, Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Pending'
-      },{
-        studentName: 'Purandara Das',
-        enrolementNumber: 'XXXX',
-        courseName: 'XXXX',
-        exams: 'Exam 1, Exam 2',
-        numberOfExams: '2',
-        fee: '2000',
-        status: 'Pending'
-      },
-    ])
-  }
   getMarksForDashboard$(): Observable<any>{
     return of(
       [
@@ -703,6 +475,30 @@ export class BaseService extends HttpService {
      /**************************** attendence services ends ****************************/
 
      /**************************** fee management services starts ****************************/
+     
+
+     getInstituteFeeTableData$(examCycleId?: number) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.INSTITUTE_LIST,
+        data: {
+          "page": 0,
+          "size": 50,
+          "sort": {
+              "referenceNo": "desc"
+          }
+      },
+      }
+      return this.post(requestParam);
+    }
+
+    getStudentFeesListForInstitute$(paymentRefNo: string): Observable<any>{
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.STUDENT_LIST+`${paymentRefNo}/details`,
+        data: {},
+      }
+      return this.get(requestParam);
+    }
+     
      payFees(feeDetails?: any): Observable<any> {
 
       const requestParam: RequestParam = {
@@ -917,10 +713,9 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   }
   return this.get(requestParam);
 }
-  //#region (candidate portal)
 
 
-  //#region (Results)
+  //#region (manage Results)
 
   getResults() {
     const response = [
@@ -947,6 +742,50 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return of(response)
   }
 
+  getStudentResultData$(examCycleId: any, instituteId: string):Observable<any>{
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RESULTS_BY_INSTITUTE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
+    //   data: {},
+    // }
+    // return this.get(requestParam);
+    return of( {
+      responseData: [
+        {
+          "id": 2,
+                "instituteName": "IIT",
+                "instituteId": 8,
+                "firstName": 'John',
+                "lastName": 'Smith',
+                "enrollmentNumber": 'Enrolment Number',
+                "motherName": 'Mary',
+                "fatherName": 'Robert',
+                "courseValue": 'ANM1',
+                "examCycleValue": 'Fall 2023',
+                "examValue": 'Exam',
+                "internalMarks": 30,
+                "passingInternalMarks": 12,
+                "internalMarksObtained": 13,
+                "practicalMarks": 23,
+                "passingPracticalMarks": 12,
+                "practicalMarksObtained": 12,
+                "otherMarks": 12,
+                "passingOtherMarks": 12,
+                "otherMarksObtained": 12,
+                "externalMarks": 12,
+                "passingExternalMarks": 12,
+                "externalMarksObtained": 12,
+                "totalMarks": 12,
+                "passingTotalMarks": 12,
+                "totalMarksObtained": 12,
+                "grade": 'c',
+                "result": 'PASS',
+                "status": 12,
+                "published": false
+        },
+      ]
+    })
+  }
+
   publishResults$(request: any) {
     const requestParam: RequestParam = {
       url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.PUBLISH}`,
@@ -967,23 +806,28 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.multipartPost(requestParam)
   }
 
-  getExamDetailsByInstitute$(examCycleId: string, instituteId: number) {
-    return of({
-      responseData: [
-        {
-          examName: 'Exam 1',
-          examId: 1,
-          lastDateToUplode: '25 Mar 2023',
-          marksUploded: false,
-        }, {
-          examName: 'Exam 2',
-          examId: 2,
-          lastDateToUplode: '25 Mar 2023',
-          marksUploded: true,
+  getExamsByInstitute$(examCycleId: string, instituteId: number) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAMS_OF_INSTITUTE_EXMACYCLE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
+      data: {},
+    }
+    return this.get(requestParam);
+    // return of({
+    //   responseData: [
+    //     {
+    //       examName: 'Exam 1',
+    //       examId: 1,
+    //       lastDateToUplode: '25 Mar 2023',
+    //       marksUploded: false,
+    //     }, {
+    //       examName: 'Exam 2',
+    //       examId: 2,
+    //       lastDateToUplode: '25 Mar 2023',
+    //       marksUploded: true,
     
-        },
-      ]
-    })
+    //     },
+    //   ]
+    // })
   }
 
   uplodeInternalMarks$(request: any) {
@@ -998,7 +842,41 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.multipartPost(requestParam)
   }
 
+  downloadResultsTemplate(): Observable<Blob> {
+    return this.httpClient.get('assets/templates/instituteResultTemplate.xlsx', { responseType: 'blob' });
+  }
+
+  getInternalMarksOfExam$(formBody: any) {
+    // const requestParam: RequestParam = {
+    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAM_MARKS_BY_INSTITUTE}`,
+    //   data: formBody
+    // }
+    // return this.get(requestParam);
+    return of({
+      responseData: [
+        {
+          "firstName": "jay",
+          "courseName": "Mechanical Engineering",
+          "exam": "Data Structure",
+          "internalMark": 13,
+          "lastName": "singh",
+          enrolementNumber: 'EN2023 ABC37',
+        },
+        {
+          "firstName": "jay",
+          "courseName": "Mechanical Engineering",
+          "exam": "Data Structure",
+          "internalMark": 13,
+          "lastName": "singh",
+          enrolementNumber: 'EN2023 ABC37',
+        },
+      ]
+    })
+  }
+
   //#endregion
+
+  //#region (candidate portal)
 
   formateResultDetails() {
     const response = [

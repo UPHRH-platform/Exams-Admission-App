@@ -59,6 +59,8 @@
         },
         "PAYMENT": {
             "FEES": "/v1/fee/initiate",
+            "INSTITUTE_LIST":"/v1/fee/all",
+            "STUDENT_LIST":"/v1/fee/",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all"
@@ -94,8 +96,11 @@
         "MANAGE_RESULTS": {
             "PUBLISH": "/v1/studentResults/publish",
             "MANAGE_RESULTS": "/v1/studentResults/manageResults",
-            "UPLOAD_EXTERNAL_MARKS": "",
-            "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload"
+            "UPLOAD_EXTERNAL_MARKS": "/v1/studentResults/bulkUploadExternal",
+            "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload",
+            "RESULTS_BY_INSTITUTE": "/v1/studentResults/resultsByInstitute",
+            "EXAMS_OF_INSTITUTE_EXMACYCLE": "/v1/studentResults/resultUploadStatusForInstitute",
+            "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute"
         }
     }
 }

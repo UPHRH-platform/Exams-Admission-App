@@ -1,5 +1,5 @@
+//#region (imports)
 import { Component } from '@angular/core';
-import { FeeManagementService } from '../../fee-management/services/fee-management.service';
 import { FormControl } from '@angular/forms';
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
@@ -9,27 +9,29 @@ import { BaseService } from '../../../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mergeMap, of } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+//#endregion
 interface Course {
   value: string;
   viewValue: string;
 }
-
 
 @Component({
   selector: 'app-manage-result-admin',
   templateUrl: './manage-result-admin.component.html',
   styleUrls: ['./manage-result-admin.component.scss']
 })
+
 export class ManageResultAdminComponent {
   //#region (global variables)
   selectedCellDetails: any;
   isDataLoading: boolean = false;
   studentResultData: any[] = [];
   title: string = 'Manage Results'
+  showDownloadBtn = false
+  showDeleteBtn = false
+  showPublishBtn = true
 
 
-  
-  courses: Course[] = [];
   examCycleList = []
 
   instituteTableHeader = [
@@ -92,20 +94,8 @@ export class ManageResultAdminComponent {
       },
       isAction: true,
       hasStyle: true,
-    },    
-    {
-      header: '',
-      columnDef: 'publish',
-      isSortable: false,
-      cell: (element: Record<string, any>) => `${element['publish']}`,
-      cellStyle: {
-        'background-color': '#0000000a',
-        'color': '#00000099'
-      },
-      isAction: true,
-      hasStyle: true,
     }
-  ]  
+  ]
   instituteTableData = [];
 
   studentExamsTableHeader = [
@@ -143,31 +133,29 @@ export class ManageResultAdminComponent {
   ]
 
   examCycleControl = new FormControl('');
-  examControl = new FormControl('');
 
-  // searcControl = '';
-  // searchKey = ''
   showInstitutesTable = true
 
   breadcrumbItems = [
     { label: 'Manage Results', url: '' },
   ]
+  studentMarksDetails = [];
   //#endregion
+  
   constructor(
     private baseService: BaseService,
     private dialog: MatDialog,
     private toastrService: ToastrServiceService
-  ) {
-   
+  ) { 
   }
 
   ngOnInit(): void {
     this.intialisation()
   }
 
+  //#region (Intialisation)
   intialisation() {
     this.getExamCycles()
-    this.getInstitutesData();
   }
 
   getExamCycles() {
@@ -180,15 +168,14 @@ export class ManageResultAdminComponent {
     })
   }
 
-  getInstitutesData(searchKey: string = '') {
-    this.baseService.getInstitutesResultData$()
+  getInstitutesData(examCycleId: any) {
+    this.baseService.getInstitutesResultData$(examCycleId)
     .pipe((mergeMap((res) => {
       return this.formateInstitutesData(res.responseData)
     })))
      .subscribe({
         next: (response: any) => {
-          console.log('InstitutesResultData', response)
-          this.instituteTableData = response
+          this.instituteTableData = response;
       },
       error: (err: HttpErrorResponse) => {
         this.toastrService.showToastr(err, 'Error', 'error', '')
@@ -199,62 +186,230 @@ export class ManageResultAdminComponent {
   formateInstitutesData(response: any) {
     const foramtedData: any[] = []
     response.forEach((institute: any) => {
-      institute['classes'] = {}
-      if(institute.internalMarksProvided &&  institute.finalMarksProvided && institute.revisedFinalMarksProvided ){
-        institute.publish = "Publish"
-      } else {
-        institute.publish = "-"
+      let formatedInstituteData: {
+        instituteName: string,
+        instituteId: string,
+        course: string,
+        internalMarksProvided: string,
+        finalMarksProvided: string,
+        revisedFinalMarksProvided: string,
+        classes: any,
+      } = {
+        instituteName: institute.instituteName,
+        instituteId: institute.instituteId,
+        course: institute.course,
+        internalMarksProvided: '-',
+        finalMarksProvided: '-',
+        revisedFinalMarksProvided: '-',
+        classes: {}
       }
-      institute['classes']['publish'] = ['color-blue']
-      if (institute.internalMarksProvided) {
-        institute.internalMarksProvided = "View & Download"
-        institute['classes']['internalMarksProvided'] = ['color-green']
+      if (institute.hasInternalMarks) {
+        formatedInstituteData.internalMarksProvided = "View";
+        formatedInstituteData['classes']['internalMarksProvided'] = ['color-green'];
       } else {
-        institute.internalMarksProvided = "Pending"
-        institute['classes']['internalMarksProvided'] = ['color-orange']
+        formatedInstituteData.internalMarksProvided = "Pending";
+        formatedInstituteData['classes']['internalMarksProvided'] = ['color-orange'];
       }
       
-      if (institute.finalMarksProvided) {
-        institute.finalMarksProvided = "View & Delete"
-        institute['classes']['finalMarksProvided'] = ['color-green']
+      if (institute.hasFinalMarks) {
+        formatedInstituteData.finalMarksProvided = "View";
+        formatedInstituteData['classes']['finalMarksProvided'] = ['color-green'];
+      } else if(formatedInstituteData.internalMarksProvided === "View") {
+        formatedInstituteData.finalMarksProvided = "Upload";
+        formatedInstituteData['classes']['finalMarksProvided'] = ['color-blue'];
       } else {
-        institute.finalMarksProvided = "Upload"
-        institute['classes']['finalMarksProvided'] = ['color-blue']
+        formatedInstituteData.finalMarksProvided = "-";
+        formatedInstituteData['classes']['finalMarksProvided'] = ['color-blue'];
       }
       
-      if (institute.revisedFinalMarksProvided) {
-        institute.revisedFinalMarksProvided = "View & Delete"
-        institute['classes']['revisedFinalMarksProvided'] = ['color-green']
+      if (institute.hasRevisedFinalMarks) {
+        formatedInstituteData.revisedFinalMarksProvided = "View";
+        formatedInstituteData['classes']['revisedFinalMarksProvided'] = ['color-green'];
+      } else if (formatedInstituteData.finalMarksProvided === "View") {
+        formatedInstituteData.revisedFinalMarksProvided = "Upload";
+        formatedInstituteData['classes']['revisedFinalMarksProvided'] = ['color-blue'];
       } else {
-        institute.revisedFinalMarksProvided = "Upload"
-        institute['classes']['revisedFinalMarksProvided'] = ['color-blue']
+        formatedInstituteData.revisedFinalMarksProvided = "-";
+        formatedInstituteData['classes']['revisedFinalMarksProvided'] = ['color-blue'];
       }
 
-      foramtedData.push(institute)
+      foramtedData.push(formatedInstituteData)
     
     })
     return of(foramtedData)
   }
+  //#endregion
 
-  getExams(examCycleId: number) {
-    this.courses = []
-    this.baseService.getExamsByExamCycleId(examCycleId)
-    .pipe(mergeMap((res: any) => {
-      return this.baseService.formateExams(res.responseData)
-    }))
-      .subscribe({
-        next: (result: any) => {
-          this.courses = result.examsList
-        },
-        error: (err) => {
-          console.log(err)
-          this.toastrService.showToastr(err, 'Error', 'error', '');
+  //#region (button clicks)
+
+  //#region (publish)
+  openPublishConfirmation() {
+    const dialogRef = this.dialog.open(ConformationDialogComponent, {
+      data: {
+        dialogType: 'confirmation',
+        header: 'Publish marks ?',
+        description: [`Are you sure you want to publish marks of ${this.title} `],
+        buttons: [
+          {
+            btnText: 'Publish',
+            positionClass: 'right',
+            btnClass: 'btn-full',
+            response: true
+          },
+          {
+            btnText: 'Cancel',
+            positionClass: 'right',
+            btnClass: 'btn-outline mr2',
+            response: false
+          },
+        ],
+      },
+      width: '500px',
+      height: '200px',
+      maxWidth: '90vw',
+      maxHeight: '90vh'
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const formBody = {
+          examCycleId: this.examCycleControl.value,
+          courseId: 9,
         }
-      })
+        this.publishResults(formBody)
+      }
+    })
   }
 
+  publishResults(formBody: any) {
+    this.baseService.publishResults$(formBody)
+    .subscribe((res: any) => {
+      this.showInstituteTable()
+    })
+  }
+  //#endregion
+
+  downloadMarksHandler() {
+    const internalMarks = [
+      [
+        `First Name`, 
+        `Last Name`, 
+        `Enrolment Number`,
+        `Mother's Name`,
+        `Father's Name`,
+        `Course`,
+        `Exam Cycle`,
+        `Exam`,
+        `Internal Marks`,
+        `Passing Internal Marks`,
+        `Internal Marks Obtained`,
+        `Practical Marks`,
+        `Passing Practical Marks`,
+        `Practical Marks Obtained`,
+        `Other Marks`,
+        `Passing Other Marks`,
+        `Other Marks Obtained`,
+        `External Marks`,
+        `Passing External Marks`,
+        `External Marks Obtained`,
+        `Total Marks`,
+        `Passing Total Marks`,
+        `Total Marks Obtained`,
+        `Grade`,
+        `Result`,
+      ],
+    ];
+
+    if(this.studentMarksDetails.length > 0) {
+      this.studentMarksDetails.forEach((element: any) => {
+        const stuentMarks = [
+          element.firstName,
+          element.lastName,
+          element.enrollmentNumber,
+          element.motherName,
+          element.fatherName,
+          element.courseValue,
+          element.examCycleValue,
+          element.examValue,
+          element.internalMarks,
+          element.passingInternalMarks,
+          element.internalMarksObtained,
+          element.practicalMarks,
+          element.passingPracticalMarks,
+          element.practicalMarksObtained,
+          element.otherMarks,
+          element.passingOtherMarks,
+          element.otherMarksObtained,
+          element.externalMarks,
+          element.passingExternalMarks,
+          element.externalMarksObtained,
+          element.totalMarks,
+          element.passingTotalMarks,
+          element.totalMarksObtained,
+          element.grade,
+          element.result
+        ]
+        internalMarks.push(stuentMarks)
+      });
+    }
+
+    // Create a 2D array to hold the Excel data
+    const csvContent: any = [];
+    internalMarks.forEach((row: any) => {
+      csvContent.push(row.join(','));
+    });
+
+    // Convert the array to a CSV string
+    const csvString = csvContent.join('\n');
+
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvString], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Create a download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = this.selectedCellDetails.row.instituteName + '.xlsx';
+
+    // Append the download link to the body
+    document.body.appendChild(a);
+
+    // Trigger the download
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    this.showInstituteTable();
+  }
+
+  deleteMarksHander() {
+    this.isDataLoading = true;
+    this.baseService.deleteResults().subscribe({
+      next: (res:any) => {
+        this.toastrService.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '')
+        this.isDataLoading = false;
+        this.showInstituteTable()
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastrService.showToastr(err, 'Error', 'error', '')
+        this.isDataLoading = false;
+      }
+    })
+
+  }
+  //#endregion
+
+  showInstituteTable() {
+    this.showDeleteBtn = false;
+    this.showDownloadBtn = false;
+    this.showPublishBtn = true;
+    this.title = 'Manage Results';
+    this.showInstitutesTable = true;
+    this.getInstitutesData(this.examCycleControl.value);
+  }
+
+  //#region (cell click action)
   onCellClick(event: any) {
-    console.log("Cell Data", event);
     switch(event.columnDef) {
       case "internalMarksProvided":
         this.internalMarksHandler(event);
@@ -265,40 +420,113 @@ export class ManageResultAdminComponent {
       case "revisedFinalMarksProvided": 
         this.revisedFinalMarksHandler(event);
         break;
-      case "publish":
-        this.publishHandler(event);
-        break;
-
     }
   }
 
-
   internalMarksHandler(cellDetails: any) {
-    if(cellDetails.row.internalMarksProvided === 'View & Download'){
-      this.title = cellDetails.row.instituteName;
-      this.showInstitutesTable = false;
-      this.selectedCellDetails  = cellDetails;
-      this.studentExamsTableData()
+    if(cellDetails.row.internalMarksProvided === 'View'){
+      this.showStudentsTable(cellDetails)
     }
   }
 
   finalMarksHandler(cellDetails:any) {
-    if(cellDetails.row.finalMarksProvided === 'View & Delete'){
-      this.showInstitutesTable = false;
-      this.selectedCellDetails  = cellDetails;
-      this.studentExamsTableData()
+    if(cellDetails.row.finalMarksProvided === 'View'){
+      this.showStudentsTable(cellDetails);
     } else if(cellDetails.row.finalMarksProvided === 'Upload') {
       this.openUploadModal(cellDetails);
     }
-
   }
 
+  revisedFinalMarksHandler(cellDetails:any) {
+    if(cellDetails.row.revisedFinalMarksProvided === 'Upload') {
+      this.openUploadModal(cellDetails);
+    } else if (cellDetails.row.revisedFinalMarksProvided === 'View') {
+      this.showStudentsTable(cellDetails);
+    }
+  }
 
-  studentExamsTableData(){
+  //#region (show student table)
+  showStudentsTable(cellDetails: any) {
+    this.title = cellDetails.row.instituteName;
+    this.selectedCellDetails = cellDetails;
+    this.showPublishBtn = false;
+    this.studentExamsTableHeader = [
+      {
+        header: 'Full name',
+        columnDef: 'studentName',
+        isSortable: true,
+        cell: (element: Record<string, any>) => `${element['studentName']}`,
+        cellStyle: {
+          'background-color': '#0000000a',
+          'color': '#00000099'
+        },
+      },{
+        header: 'Course name',
+        columnDef: 'courseName',
+        cell: (element: Record<string, any>) => `${element['courseName']}`,
+        cellStyle: {
+          'background-color': '#0000000a', 'width': '120px', 'color': '#00000099'
+        },
+      },{
+        header: 'Exam',
+        columnDef: 'exams',
+        cell: (element: Record<string, any>) => `${element['exams']}`,
+        cellStyle: {
+          'background-color': '#0000000a', 'width': '120px', 'color': '#00000099'
+        },
+      },{
+        header: 'Internal marks',
+        columnDef: 'internalMarks',
+        cell: (element: Record<string, any>) => `${element['internalMarks']}`,
+        cellStyle: {
+          'background-color': '#0000000a', 'width': '130px', 'color': '#00000099'
+        },
+      }
+    ]
+    switch(cellDetails.columnDef) {
+      case "internalMarksProvided":
+        this.showDownloadBtn = true;
+        this.showDeleteBtn = false;
+        break;
+      case "finalMarksProvided": 
+        this.showDeleteBtn = true;
+        this.showDownloadBtn = false;
+        this.studentExamsTableHeader.push(
+        {
+          header: 'Final marks',
+          columnDef: 'externalMarks',
+          cell: (element: Record<string, any>) => `${element['externalMarks']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '120px', 'color': '#00000099'
+          },
+        })
+        break;
+      case "revisedFinalMarksProvided": 
+        this.showDeleteBtn = true;
+        this.showDownloadBtn = false;
+        this.studentExamsTableHeader.push(
+          {
+            header: 'Revised final marks',
+            columnDef: 'externalMarks',
+            cell: (element: Record<string, any>) => `${element['externalMarks']}`,
+            cellStyle: {
+              'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+            },
+          })
+        break;
+    }
+    this.getStudentExamsTableData()
+  }
+
+  getStudentExamsTableData(){
     this.isDataLoading = true;
-    this.baseService.getStudentResultData$().subscribe({
+    this.studentMarksDetails = [];
+    this.baseService.getStudentResultData$(this.examCycleControl.value, this.selectedCellDetails.row.id)
+    .subscribe({
       next:(res:any)=>{
-        this.studentResultData = res
+        this.studentMarksDetails = res.responseData
+        this.studentResultData = this.formateStudentsResults(res.responseData)
+        this.showInstitutesTable = false;
         setTimeout(() => {
           this.isDataLoading = false;
         }, 1000);
@@ -311,36 +539,33 @@ export class ManageResultAdminComponent {
 
     })  } 
 
-
-  revisedFinalMarksHandler(cellDetails:any) {
-    if(cellDetails.row.revisedFinalMarksProvided === 'Upload') {
-      this.openUploadModal(cellDetails);
+  formateStudentsResults(result: any) {
+    const formatedStudentsData:any = [];
+    if(result && result.length > 0) {
+      result.forEach((element: any) => {
+        const formatedStudentData = {
+          studentName: element.lastName + ' ' + element.firstName,
+          courseName: element.courseValue,
+          exams: element.examValue,
+          internalMarks: element.internalMarksObtained,
+          externalMarks: element.externalMarks,
+          revisedMarks: element.externalMarks
+        } 
+        formatedStudentsData.push(formatedStudentData)
+      })
     }
+    return formatedStudentsData;
   }
+  //#endregion
 
+  //#region (upload external marks)
   openUploadModal(cellDetails: any){
     const heading= cellDetails.columnDef === "finalMarksProvided" ? "Upoad final marks" : "Upload revised marks";
     const dialogRef = this.dialog.open(UploadDialogComponent, {
     data: {
               heading: heading,     
               labelTwo:'Attach file(s)',
-              // dateSelect: 'dateSelect',  
-
-              // select: {
-              //   selectCycleList: [
-              //     {
-              //       displayValue: 'Exam 1',
-              //       value: 'Exam 1'
-              //     },
-              //     {
-              //       displayValue: 'Exam 2',
-              //       value: 'Exam 2'
-              //     }
-              //   ]
-              // },
-
-
-              description: ['Hall ticket downloaded successfully'],
+              acceptFiles: '.xlsx',
               buttons: [
                 {
                   btnText: 'Browse',
@@ -365,98 +590,57 @@ export class ManageResultAdminComponent {
                   hideButton: false,
                   btnType: 'close'
                 },
-                
               ],
             },
     })
     dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          const dialogRef = this.dialog.open(ConformationDialogComponent, {
-            data: {
-              dialogType: 'success',
-              description: ['Markes uploaded successfully'],
-              buttons: [
-                {
-                  btnText: 'Ok',
-                  positionClass: 'center',
-                  btnClass: 'btn-full',
-                  response: true,
-                  // click:this.router.navigateByUrl('/manage-result/institute'),
-    
-                },
-              ],
-            },
-            width: '700px',
-            height: '400px',
-            maxWidth: '90vw',
-            maxHeight: '90vh'
-          })
-          dialogRef.afterClosed().subscribe(files => {
-            if (files) {
-             
-            }
-          })        
+      if (result) {   
+        this.uploadResults(result.files); 
+      }
+    });
+  }
+
+  uploadResults(files: any) {
+    const formData = new FormData();
+    formData.append(`fileType`, `excel`)
+    formData.append("file", files[0], files[0].name);
+    this.baseService.uplodeExternalMarks$(formData)
+      .subscribe({
+        next: (res: any) => {
+          this.openConformationDialog()
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
         }
-    })
+      })
   }
 
-  publishHandler(cellDetails: any) {
-    if(cellDetails.row.publish === 'Publish') {
-      this.openPublishConfirmation(cellDetails);;
-    }
-  }
-
-  openPublishConfirmation(cellDetails: any) {
+  openConformationDialog() {
     const dialogRef = this.dialog.open(ConformationDialogComponent, {
       data: {
-        dialogType: 'confirmation',
-        header: 'Publish marks ?',
-        description: [`Are you sure you want to publish marks of ${cellDetails.row.instituteName} `],
+        dialogType: 'success',
+        description: ['Markes uploaded successfully'],
         buttons: [
           {
-            btnText: 'Publish',
-            positionClass: 'right',
+            btnText: 'Ok',
+            positionClass: 'center',
             btnClass: 'btn-full',
-            response: true
-          },
-          {
-            btnText: 'Cancel',
-            positionClass: 'right',
-            btnClass: 'btn-outline mr2',
-            response: false
+            response: true,
           },
         ],
       },
       width: '700px',
-      height: '300px',
+      height: '400px',
       maxWidth: '90vw',
-      maxHeight: '30vh'
+      maxHeight: '90vh'
     })
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const formBody = {
-          // examCycleId: ,
-          // courseId: ,
-        }
-        this.publishResults(formBody)
+    dialogRef.afterClosed().subscribe(files => {
+      if (files) {
+        this.showInstituteTable();
       }
     })
   }
+  //#endregion
 
-  publishResults(formBody: any) {
-    this.baseService.publishResults$(formBody)
-    .subscribe((res: any) => {
-      this.getInstitutesData()
-    })
-  }
-
-  deleteMarksHander() {
-
-  }
-
-  downloadMarksHandler() {
-
-  }
-
-
+  //#endregion
 }

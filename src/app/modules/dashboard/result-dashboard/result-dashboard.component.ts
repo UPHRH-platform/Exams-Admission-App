@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { HallTicket, Institute, Course, Year, TableColumn } from '../../../interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mergeMap } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -13,6 +15,13 @@ export class ResultDashboardComponent {
   breadcrumbItems = [
     { label: 'Result Dashboard', url: '' },
   ];
+  examCycleControl = new FormControl();
+  examCycleList: { 
+    id: number; 
+    examCycleName: string; 
+    courseId: string; 
+    status: string; 
+  }[] = []
   institutes: Institute[];
   years: Year[];
   marksTableColumns: TableColumn[] = [];
@@ -26,13 +35,21 @@ export class ResultDashboardComponent {
     }
 
   ngOnInit(): void {
-
+    this.getExamCycles()
     this.initializeTableColumns();
     this.initializePageData();
     this.getMarksData();
-
   }
 
+  getExamCycles() {
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.baseService.formatExamCyclesForDropdown(res.responseData)
+    }))
+      .subscribe((examCycles: any) => {
+        this.examCycleList = examCycles.examCyclesList;
+      })
+  }
 
   initializeTableColumns(): void {
 
@@ -142,7 +159,6 @@ export class ResultDashboardComponent {
 
   }
 
-
   initializePageData() {
     this.getAllInstitutes();
 
@@ -153,6 +169,7 @@ export class ResultDashboardComponent {
     ];
 
   }
+
   getAllInstitutes() {
     return this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
@@ -163,6 +180,7 @@ export class ResultDashboardComponent {
       }
     })
   }
+
   getMarksData() {
     this.isDataLoading = true;
     this.baseService.getMarksForDashboard$().subscribe({

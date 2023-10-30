@@ -64,9 +64,9 @@ export class FeeManagementAdminComponent implements OnInit {
    this.instituteTableHeader = [
     {
       header: 'Institute name',
-      columnDef: 'instituteName',
+      columnDef: 'institute.instituteName',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['instituteName']}`,
+      cell: (element: Record<string, any>) => `${element['institute.instituteName']}`,
       cellStyle: {
         'background-color': '#0000000a',
         'color': '#00000099'
@@ -105,16 +105,16 @@ export class FeeManagementAdminComponent implements OnInit {
       },
     },{
       header: 'Total fee paid',
-      columnDef: 'totalFeePaid',
+      columnDef: 'amount',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['totalFeePaid']}`,
+      cell: (element: Record<string, any>) => `${element['amount']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
       },
     },{
       header: '',
       columnDef: 'viewList',
-      cell: (element: Record<string, any>) => `${element['viewList']}`,
+      cell: (element: Record<string, any>) => `View List`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
       },
@@ -126,16 +126,15 @@ export class FeeManagementAdminComponent implements OnInit {
   instituteTableData() {
     this.isDataLoading = true;
     this.baseService.getInstituteFeeTableData$()
-    .pipe((mergeMap((response: any) => {
+  /*   .pipe((mergeMap((response: any) => {
       return this.formateInstituteTableData(response)
-    })))
+    }))) */
     .subscribe({
       next:(res:any)=>{
-        this.instituteData = res.formatedInstituteTableDataList
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
-
+       // this.instituteData = res.formatedInstituteTableDataList
+       console.log(res.responseData.examFees)
+       this.instituteData = res.responseData.examFees
+       this.isDataLoading = false;
       },
       error: (error: HttpErrorResponse) => {
         this.isDataLoading = false;
@@ -232,18 +231,19 @@ export class FeeManagementAdminComponent implements OnInit {
     },
   ]
  }
-  studentExamsTableData(){
+
+ getStudentFeesListForInstitute(){
     this.isDataLoading = true;
-    this.baseService.getStudentFeeTableData$()
+    let paymentRefNo = "1851697786049740a04b2866-5e5f-4056-94e8-73f29affacfd";
+    this.baseService.getStudentFeesListForInstitute$(paymentRefNo)
     .pipe(mergeMap((response: any)=> {
-      return this.formateStudentData(response)
+      return this.formateStudentData(response.responseData)
     }))
     .subscribe({
       next:(res:any)=>{
+        console.log(res)
         this.studentData = res.studentsExamDetailsList;
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
+     
 
       },
       error: (error: HttpErrorResponse) => {
@@ -261,16 +261,16 @@ export class FeeManagementAdminComponent implements OnInit {
     } = {
       studentsExamDetailsList: []
     }
-
     if (response) {
       response.forEach((examDetails: any) => {
+        console.log(examDetails.student)
         const studentExamDetial = {
-          studentName: examDetails.studentName,
-          enrolementNumber: examDetails.enrolementNumber,
-          courseName: examDetails.courseName,
-          exams: examDetails.exams,
-          numberOfExams: examDetails.numberOfExams,
-          fee: examDetails.fee,
+          studentName: examDetails.student.firstName +" "+ examDetails.student.surname,
+          enrolementNumber: examDetails.student.enrollmentNumber,
+          courseName: examDetails.student.course.courseName,
+          exams: examDetails.student.intermediateSubjects,
+          numberOfExams: examDetails.student.intermediateSubjects,
+          fee: examDetails.student.amount,
           status: examDetails.status,
           classes: {
             status: ['color-green']
@@ -313,7 +313,7 @@ export class FeeManagementAdminComponent implements OnInit {
     this.showInstitutesTable = true
   }
 
-  onSelecteInstitute(event: any) {
+  onSelectedInstitute(event: any) {
     if (event) {
       // this.instituteTableData = []
       // this.feeManagementService.getExamsOfInstitute('')
@@ -321,7 +321,7 @@ export class FeeManagementAdminComponent implements OnInit {
       //   this.instituteTableData = exams
       // })
     }
-    this.studentExamsTableData()
+    this.getStudentFeesListForInstitute()
     this.showInstitutesTable = false
 
   }

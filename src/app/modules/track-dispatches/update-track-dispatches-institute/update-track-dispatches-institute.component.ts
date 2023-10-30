@@ -9,6 +9,7 @@ import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-pro
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthServiceService } from 'src/app/core/services';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
@@ -28,6 +29,8 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   dispatchesList = [];
   loggedInUserId: string | number;
   instituteDetail: any;
+  noResultMessage: string = 'Your institution did not pass the CCCTV Verification for the selected exam cycle, and as a result, you do not have the authorization to serve as an examination center. Please reach out to the administration for additional details.';
+
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
