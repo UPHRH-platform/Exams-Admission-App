@@ -55,15 +55,10 @@ export class StudentEnrollmentComponent {
   instituteList: any[] = [];
   courses: any[] = []
   loggedInUserId: string | number;
-  years: Year[] = [
-    {value: '2020-2021', viewValue: '2020-2021'},
-    {value: '2021-2022', viewValue: '2021-2022'},
-    {value: '2022-2023', viewValue: '2022-2023'},
-    {value: '2023-2024', viewValue: '2023-2024'},
-    {value: '2024-2025', viewValue: '2024-2025'},
-  ];
+  years: string[] = [];
   isHallTicket: boolean = true;
   instituteDetail: InstituteDetail;
+  currentFY:string;
 constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService, private toastrService: ToastrServiceService){}
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -75,6 +70,9 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     if(this.loggedInUserRole === 'exams_institute') {
       this.getInstituteByuserId();
     }
+    else if(this.loggedInUserRole === 'exams_secretary') {
+      
+    }
     else {
       this.getAllCourses();
       this.getAllInstitutes();
@@ -82,6 +80,27 @@ constructor(private router: Router, private authService: AuthServiceService, pri
     }
   }
 
+  getAdmissionSessionList() {
+    const thisYear = (new Date()).getFullYear();
+    this.currentFY = [0].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`).join();
+    console.log(this.currentFY);
+    const yesterYears = [0, 1, 2, 3, 4].map((count) => `${thisYear - count - 1}-${(thisYear - count)}`);
+    const aheadYears = [0, -1, -2, -3].map((count) => `${thisYear - count}-${(thisYear - count + 1)}`)
+    this.years.push(...yesterYears, ...aheadYears);
+    this.years.sort((a, b) => {
+      if(a > b) {
+        return 1
+      }
+      else {
+        return - 1;
+      }
+    })
+    console.log(this.years);
+}
+
+  getPendingEnrollment() {
+
+  }
   initializeSearchForm() {
     this.searchForm =  new FormGroup({
       searchData:  new FormControl('')

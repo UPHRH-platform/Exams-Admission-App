@@ -59,6 +59,8 @@ export class AuthServiceService extends HttpService {
         case 'exams_student':
           role= this.configService.rolesConfig.ROLES.STUDENT;
           break;
+        case 'exams_secretary':
+          role = this.configService.rolesConfig.ROLES.SECRETARY;
       }
     }
     return [role];
