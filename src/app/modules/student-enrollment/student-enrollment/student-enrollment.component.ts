@@ -144,12 +144,32 @@ export class StudentEnrollmentComponent {
 
   getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
     this.enrollmentTableData = [];
-    let request = {
-      instituteId: instituteId !== undefined ? instituteId : '',
-      courseId: courseId !== undefined ? courseId : '',
-      academicYear: academicYear !== undefined ? academicYear : '',
-      verificationStatus: this.selectedTab.name === 'Approved' ? 'VERIFIED' : this.selectedTab.name.toUpperCase()
+
+  let request = {
+    instituteId: instituteId !== undefined? instituteId : '',
+    courseId: courseId !== undefined? courseId : '',
+    academicYear: academicYear !== undefined? academicYear: '',
+    verificationStatus: this.selectedTab.name === 'Approved'? 'VERIFIED' : this.selectedTab.name.toUpperCase()
+  }
+ if(this.loggedInUserRole === 'exams_institute') {
+    request['instituteId']= this.instituteDetail?.id.toString();
+ } 
+  this.isDataLoading = true;
+  this.baseService.getEnrollmentList(request).subscribe({
+    next: (res) => {
+      this.setEnrollmentTableColumns();
+      this.isDataLoading = false;
+      res.responseData.map((obj: any) => {
+        obj.courseName = obj.course.courseName;
+      })
+      this.enrollmentTableData = res.responseData;
+    },
+    error: (error: any) => {
+      this.isDataLoading = false;
+      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+
     }
+  })
     if (this.loggedInUserRole === 'exams_institute') {
       request['instituteId'] = this.instituteDetail?.id.toString();
     }
@@ -170,8 +190,18 @@ export class StudentEnrollmentComponent {
     })
   }
 
-  applySearch(searchterms: any) {
-    this.searchParams = searchterms;
+
+
+
+  setEnrollmentTableColumns() {
+    if (this.enrollmentTableColumns.length > 0 && this.loggedInUserRole === 'exams_institute') {
+      this.enrollmentTableColumns[1].header = this.selectedTab.name === 'Approved' ? 'Enrollment Number' : 'Provisional Enrollment Number'
+    }
+  }
+
+  applySearch(searchterms:any){ 
+     this.searchParams = searchterms;
+
   }
 
   initializeColumns(): void {
@@ -489,7 +519,7 @@ export class StudentEnrollmentComponent {
       rowPageBreak: 'auto',
       bodyStyles: { valign: 'top' },
       columnStyles: {
-        1: { cellWidth: 20 },
+        1: { cellWidth: 40 },
       },
       head: [['Applicant Name', 'Provisional Enrollment Number', 'Enrollment Number', 'Course Name', 'Admission Date', 'Verification Status']],
       body: docBody,
