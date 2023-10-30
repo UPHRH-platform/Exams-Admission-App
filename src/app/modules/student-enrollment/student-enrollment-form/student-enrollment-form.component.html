@@ -738,7 +738,7 @@
                           <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
                           .controls['marksSheet'].value}}"><span>View</span></a>
                         </span>
-                        <span
+                        <span [ngClass]="{'disabled-btn': !iseditable}"
                           class="attachment-label"
                           (click)="
                             removeSelectedFiles('highschool_marksheet', index)
@@ -811,7 +811,7 @@
                           <a target="_blank" href="{{educationalDetailsForm.get('highSchoolDocuments')
                           .controls['certificate'].value}}"><span>View</span></a>
                         </span>
-                        <span
+                        <span [ngClass]="{'disabled-btn': !iseditable}"
                           class="attachment-label"
                           (click)="
                             removeSelectedFiles('highschool_certificate', index)
@@ -943,7 +943,7 @@
                           <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
                           .controls['marksSheet'].value}}"><span>View</span></a>
                         </span>
-                        <span
+                        <span [ngClass]="{'disabled-btn': !iseditable}"
                           class="attachment-label"
                           (click)="
                             removeSelectedFiles('intermediate_marksheet', index)
@@ -1016,7 +1016,7 @@
                           <a target="_blank" href="{{educationalDetailsForm.get('intermediateDocuments')
                           .controls['certificate'].value}}"><span>View</span></a>
                         </span>
-                        <span
+                        <span [ngClass]="{'disabled-btn': !iseditable}"
                           class="attachment-label"
                           (click)="
                             removeSelectedFiles(

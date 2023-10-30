@@ -127,6 +127,7 @@ th.mdc-data-table__cell,
 .disabled-btn {
     background-color: #efefefbf !important;
     color: #1010104d !important;
+    pointer-events: none;
 }
 
 .disableFields {
