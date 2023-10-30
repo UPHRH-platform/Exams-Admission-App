@@ -581,7 +581,7 @@ export class BaseService extends HttpService {
           "page": 0,
           "size": 5,
           "filter": {
-              "examCycle": 8
+              "examCycle": examCycleId
           },
           "sort": {
               "referenceNo": "desc"
