@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'institute', component: FeeManagementInstituteComponent
   },
   {
-    path: 'manage-fee', component: FeeManagementListInstituteComponent
+    path: 'manage-fee/:id', component: FeeManagementListInstituteComponent
   }
 ];
 
