@@ -495,6 +495,10 @@ export class StudentEnrollmentFormComponent {
           }
           else {
             this.iseditable = false;
+            this.basicDetailsForm.patchValue({
+              aadharNo:"XXXXXX"+this.basicDetailsForm.value.aadharNo.substring(this.basicDetailsForm.value.aadharNo.length - 4)
+        
+            })
           }
         },
         error: (error: HttpErrorResponse) => {
