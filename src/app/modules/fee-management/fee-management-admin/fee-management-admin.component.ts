@@ -161,6 +161,8 @@ let r = response.examFees
       r.forEach((instituteData: any) => {
         console.log(instituteData)
         const formatedInstitutesData = {
+          instituteId:instituteData.institute.id,
+          examCycleId:instituteData.examCycle.id,
           instituteName: instituteData.institute.instituteName,
           courseName: instituteData.examCycle.course.courseName,
           instituteCode: instituteData.institute.instituteCode,
@@ -238,9 +240,9 @@ let r = response.examFees
   ]
  }
 
- getStudentFeesListForInstitute(){
+ getStudentFeesListForInstitute(examCycleId: number,instituteId:number, ){
     this.isDataLoading = true;
-    this.baseService.getStudentFeesListForInstitute$(8,5)
+    this.baseService.getStudentFeesListForInstitute$(examCycleId,instituteId)
     .pipe(mergeMap((response: any)=> {
       console.log(response.responseData)
       return this.formateStudentData(response.responseData)
@@ -333,14 +335,8 @@ let r = response.examFees
   }
 
   onSelectedInstitute(event: any) {
-    if (event) {
-      // this.instituteTableData = []
-      // this.feeManagementService.getExamsOfInstitute('')
-      // .subscribe((exams: any) => {
-      //   this.instituteTableData = exams
-      // })
-    }
-    this.getStudentFeesListForInstitute()
+  
+    this.getStudentFeesListForInstitute(event.row.examCycleId,event.row.instituteId)
     this.showInstitutesTable = false
 
   }
