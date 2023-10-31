@@ -1058,6 +1058,14 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     })
     return years;
   }
+
+  getUserProfileInfo$(id:number){
+    const requestParam: RequestParam = {
+      url: this.baseUrl + this.configService.urlConFig.URLS.USER_PROFILE+`${id}`,
+      data: {}
+    }
+    return this.get(requestParam);
+  }
   //#endregion
 
 }
