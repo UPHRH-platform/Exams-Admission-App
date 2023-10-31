@@ -61,10 +61,10 @@ export class CandidatePortalComponent implements OnInit {
     this.isDataLoading = true;
     this.studentID = this.authService.getUserRepresentation().attributes.studentId;
     console.log(this.studentID[0])
-/*     forkJoin([this.baseService.getHallTicketData$(parseInt(this.studentID[0]), event), 
-    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)]) */
-    forkJoin([this.baseService.getHallTicketData$(2, 5), 
+    forkJoin([this.baseService.getHallTicketData$(parseInt(this.studentID[0]), event), 
     this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)])
+ /*    forkJoin([this.baseService.getHallTicketData$(2, 5), 
+    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)]) */
     .pipe(
       catchError(error => {
         this.toasterService.showToastr(error, 'Error', 'error')
