@@ -171,6 +171,7 @@ export class ManageExamCycleListComponent {
           next: (res) => {
             this.isDataLoading = false;
             this.toastrService.showToastr('Exam cycle deleted successfully', 'Success', 'success', '');
+            this.getExamCycleData()
           },
           error: (err: HttpErrorResponse) => {
             console.log("Entered error loop");

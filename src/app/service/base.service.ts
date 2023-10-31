@@ -479,7 +479,17 @@ export class BaseService extends HttpService {
                     "result": "pass",
                     "status": "ENTERED",
                     "id": "2"
-                }
+                },
+                {
+                  "examName": "networks",
+                  "internalMarks": 30,
+                  "externalMarks": 12,
+                  "totalMarks": 100,
+                  "grade": "D",
+                  "result": "pass",
+                  "status": "ENTERED",
+                  "id": "2"
+              }
             ]
         },
     })

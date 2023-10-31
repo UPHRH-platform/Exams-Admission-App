@@ -155,8 +155,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
         const request = {
           examCycleId: this.examCycle.value,
           examId: dispatch.examId,
-          dispatchDate: dispatchDate,
-          examCenterCode: this.instituteDetail.instituteCode
+          examCenterCode: this.instituteDetail.id
         }
         const formData = new FormData();
         for (let [key, value] of Object.entries(request)) {
@@ -166,7 +165,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
         this.baseService.uploadDispatch$(formData)
           .subscribe({
             next: (res: any) => {
-              this.openConformationDialog()
+              this.openConformationDialog();
             },
             error: (err: HttpErrorResponse) => {
               this.toastrService.showToastr(err, 'Error', 'error', '')

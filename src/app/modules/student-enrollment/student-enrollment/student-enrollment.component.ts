@@ -192,7 +192,15 @@ export class StudentEnrollmentComponent {
 
   setEnrollmentTableColumns() {
     if (this.enrollmentTableColumns.length > 0) {
-      this.enrollmentTableColumns[1].header = this.selectedTab.name === 'Approved' ? 'Enrollment Number' : 'Provisional Enrollment Number'
+      if (this.selectedTab.name === 'Approved') {
+        this.enrollmentTableColumns[1].header = 'Enrollment Number'
+        this.enrollmentTableColumns[1].columnDef = 'enrollmentNumber'
+        this.enrollmentTableColumns[1].cell = (element: Record<string, any>) => `${element['enrollmentNumber']}`
+      } else {
+        this.enrollmentTableColumns[1].header = 'Provisional Enrollment Number'
+        this.enrollmentTableColumns[1].columnDef = 'provisionalEnrollmentNumber'
+        this.enrollmentTableColumns[1].cell = (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
+      }
     }
   }
 
