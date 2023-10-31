@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import {Location} from '@angular/common';
 import { BaseService } from '../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthServiceService } from '../core/services/auth-service/auth-service.service';
 
 
 @Component({
@@ -27,10 +28,11 @@ export class UserProfileComponent {
     role: 'Candidate',
     activeStatus: 'Active'
   }
+  userData: any;
 
   constructor(private router: Router,
     private _location: Location,
-    private route: ActivatedRoute, 
+    private authService: AuthServiceService,
     private baseService: BaseService) {
     this.userForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
@@ -43,6 +45,7 @@ export class UserProfileComponent {
   }
 
   ngOnInit(): void {
+    this.userData = this.authService.getUserRepresentation();
     this.baseService.getUserProfileInfo$(6)
     .subscribe({
       next:(res:any)=>{
@@ -62,13 +65,12 @@ export class UserProfileComponent {
 
   setUserFormData(data: any) {
 
-    console.log(data)
 
     this.userObject.name = data.firstName +" "+data.surname;
     this.userObject.enrollmentNumber= data.enrollmentNumber
     this.userObject.emailId = data.emailId
     this.userObject.phoneNumber =data.mobileNo
-    this.userObject.role= 'Candidate',
+    this.userObject.role= this.userData.attributes.Role[0]==='exams_student' ? 'Candidate': '-',
     this.userObject.activeStatus= 'Active'
 
     this.userForm.patchValue({
