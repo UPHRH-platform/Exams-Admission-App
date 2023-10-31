@@ -110,6 +110,7 @@ export class ModifyHallTicketComponent implements OnInit {
         labelOne: 'Select ID type',
         labelTwo: 'Attach file(s)',
         hidePreview: true,
+        acceptFiles:['.pdf','.jpg','.jpeg'],
         select: {
           selectCycleList: [
             {
