@@ -174,7 +174,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
   getInstituteDetailsByUser() {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
-    console.log(this.loggedInUserId)
     this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
       next: (res) => {
         if (this.examCycleId !== undefined) {
@@ -193,7 +192,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
     this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId)
       .pipe((mergeMap((response: any) => {
         this.isDataLoading = false;
-        console.log(response.responseData)
         return this.formateStudentFeeDetails(response.responseData);
       })))
       .subscribe((feeDetails: any) => {
@@ -209,50 +207,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
       pendingFeeDetails: []
     };
     let foramtedFeeDetails: any
-    /*   response = [
-        {
-          courseName: "Mathematics",
-          enrollmentNumber: "EN2023112",
-          exams: [{
-            amount: 1000,
-            feesPaid: false,
-            id: 13,
-            name: "Mathematics 101"
-          },
-          {
-            amount: 1000,
-            feesPaid: false,
-            id: 14,
-            name: "English 104"
-          }],
-          firstName: "sachin",
-          id: 12,
-          numberOfExams: 2,
-          session: "2023-2024",
-          surname: "S"
-        },
-        {
-          courseName: "Mathematics",
-          enrollmentNumber: "EN2023112",
-          exams: [{
-            amount: 1000,
-            feesPaid: false,
-            id: 13,
-            name: "Mathematics 101"
-          },
-          {
-            amount: 1000,
-            feesPaid: false,
-            id: 14,
-            name: "English 104"
-          }],
-          firstName: "CCC",
-          id: 12,
-          numberOfExams: 2,
-          session: "2023-2024",
-          surname: "S"
-        },
-      ] */
     if (response) {
       response.forEach((feeDetails: any) => {
         let examsNameArray = [];
@@ -311,13 +265,11 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   payFee() {
-    console.log(this.payingExams)
     let examDetails: any = []
 
     if (this.payingExams) {
 
       for (let item of this.payingExams) {
-        console.log(item)
         let examArrayObject = []
         for (let examid of item.examsId) {
           examArrayObject.push({
@@ -333,7 +285,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
         })
       }
     }
-    console.log(examDetails)
     const reqBody: any = {
       "examCycleId": this.examCycleId,
       "instituteId": this.instituteId,
@@ -345,7 +296,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
     this.baseService.payFees(reqBody)
       .subscribe((result: any) => {
-        console.log(result.responseData.redirectUrl)
         window.open(result.responseData.redirectUrl, "_blank");
         //  window.location.href=result.responseData.redirectUrl;
       })
