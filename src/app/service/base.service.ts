@@ -197,49 +197,16 @@ export class BaseService extends HttpService {
   }
 
   getStudentResults$(enrolmentNumber: string, dateOfBirth: string, examCycleID: string) {
-    // const formBody = {
-    //   enrolmentNumber: enrolmentNumber,
-    //   dateOfBirth: dateOfBirth,
-    //   examCycleID: examCycleID
-    // }
-    // const requestParam: RequestParam = {
-    //   url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}`,
-    //   data: formBody
-    // }
-    // return this.get(requestParam)
-
-    return of({
-      responseData: {
-        "firstName": "jay (static data)",
-            "lastName": "singh",
-            "enrollmentNumber": "EN2023 ABC36",
-            "dateOfBirth": "1995-12-15",
-            "courseName": "Mathematics",
-            "courseYear": '2013',
-            "examDetails": [
-                {
-                    "examName": "Data Structure",
-                    "internalMarks": 30,
-                    "externalMarks": 12,
-                    "totalMarks": 100,
-                    "grade": "D",
-                    "result": "pass",
-                    "status": "ENTERED",
-                    "id": "2"
-                },
-                {
-                  "examName": "networks",
-                  "internalMarks": 30,
-                  "externalMarks": 12,
-                  "totalMarks": 100,
-                  "grade": "D",
-                  "result": "pass",
-                  "status": "ENTERED",
-                  "id": "2"
-              }
-            ]
-        },
-    })
+    const formBody = {
+      enrolmentNumber: enrolmentNumber,
+      dateOfBirth: dateOfBirth,
+      examCycleID: examCycleID
+    }
+    const requestParam: RequestParam = {
+      url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}`,
+      data: formBody
+    }
+    return this.get(requestParam)
   }
 
   requestHallTicketModification$(reqbody: any) {
