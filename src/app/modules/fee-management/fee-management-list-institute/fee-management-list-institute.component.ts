@@ -209,58 +209,81 @@ export class FeeManagementListInstituteComponent implements OnInit {
       pendingFeeDetails: []
     };
     let foramtedFeeDetails: any
-    response = [
-      {
-        firstName: 'mansur 2', surname: 'tom',
-        exams: [
-          { id: 8, name: 'Mathematics 101' },
-          { id: 9, name: 'Mathematics 10' }
-        ],
-        fee: 1000,
-        id: null,
-        status: "Pending",
-        enrollmentNumber: 'EN202312', courseName: 'Mathematics', session: '2023-2024'
-      },
-      {
-        firstName: 'mansur',
-        exams: [
-          { id: 18, name: 'Mathematics 101' },
-          { id: 91, name: 'Mathematics 10000' }
-        ],
-        fee: 1000,
-        id: null,
-        status: "Paid",
-        surname: 'tom', enrollmentNumber: 'EN202311', courseName: 'Mathematics', session: '2023-2024'
-      }
-    ]
+    /*   response = [
+        {
+          courseName: "Mathematics",
+          enrollmentNumber: "EN2023112",
+          exams: [{
+            amount: 1000,
+            feesPaid: false,
+            id: 13,
+            name: "Mathematics 101"
+          },
+          {
+            amount: 1000,
+            feesPaid: false,
+            id: 14,
+            name: "English 104"
+          }],
+          firstName: "sachin",
+          id: 12,
+          numberOfExams: 2,
+          session: "2023-2024",
+          surname: "S"
+        },
+        {
+          courseName: "Mathematics",
+          enrollmentNumber: "EN2023112",
+          exams: [{
+            amount: 1000,
+            feesPaid: false,
+            id: 13,
+            name: "Mathematics 101"
+          },
+          {
+            amount: 1000,
+            feesPaid: false,
+            id: 14,
+            name: "English 104"
+          }],
+          firstName: "CCC",
+          id: 12,
+          numberOfExams: 2,
+          session: "2023-2024",
+          surname: "S"
+        },
+      ] */
     if (response) {
       response.forEach((feeDetails: any) => {
         let examsNameArray = [];
         let examsIdArray = []
+        let TotalFee = 0
+        let feePaidStatus: boolean = false;
         for (let exam of feeDetails.exams) {
           examsNameArray.push(exam.name)
           examsIdArray.push(exam.id)
-
+          TotalFee = TotalFee + exam.amount
+          feePaidStatus = exam.feesPaid
         }
         foramtedFeeDetails = {
-          studentName: feeDetails.firstName,
+          studentName: feeDetails.firstName + " " + feeDetails.surname,
           examNames: examsNameArray,
           examsId: examsIdArray,
           noOfExams: examsNameArray.length,
-          fee: feeDetails.fee,
+          fee: TotalFee,
           studentId: feeDetails.id,
 
-          status: feeDetails.status,
+          status: feePaidStatus ? "Paid" : "Pending",
         }
-        switch (feeDetails.status) {
-          case 'Paid': {
+        switch (feePaidStatus) {
+          case true: {
             foramtedFeeDetails['classes'] = {
               status: ['color-green'],
             }
             studentsFeeDetails.paidFeeDetails.push(foramtedFeeDetails)
             break;
           }
-          case 'Pending': {
+          case false: {
             foramtedFeeDetails['classes'] = {
               status: ['color-blue'],
             }
@@ -294,23 +317,23 @@ export class FeeManagementListInstituteComponent implements OnInit {
     if (this.payingExams) {
 
       for (let item of this.payingExams) {
+        console.log(item)
         let examArrayObject = []
         for (let examid of item.examsId) {
           examArrayObject.push({
             id: examid,
-            fee:''
+            fee: item.fee
           })
         }
 
         examDetails.push({
-         // studentId: item.studentId,
-         studentId: 6,
+          studentId: item.studentId,
           exam: examArrayObject
 
         })
       }
     }
-console.log(examDetails)
+    console.log(examDetails)
     const reqBody: any = {
       "examCycleId": this.examCycleId,
       "instituteId": this.instituteId,
@@ -319,13 +342,13 @@ console.log(examDetails)
       "payerType": "EXAM",
       "createdBy": this.loggedInUserId
     }
-    
-        this.baseService.payFees(reqBody)
-          .subscribe((result: any) => {
-            console.log(result.responseData.redirectUrl)
-            window.open(result.responseData.redirectUrl, "_blank");
-            //  window.location.href=result.responseData.redirectUrl;
-          })
+
+    this.baseService.payFees(reqBody)
+      .subscribe((result: any) => {
+        console.log(result.responseData.redirectUrl)
+        window.open(result.responseData.redirectUrl, "_blank");
+        //  window.location.href=result.responseData.redirectUrl;
+      })
 
 
   }
