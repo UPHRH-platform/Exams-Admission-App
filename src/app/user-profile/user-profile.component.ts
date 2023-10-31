@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {Location} from '@angular/common';
 import { BaseService } from '../service/base.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -19,10 +20,10 @@ export class UserProfileComponent {
   isEditData:boolean = false;
 
   userObject={
-    name: 'Amit kumar',
-    enrollmentNumber: '1234567890',
-    emailId : 'amitkumar@gmail.com' ,
-    phoneNumber : '9876543210',
+    name: '',
+    enrollmentNumber: '',
+    emailId : '' ,
+    phoneNumber : '',
     role: 'Candidate',
     activeStatus: 'Active'
   }
@@ -42,15 +43,39 @@ export class UserProfileComponent {
   }
 
   ngOnInit(): void {
-    this.setUserFormData();
+    this.baseService.getUserProfileInfo$(6)
+    .subscribe({
+      next:(res:any)=>{
+        console.log(res.responseData)
+       // this.studentData = res.studentsExamDetailsList;
+     
+       this.setUserFormData(res.responseData);
+      },
+      error: (error: HttpErrorResponse) => {
+       // this.isDataLoading = false;
+        console.log(error)
+      }
+
+    })
+    
   }
 
-  setUserFormData() {
-    this.userForm.setValue({
-      firstName: this.userObject?.name.split(' ').slice(0, -1).join(' '),
-      lastName: this.userObject?.name.split(' ').slice(-1).join(' '),
-      emailId: this.userObject?.emailId,
-      phoneNumber: this.userObject?.phoneNumber,
+  setUserFormData(data: any) {
+
+    console.log(data)
+
+    this.userObject.name = data.firstName +" "+data.surname;
+    this.userObject.enrollmentNumber= data.enrollmentNumber
+    this.userObject.emailId = data.emailId
+    this.userObject.phoneNumber =data.mobileNo
+    this.userObject.role= 'Candidate',
+    this.userObject.activeStatus= 'Active'
+
+    this.userForm.patchValue({
+      firstName: data.firstName,
+      lastName: data.surname,
+      emailId:  data.emailId,
+      phoneNumber: data.mobileNo,
       role: this.userObject?.role,
       activeStatus: this.userObject?.activeStatus
     })
