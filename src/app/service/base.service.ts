@@ -591,9 +591,9 @@ export class BaseService extends HttpService {
       return this.post(requestParam);
     }
 
-    getStudentFeesListForInstitute$(paymentRefNo: string): Observable<any>{
+    getStudentFeesListForInstitute$(examCycleId: number,instituteId: number): Observable<any>{
       const requestParam: RequestParam = {
-        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.STUDENT_LIST+`${paymentRefNo}/details`,
+        url: this.baseUrl + this.configService.urlConFig.URLS.PAYMENT.STUDENT_LIST+`${examCycleId}/${instituteId}/details`,
         data: {},
       }
       return this.get(requestParam);

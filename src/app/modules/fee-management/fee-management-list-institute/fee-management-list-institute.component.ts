@@ -303,7 +303,8 @@ export class FeeManagementListInstituteComponent implements OnInit {
         }
 
         examDetails.push({
-          studentId: item.studentId,
+         // studentId: item.studentId,
+         studentId: 6,
           exam: examArrayObject
 
         })
@@ -319,12 +320,12 @@ console.log(examDetails)
       "createdBy": this.loggedInUserId
     }
     
- /*        this.baseService.payFees(reqBody)
+        this.baseService.payFees(reqBody)
           .subscribe((result: any) => {
             console.log(result.responseData.redirectUrl)
             window.open(result.responseData.redirectUrl, "_blank");
             //  window.location.href=result.responseData.redirectUrl;
-          }) */
+          })
 
 
   }
