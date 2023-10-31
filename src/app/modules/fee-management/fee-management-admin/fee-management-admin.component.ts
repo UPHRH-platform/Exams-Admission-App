@@ -335,15 +335,7 @@ let r = response.examFees
   }
 
   onSelectedInstitute(event: any) {
-    if (event) {
-      // this.instituteTableData = []
-      // this.feeManagementService.getExamsOfInstitute('')
-      // .subscribe((exams: any) => {
-      //   this.instituteTableData = exams
-      // })
-    }
-    console.log(event.row)
-    console.log(event.row.instituteId)
+  
     this.getStudentFeesListForInstitute(event.row.examCycleId,event.row.instituteId)
     this.showInstitutesTable = false
 
