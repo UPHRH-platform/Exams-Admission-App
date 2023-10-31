@@ -32,22 +32,6 @@ export class CctvManagementAdminComponent {
     courseId: string;
     status: string;
   }[] = [
-      {
-        examCycleName: 'Exam Cycle 1',
-        id: 1,
-        courseId: '',
-        status: '',
-      }, {
-        examCycleName: 'Exam Cycle 2',
-        id: 2,
-        courseId: '',
-        status: '',
-      }, {
-        examCycleName: 'Exam Cycle 3',
-        id: 3,
-        courseId: '',
-        status: '',
-      },
     ]
   examCycleControl = new FormControl('');
 
@@ -163,6 +147,16 @@ export class CctvManagementAdminComponent {
             },
           }
         );
+        // TableColumns.push(
+        //   {
+        //     header: 'Alternate institute status',
+        //     columnDef: 'assignedStatus',
+        //     cell: (element: Record<string, any>) => `${element['assignedStatus']}`,
+        //     cellStyle: {
+        //       'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
+        //     },
+        //   }
+        // )
         TableColumns.push(
           {
             header: '',
@@ -227,6 +221,7 @@ export class CctvManagementAdminComponent {
       district: string,
       cctvVerified: boolean,
       ipAddress: string,
+      alternateExamCenterAssigned: boolean
     }[] = [];
     if (instituteesList && instituteesList.length) {
       instituteesList.forEach((institute: any) => {
@@ -237,6 +232,7 @@ export class CctvManagementAdminComponent {
           district: institute.district,
           cctvVerified: institute.approvalStatus,
           ipAddress: institute.ipAddress,
+          alternateExamCenterAssigned: institute.alternateExamCenterAssigned
         }
         formattedInstitutesList.push(formattedInstitute)
       })
@@ -278,8 +274,16 @@ export class CctvManagementAdminComponent {
           if (institute.cctvVerified === 'REJECTED') {
             institute.updateStatus == true;
             pendingInstitute['hasStyle'] = true;
-            pendingInstitute['classes'] = {
-              status: ['cursor-pointer', 'color-blue']
+            if (institute.alternateExamCenterAssigned) {
+              pendingInstitute['classes'] = {
+                status: ['disabled-btn']
+              }
+              pendingInstitute['assignedStatus'] = 'Assigned'
+            } else {
+              pendingInstitute['classes'] = {
+                status: ['cursor-pointer', 'color-blue']
+              }
+              pendingInstitute['assignedStatus'] = 'Pending'
             }
             pendingInstitute['status'] = 'Enter alternate Institute';
           } else {

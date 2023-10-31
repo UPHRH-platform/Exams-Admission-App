@@ -64,7 +64,8 @@ export class AttendanceRecordUploadListComponent {
   }
 
   downloadTemplate() {
-    this.baseService.downloadResultsTemplate().subscribe(blob => {
+    const url = 'assets/templates/Template_Student_Attendance.xlsx'
+    this.baseService.downloadTemplate(url).subscribe(blob => {
       const a = document.createElement('a');
       const objectUrl = URL.createObjectURL(blob);
       a.href = objectUrl;
