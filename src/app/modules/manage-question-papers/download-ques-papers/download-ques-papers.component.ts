@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from 'src/app/service/base.service';
@@ -24,7 +24,9 @@ export class DownloadQuesPapersComponent {
     {label: 'Download Question Papers', url: ''}
   ]
   constructor(
-    private baseService: BaseService,private authService: AuthServiceService, private toastrService: ToastrServiceService
+    private baseService: BaseService,private authService: AuthServiceService,
+     private toastrService: ToastrServiceService,
+     private renderer: Renderer2
   ) {
   }
   ngOnInit() {
@@ -83,13 +85,18 @@ export class DownloadQuesPapersComponent {
     this.getQuestionPapersByExamCycle();
   }
 
-  downloadQuestionPaper(questionPaperId: any) {
-    this.baseService.downloadQuestionPaper(questionPaperId).subscribe({
+  downloadQuestionPaper(questionPaper: any) {
+    this.baseService.downloadQuestionPaper(questionPaper.id).subscribe({
       next: (response) => {
-        console.log("Download question paper response", response);
+        const link = this.renderer.createElement('a');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', response.responseData);
+        link.click();
+        link.remove();
       },
       error: (error) => {
-        console.log("Download question paper error", error);
+        console.log( error);
+        this.toastrService.showToastr(error?.error?.result?.message, 'Error', 'error', '');
       }
     });
   }
@@ -105,11 +112,15 @@ export class DownloadQuesPapersComponent {
     })
   }
 
-  viewQuestionPapers(questionPaperId: any) {
-    console.log("viewQuestionPaper questionPaperId",questionPaperId)
-    this.baseService.getQuestionPaperPreviewUrl(questionPaperId).subscribe({
+  viewQuestionPapers(questionPaper: any) {
+    console.log(questionPaper.id)
+    this.baseService.getQuestionPaperPreviewUrl(questionPaper.id).subscribe({
       next: (response) => {
-        console.log("question paper preview url response", response);
+        const link = this.renderer.createElement('a');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', response.responseData);
+        link.click();
+        link.remove();
       },
       error: (error) => {
         console.log("question paper preview url error", error);

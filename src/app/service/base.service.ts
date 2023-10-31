@@ -76,43 +76,6 @@ export class BaseService extends HttpService {
 
 
   getInstitutesResultData$(examCycleId: string): Observable<any> {
-    // return this.httpClient.get<any>("https://api.agify.io/?name=meelad");
-
-    // const result = {
-    //   responseData: [
-    //     {
-    //       instituteName: 'NEW COLLEGE OF NURSING',
-    //       instituteId: '123',
-    //       course: 'xxxx',
-    //       hasInternalMarks: true,
-    //       hasFinalMarks: true,
-    //       hasRevisedFinalMarks: true,
-         
-    //     },
-    //     {
-    //       instituteName: 'OLD COLLEGE OF NURSING',
-    //       instituteId: '123',
-    //       course: 'xxxx',
-    //       hasInternalMarks:false,
-    //       hasFinalMarks: false,
-    //       hasRevisedFinalMarks: false,
-       
-    //     },
-    //     {
-    //       instituteName: 'MODERN COLLEGE OF NURSING',
-    //       instituteId: '123',
-    //       course: 'xxxx',
-    //       hasInternalMarks: true,
-    //       hasFinalMarks: false,
-    //       hasRevisedFinalMarks: true,
-      
-    //     },
-      
-     
-    //   ]
-    // }
-    // return of( result )
-
     const requestParam: RequestParam = {
       url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.MANAGE_RESULTS}?examCycle=${examCycleId}`,
       data: {}
@@ -130,21 +93,7 @@ export class BaseService extends HttpService {
   }
 
   getUserData$(): Observable<any>{
-    return of([
-      {
-        fullName: 'Devaprathap Nagendra',
-        email: 'name@gmail.com',
-        phoneNumber: '9765454333',
-        role: 'Institute',
-        accountStatus: 'Active'
-      },
-      {
-        fullName: 'D. Nagendra',
-        email: 'name@gmail.com',
-        phoneNumber: '9765454333',
-        role: 'Admin',
-        accountStatus: 'Active'
-      },
+    return of([    
   ])
   }
 
@@ -152,87 +101,7 @@ export class BaseService extends HttpService {
 
   getMarksForDashboard$(): Observable<any>{
     return of(
-      [
-        {
-          examName: 'Anatomy',
-          totalMarks: 100,
-          passingMarks: 40,
-          totalAttempts: 96,
-          failedAttempts: 12,
-          passedAttempts: 84,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-  
-        },
-        {
-          examName: 'Physiology',
-          totalMarks: 100,
-          passingMarks: 40,
-          totalAttempts: 96,
-          failedAttempts: 12,
-          passedAttempts: 84,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-        },
-        {
-          examName: 'Biochemistry',
-          totalMarks: 100,
-          passingMarks: 40,
-          totalAttempts: 96,
-          failedAttempts: 12,
-          passedAttempts: 84,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-        },
-        {
-          examName: 'Pathology',
-          totalMarks: 100,
-          passingMarks: 40,
-          totalAttempts: 96,
-          failedAttempts: 12,
-          passedAttempts: 84,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-        },
-        {
-          examName: 'Microbiology',
-          totalMarks: 100,
-          passingMarks: 40,
-          totalAttempts: 96,
-          failedAttempts: 12,
-          passedAttempts: 84,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-        },
-        {
-          examName: 'Aggregate',
-          totalMarks: 'NA',
-          passingMarks: 'NA',
-          totalAttempts: 480,
-          failedAttempts: 60,
-          passedAttempts: 420,
-          passPercentage: 88,
-          maximumMarks: 96,
-          minimumMarks: 16,
-          avgMarks: 62,
-          standardDeviation: 15,
-        },
-      ]
+    []
     )
   }
 
@@ -254,86 +123,7 @@ export class BaseService extends HttpService {
       url: this.baseUrl + this.configService.urlConFig.URLS.COURSE.GET_ALL,
       data: {}
     }
-    return of ([
-      {
-  
-        examId: 1,
-        courseName: 'One',
-        examDate: 'One',
-        examStartTime: '10.00 A.M.',
-        marks: '100',
-        examName: 'msc Nursing (Exam 1)',
-        questionPaperList: [
-          {
-            id: 1234,
-            name: 'Question paper set 1'
-          },
-          {
-            id: 1234,
-            name: 'Question paper set 2'
-          }
-        ]
-      },
-      {
-        examId: 1,
-        courseName: 'Two',
-        examDate: 'Some date',
-        marks: '100',
-        examStartTime: '12.00 A.M.',
-        examName: 'msc Nursing (Exam 2)',
-        questionPaperList: [
-          {
-            id: 1234,
-            name: 'Question paper set 1'
-          },
-          {
-            id: 1234,
-            name: 'Question paper set 2'
-          }
-        ]
-  
-      },
-      {
-        examId: 1,
-        courseName: 'Three',
-        examDate: 'Some date',
-        examStartTime: '10.00 A.M.',
-        marks: '100',
-        examName: 'msc Nursing (Exam 3)',
-        questionPaperList: [
-          {
-            id: 1234,
-            name: 'Question paper set 1'
-          },
-          {
-            id: 1234,
-            name: 'Question paper set 2'
-          }
-        ]
-  
-      },
-      {
-  
-        examId: 1,
-        courseName: 'Four',
-        examDate: 'Some date',
-        examStartTime: '10.00 A.M.',
-        marks: '100',
-        examName: 'msc Nursing (Exam 4)',
-        questionPaperList: [
-          {
-            id: 1234,
-            name: 'Question paper set 1'
-          },
-          {
-            id: 1234,
-            name: 'Question paper set 2'
-          }
-        ]
-  
-      },
-  
-    ])
+    return of ([])
   }
 
   getQuestionsByExamsAndExamCycle(examCycleId : string | number, examId: string | number): Observable<any> {
@@ -745,10 +535,10 @@ uploadQuestionPaper(fileData: any):  Observable<ServerResponse> {
  return this.multipartPost(reqParam);
 }
 
-downloadQuestionPaper(payloadData: any): Observable<ServerResponse> {
+downloadQuestionPaper(quesPaperId: any): Observable<ServerResponse> {
   const reqParam: RequestParam = {
-    url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DOWNLOAD}`,
-    data: payloadData
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.QUESTION_PAPER.DOWNLOAD}/${quesPaperId}`,
+    data: {}
   }
  return this.get(reqParam);
 }
