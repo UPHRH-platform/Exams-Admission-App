@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     row-gap: 12px;
-    height: 394px;
+    height: fit-content;
     padding: 16px;
 
     .inner-container{
@@ -11,7 +11,7 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        height: 218px;
+        height: fit-content;
     }
 
     .label{
@@ -88,13 +88,14 @@
         border-radius: 5px;
         font-size: 15px;
         cursor: pointer;
+        border: 0px;
     }
 
     .btn-outline {
         min-width: 80px;
         background-color: white;
         color: #045dad;
-        border: 2px solid #045dad;
+        border: 2px solid #045dad !important;
         height: 35px;
         border-radius: 5px;
         font-size: 15px;

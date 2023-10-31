@@ -4,7 +4,7 @@
       style="display: flex; flex-direction: row; justify-content: space-between"
     >
       <h2 class="title-header">{{ "Attendance Record" }}</h2>
-      <button class="btn-1" (click)="goToList()">Cancel</button>
+      <button class="btn-1" (click)="goToAttendanceList()">Cancel</button>
     </div>
     <div class="body-section">
       <div class="sidebar">
@@ -34,7 +34,7 @@
           >
         </div>
         <div style="margin-top: 160px">
-          <button class="btn-3">Download template</button>
+          <button class="btn-3" (click)="downloadTemplate()">Download template</button>
         </div>
       </div>
 
@@ -42,7 +42,7 @@
         <div class="form-section">
           <div class="side-heading">
             Upload new list
-            <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Back</button>
+           <!--  <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Back</button> -->
           </div>
           <div
             style="
@@ -56,7 +56,7 @@
               flex-direction: column;
               row-gap: 8px;
             "
-            *ngIf="files.length == 0"
+           
           >
             <label for="fileUpload1" class="custom-file-upload">
               <a mat-button style="color: #fff" class="btn-2">Browse</a>
@@ -72,11 +72,11 @@
               enctype="multipart/form-data"
               (change)="changeListener($event)"
               multiple="true"
-              accept=".csv"
+              accept=".csv,.xlsx"
             />
           </div>
 
-          <div
+         <!--  <div
             style="
               justify-content: center;
               width: 80%;
@@ -103,9 +103,9 @@
               column-gap: 8px;
             "
           >
-            <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Re-upload list</button>
+            <button class="btn-4" *ngIf="files.length > 0" (click)="files.length=0">Upload Another List</button>
             <button class="btn-2" (click)="goToList()" *ngIf="files.length > 0">Ok</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

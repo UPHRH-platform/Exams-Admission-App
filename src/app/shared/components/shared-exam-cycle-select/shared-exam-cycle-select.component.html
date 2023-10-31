@@ -1,0 +1,14 @@
+<div>
+    <div>
+            <span class="exam-lable">Exam Cycle</span>
+        </div>
+        <mat-form-field appearance="outline" class="exam-form">
+        <mat-select [formControl]="examCycleFormControl" (selectionChange)="onSelectionChangeExamCycle($event)">
+                <ng-container *ngFor="let examCycle of examCycleList">
+                    <mat-option  [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                </ng-container>
+                <mat-option style="display: none;" value="">Select here</mat-option>
+            </mat-select>
+           
+        </mat-form-field>
+    </div>

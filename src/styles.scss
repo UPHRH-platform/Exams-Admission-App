@@ -123,3 +123,16 @@ th.mdc-data-table__cell,
 .mat-drawer-content {
   overflow: visible !important;
 }
+
+.disabled-btn {
+    background-color: #efefefbf !important;
+    color: #1010104d !important;
+    pointer-events: none;
+}
+
+.disableFields {
+    .mat-mdc-text-field-wrapper {
+        background-color: #efefefbf !important;
+        pointer-events: none;
+    }
+}

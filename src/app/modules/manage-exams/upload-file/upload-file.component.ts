@@ -107,7 +107,7 @@ export class UploadFileComponent implements OnInit {
 
   uploadExamCycle() {
     const formData = new FormData();
-    formData.append('file', this.files[0].name);
+    formData.append('file', this.files[0], this.files[0].name);
     formData.append('fileType', 'csv');
     this.closeDialog('close');
     this.baseService.examcyclebulkupload(formData).subscribe({
@@ -134,14 +134,6 @@ export class UploadFileComponent implements OnInit {
     }
   }
 
-  formatBytes(bytes: any, decimals = 2) {
-    if (!+bytes) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  }
 
   public changeListener(event: any, btn: any){
     this.fileUploadError = '';
@@ -155,7 +147,7 @@ export class UploadFileComponent implements OnInit {
           if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
             this.files.push(selectedFile);
             this.listOfFiles.push(
-              selectedFile.name.concat(this.formatBytes(selectedFile.size))
+              selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
             );
             // to convert csv to JSON
             const reader = new FileReader();
@@ -200,5 +192,17 @@ export class UploadFileComponent implements OnInit {
       jsonArray.push(row);
     }
     return JSON.stringify(jsonArray, null, 2);
+  }
+
+  downloadTemplate() {
+    this.baseService.downloadTemplate('assets/templates/Exam_cycle_template.csv')
+    .subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'examCyclesAndExams.csv';
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    });
   }
 }

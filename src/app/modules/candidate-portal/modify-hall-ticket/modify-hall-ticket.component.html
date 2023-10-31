@@ -7,8 +7,8 @@
         <mat-card class="container">
             <mat-card-content>
                 <div>
-                    <h2 class="examName">{{hallTicketDetails?.exmaCycleName}}</h2>
-                    <app-edit-hallticket [examName]="hallTicketDetails.exmaCycleName"
+                    <h2 class="examName">{{stateData?.studentDetails?.exmaCycleName}}</h2>
+                    <app-edit-hallticket [examName]="stateData?.studentDetails.exmaCycleName"
                     [studentDetails]="studentDetails"></app-edit-hallticket>
                 </div>
                 <div>
@@ -33,7 +33,7 @@
                                 <div class="file-container mt1 p1">
                                     <span>{{document.name}}</span>
                                     <div>
-                                        <a class="mr2 view-delete-btn" (click)="viewDocument(i)" >View</a>
+                                        <!-- <a class="mr2 view-delete-btn" (click)="viewDocument(i)" >View</a> -->
                                         <a class="view-delete-btn" (click)="removeAttacment(i)">Delete</a>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
             <mat-card-actions>
                 <div class="footer">
                     <button class="cancel-btn" (click)="cancel()">Cancel</button>
-                    <button class="request-modify-btn" type="submit" (click)="submitDetails()">Request modify</button>
+                    <button class="request-modify-btn" [ngClass]="{'disabled-btn': disableModification}" type="submit" [disabled]="disableModification" (click)="makeDataCorrectionRequest()">Request modify</button>
                 </div>
             </mat-card-actions>
         </mat-card>

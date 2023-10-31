@@ -5,10 +5,11 @@
         "QUESTION_PAPER": {
             "GET_ALL": "/v1/questionPaper/list",
             "UPLOAD": "/questionPaper/upload",
-            "DOWNLOAD": "/v1/questionPaper/download",
+            "DOWNLOAD": "/questionPaper/download",
             "GET_BY_ID": "/v1/questionPaper",
-            "GET_PREVIEW_URL": "/v1/questionPaper/preview",
-            "DELETE": "/v1/questionPaper/delete"
+            "GET_PREVIEW_URL": "/questionPaper/preview",
+            "GET_QUESTIONPAPER_BY_EXAMCYCLE": "/questionPaper/examCycle",
+            "DELETE_QUESTION_PAPER": "/questionPaper/delete"
         },
         "STUDENT_ENROLLMENT": {
             "CREATE": "/v1/students/add",
@@ -16,7 +17,8 @@
             "FIND_ENROLLMENT_BY_FILTER": "/v1/students/find",
             "GET_INSTITUTE_BY_ID": "/v1/admin/institutes",
             "GET_INTERMEDIATE_SUBJECT_LIST": "/v1/admin/subject/list", 
-            "VERIFY_STUDENT":"/v1/students"
+            "VERIFY_STUDENT":"/v1/students",
+            "GET_PENDING_ENROLLENT": "/https://exams.uphrh.in/api/v1/students/pendingFor21Days"
         }, 
         "EXAM_MANAGEMENT": {
             "GET_EXAM_CYCLE_LIST": "/v1/admin/examCycle/list", 
@@ -31,7 +33,10 @@
             "EXAM_CYCLE_SEARCH": "/v1/admin/examCycle/search"
         },
         "EXAM_STUDENT_REGISTRATION": {
-            "GET_BY_EXAM_CYCLE":"v1/studentExamRegistration"
+            "GET_BY_EXAM_CYCLE":"/v1/studentExamRegistration",
+            "REGISTER_STUDENT": "/v1/studentExamRegistration/register",
+            "VIEW_REGISTERED_STUDENTS": "/v1/studentExamRegistration/getRegistrationDetail",
+            "GET_REGISTRATION_PENDING_STUDENTS": "/v1/studentExamRegistration/getVerifiedNotRegistered"
         },
         "COURSE": {
             "GET_ALL": "/v1/admin/courses/list"
@@ -47,11 +52,23 @@
             "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
+            "ALL_CENTERS": "/v1/admin/examCenters/all",
+            "GET_CCTV_VERIFICATION_BY_INSTITUTE": "/v1/admin/examCenter/verified",
+            "GET_CCTV_VERIFICATION_BY_EXAMCYCLE": "/v1/admin/examCenterStatus",
+            "CENTERS_BY_EXAM_CYCLE": "/v1/admin/byExamCycle/"
+        },
+        "PAYMENT": {
+            "FEES": "/v1/fee/initiate",
+            "INSTITUTE_LIST":"/v1/fee/all",
+            "STUDENT_LIST":"/v1/fee/",
+            "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
+            "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters",
             "ALL_CENTERS": "/v1/admin/examCenters/all"
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
             "DOWNLOAD":"/v1/admin/hallticket/downloadHallTicket",
+            "DETAILS":"/v1/admin/hallticket/hallTicketDetail",
             "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
             "APPROVE": "/v1/admin/hallticket/dataCorrection/",
@@ -60,20 +77,32 @@
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
         },
+        "ATTENDENCE":{
+            "GET_BY_EXAM_CYCLE": "/v1/attendance/getByExamCycle/",
+            "BULK_UPLOAD": "/v1/attendance/bulkUpload"
+        },
         "USER_INSTITUTE_MAPPING": {
-            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user"
+            "GET_INSTITUTE_BY_USER": "/v1/admin/institutes/user",
+            "EXAM_CENTER_VERIFIED": "/v1/admin/examCenter/verified"
         },
         "TRACK_DISPATCHES": {
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList"
+            "GET_DISPATCHES_LIST": "/v1/admin/institutes/dispatchStatus/",
+            "DISPATCHE_UPLOAD": "/v1/admin/institutes/dispatchUpload",
+            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/"
         },
         "SUBJECTS": {
-            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap",
-            "GET_DISPATCHES_LIST": "/v1/institutes/dispatchList",
-            "DISPATCHES_VIEW_PROOF": "/v1/admin/institutes/preview/",
-            "DISPATCHE_UPLOAD": "v1/admin/institutes/dispatchUpload"
+            "GET_SUBJECTS_BY_COURSE": "/v1/admin/courseSubjectMap"
         },
         "MANAGE_RESULTS": {
-            "PUBLISH": "/v1/studentResults/publish"
+            "PUBLISH": "/v1/studentResults/publish",
+            "MANAGE_RESULTS": "/v1/studentResults/manageResults",
+            "UPLOAD_EXTERNAL_MARKS": "/v1/studentResults/bulkUploadExternal",
+            "UPLOAD_INTERNAL_MARKS": "/v1/studentResults/bulkUpload",
+            "RESULTS_BY_INSTITUTE": "/v1/studentResults/resultsByInstitute",
+            "EXAMS_OF_INSTITUTE_EXMACYCLE": "/v1/studentResults/resultUploadStatusForInstitute",
+            "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute",
+            "STUDENT_RESULTS": "/v1/studentResults/results",
+            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling"
         }
     }
 }

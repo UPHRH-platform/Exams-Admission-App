@@ -21,8 +21,9 @@ export class ManageHallTicketsAdminListComponent {
   institutes: Institute[];
   courses: Course[];
   years: Year[];
-  hallTicketsData: HallTicket[];
-  selectedCandidatesForHallTicketsGenerate: HallTicket[];
+  generatedHallTicketsData: HallTicket[]=[];
+  pendingHallTicketsData: HallTicket[]=[];
+  selectedCandidatesForHallTicketsGenerate: HallTicket[]= [];
   pendingHallTicketsTableColumns: TableColumn[] = [];
   generatedHallTicketsTableColumns: TableColumn[] = [];
 
@@ -30,6 +31,7 @@ export class ManageHallTicketsAdminListComponent {
   breadcrumbItems = [
     { label: 'Manage Hall Tickets', url: '' },
   ]
+  unformattedHallTickets: any;
   constructor(
     private baseService: BaseService,
     private router: Router,
@@ -41,7 +43,7 @@ export class ManageHallTicketsAdminListComponent {
 
     this.initializeTableColumns();
     this.initializePageData();
-    this.getHallTickets();
+   
     //this.getGeneratedHallTickets();
   }
 
@@ -207,20 +209,20 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getHallTickets() {
-    let unformattedResponse: HallTicket[];
     this.isDataLoading = true;
     this.baseService.getHallTickets$()
       .pipe((mergeMap((response: any) => {
-        unformattedResponse = response.responseData;
+        this.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
         next: (res: any) => {
-          console.log(res)
-          this.hallTicketsData = res.hallTicketsDetailsList;
-          this.isDataLoading = false;
+          //console.log(res)
 
-          this.baseService.setHallTicketData$(unformattedResponse)
+          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus != 'GENERATED'));
+          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
+
+          this.isDataLoading = false;
         },
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;
@@ -247,6 +249,7 @@ export class ManageHallTicketsAdminListComponent {
           studentEnrollmentNumber: hallTicketsDetails.studentEnrollmentNumber,
           feesPaid: hallTicketsDetails.feesPaid,
           attendancePercentage: hallTicketsDetails.attendancePercentage,
+          hallTicketStatus: hallTicketsDetails.hallTicketStatus,
           classes: {
             viewHallTicket: ['color-blue']
           }
@@ -269,10 +272,37 @@ export class ManageHallTicketsAdminListComponent {
     })
   }
 
+  onSelectionChangeHallTicketType(e: any){
+    console.log(e.value)
+    e.value === 'modification_hall_ticket'? this.getHallTicketsForDataCorrections() : this.getHallTickets();
+
+  }
+  getHallTicketsForDataCorrections() {
+    this.isDataLoading = true;
+    this.baseService.getHallTicketsForDataCorrections$()
+      .pipe((mergeMap((response: any) => {
+        return this.formateHallTicketsData(response.responseData)
+      })))
+      .subscribe({
+        next: (res: any) => {
+          //console.log(res)
+          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status != 'NEW'));
+          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
+
+          this.isDataLoading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isDataLoading = false;
+          console.log(error)
+        }
+
+      })
+  }
+
   initializePageData() {
     this.halltickets = [
       {
-        value: 'new_hall_ticket', viewValue: "New Hall Tikcet"
+        value: 'new_hall_ticket', viewValue: "New Hall Ticket"
       },
       {
         value: 'modification_hall_ticket', viewValue: "Modification Hall Ticket"
@@ -318,19 +348,26 @@ export class ManageHallTicketsAdminListComponent {
     let a = this.courseControl?.value;
     let b = this.examCycleControl?.value;
     let idsArray: any = []
-    this.selectedCandidatesForHallTicketsGenerate.forEach(element => {
-      idsArray.push(element.id)
-    });
-    this.baseService.generateHallTkt$(idsArray).subscribe({
-      next: (res: any) => {
-        this.toasterService.showToastr('Hall tickets generated successfully for selected candidates !!', 'Success', 'success', '');
-        this.tabGroup.selectedIndex = 1;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error.message)
-        this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
-      }
-    })
+
+    if (this.selectedCandidatesForHallTicketsGenerate && this.selectedCandidatesForHallTicketsGenerate.length != 0) {
+      this.selectedCandidatesForHallTicketsGenerate.forEach(element => {
+        idsArray.push(element.id)
+      });
+
+      this.baseService.generateHallTkt$(idsArray).subscribe({
+        next: (res: any) => {
+          this.toasterService.showToastr('Hall tickets generated successfully for selected candidates !!', 'Success', 'success', '');
+          this.tabGroup.selectedIndex = 1;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message)
+          this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+        }
+      })
+    } else {
+      this.toasterService.showToastr('Please select candidates', 'Error', 'error', '');
+    }
+
 
   }
 
@@ -339,7 +376,8 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onViewClick(event: any) {
-    let r = event.row
-    this.router.navigate(['/hall-ticket-management/ticket-details', r.id]);
+    console.log(event)
+    let hallTktDetails = this.unformattedHallTickets.filter((hallTicket: { id: string; }) => (hallTicket.id === event.row.id));
+    this.router.navigate(['/hall-ticket-management/ticket-details'], { state: { data: hallTktDetails[0] } });
   }
 }

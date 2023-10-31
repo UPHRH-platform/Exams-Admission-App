@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { CandidatePortalService } from '../services/candidate-portal.service';
 import { mergeMap, of } from 'rxjs';
 import { BaseService } from 'src/app/service/base.service';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-request-revalution',
@@ -12,19 +14,7 @@ import { BaseService } from 'src/app/service/base.service';
 export class RequestRevalutionComponent implements OnInit {
 
   //#region (global variables)
-  hallTicketDetails = {
-    exmaCycleName: 'Exam Cycle 1',
-    studentDetails: {
-      firstName: 'Rajash',
-      lastName: 'Kumaravel',
-      roolNumber: '12345 89078',
-      DOB: '24-01-1998',
-    },
-    hallTicketDetqails: {
-      courseName: 'M. Sc. Nursing',
-      courseYear: '2022 - 2023'
-    }
-  }
+  studentDetails: any
 
   examTableHeader = [
     {
@@ -68,7 +58,7 @@ export class RequestRevalutionComponent implements OnInit {
     }, {
       header: 'Status',
       columnDef: 'status',
-      cell: (element: Record<string, any>) => `${element['status']}`,
+      cell: (element: Record<string, any>) => `${element['result']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
@@ -76,6 +66,7 @@ export class RequestRevalutionComponent implements OnInit {
   ]
 
   examTableData = []
+  selectedExams = []
 
   isHallTicket = true
 
@@ -84,13 +75,17 @@ export class RequestRevalutionComponent implements OnInit {
   amountToPay = 0;
   costOfExam = 3000;
   paymentDone = false;
+  stateData: any | undefined;
   //#endregion
 
   constructor(
     private router: Router,
     private candidatePortalService: CandidatePortalService,
     private baseService: BaseService,
-  ) { }
+    private toasterService: ToastrServiceService
+  ) { 
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state
+  }
 
   ngOnInit(): void {
     this.intialisation()
@@ -98,50 +93,22 @@ export class RequestRevalutionComponent implements OnInit {
 
   //#region (intialisation)
   intialisation() {
-    this.getExamResults()
-  }
-
-  getExamResults() {
-    this.baseService.getResults()
-      .pipe(mergeMap((res: any) => {
-        return this.formateResultDetails(res)
-      })).subscribe((results: any) => {
-        this.examTableData = results.examResults
-      })
-  }
-
-  formateResultDetails(results: any) {
-    const exams: {
-      examResults: {
-        examName: string,
-        internalMarks: string,
-        externalMarks: string,
-        totalMarks: string,
-        status: string,
-        classes: any,
-      }[]
-    } = {
-      examResults: []
+    if (this.stateData) {
+      console.log('modify results', this.stateData)
+      const studentDetails = this.stateData.studentDetails
+      this.studentDetails = {
+        firstName: studentDetails.firstName,
+        lastName: studentDetails.lastName,
+        studentEnrollmentNumber: studentDetails.studentEnrollmentNumber,
+        dob: new Date(studentDetails.dob),
+        courseName: studentDetails.courseName,
+        courseYear: studentDetails.courseYear,
+        examCyclename: studentDetails.examCyclename
+      }
+      this.examTableData = this.stateData.exams;
+    } else {
+      this.router.navigateByUrl('candidate-portal')
     }
-
-    if (results) {
-      results.forEach((result: any) => {
-        const classes:string[] = [result.status === 'Fail' ? 'color-red' : 'color-green']
-        const examResult = {
-          examName: result.examName,
-          internalMarks: result.internalMarks,
-          externalMarks: result.externalMarks,
-          totalMarks: result.totalMarks,
-          status: result.status,
-          classes: {
-            status: classes
-          }
-        }
-        exams.examResults.push(examResult)
-      })
-    }
-
-    return of(exams);
   }
 
   //#endregion
@@ -166,9 +133,10 @@ export class RequestRevalutionComponent implements OnInit {
   formateRevaluationData() { }
   //#endregion
 
-  onSelectedRows(event: any[]) {
+  onSelectedRows(event: any) {
     this.examsSelected = event.length
     this.amountToPay = (this.examsSelected * this.costOfExam)
+    this.selectedExams = event
   }
 
   payFee() {
@@ -214,6 +182,31 @@ export class RequestRevalutionComponent implements OnInit {
     //   maxHeight: '90vh'
     // })
     this.paymentDone = true
+  }
+
+  requestRetotalling() {
+    const formBody = {
+      student: {
+        enrollmentNumber: this.studentDetails.studentEnrollmentNumber
+      },
+      exams: [],
+      remarks: "Requesting for retotalling of marks 1",
+    }
+    this.selectedExams.forEach((element: any) => {
+      const exam = {
+        id: element.id
+      }
+    })
+    this.baseService.requestRetotalling(formBody)
+    .subscribe({
+      next: (res) => {
+        this.toasterService.showToastr('Retotaling request submited successfully', 'Success', 'success')
+        this.router.navigateByUrl('')
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toasterService.showToastr(err, 'Error', 'error')
+      }
+    })
   }
 
 }

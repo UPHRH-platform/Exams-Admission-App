@@ -1,6 +1,6 @@
 <div class="input-container" [ngStyle]="files.length > 0 ? {'justify-content': 'initial'}: {'justify-content': 'space-between'}">
     <div class="w-full link-class">
-    <a href="../../../../../assets/templates/Exam_cycle_template.csv" target="_blank">
+    <a class="downloadTemplate" (click)="downloadTemplate()" target="_blank">
         Download template
     </a>
     </div>

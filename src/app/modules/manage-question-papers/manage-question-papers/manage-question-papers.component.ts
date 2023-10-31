@@ -26,11 +26,12 @@ export class ManageQuestionPapersComponent {
   fileUploadError: string;
   listOfFiles: any[] = [];
   files: any[] = [];
+  previewURL: string = "";
   
 
-   isDataLoading: boolean = false;
-   questionPapersList: QuestionPaper[] = [];
-
+  isDataLoading: boolean = false;
+  questionPapersList: QuestionPaper[] = [];
+  examsList: any[] = [];
   constructor(
     private baseService: BaseService,
     private authService: AuthServiceService, 
@@ -42,29 +43,9 @@ export class ManageQuestionPapersComponent {
   }
 
   ngOnInit(): void {
-    this.getQuestionPapersList();
     this.getExamCycleData();
 
   }
-
-  getQuestionPapersList() {
-    this.isDataLoading = true;
-    this.baseService.getExamsAndQuestionPapersList$().subscribe({
-      next:(res:any)=>{
-        console.log(res)
-        this.questionPapersList = res;
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
-
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isDataLoading = false;
-        console.log(error)
-      }
-
-    })  
-  } 
 
   breadcrumbItems = [
     { label: 'Manage Question Paper', url: '' },
@@ -72,15 +53,10 @@ export class ManageQuestionPapersComponent {
 
   getExamCycleData() {
     this.isDataLoading = true;
-  this.baseService.getExamCycleList$().subscribe({
+    this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
-      // this.examCycleData.map((obj, index) => {
-      //   obj.id = obj?.id;
-      //   obj.examCycleName = obj?.examCycleName
-      //   console.log("exam cycle data",this.examCycleData)
-      // })
     },
     error: (error: HttpErrorResponse) => {
       console.log(error);
@@ -89,13 +65,23 @@ export class ManageQuestionPapersComponent {
   })
   }
   getExamCycleSelection(value:any){
-    this.examCycleValue = value
+    this.examCycleValue = value;
+    this.getQuestionPapersByExamCycle();
+  }
+
+  getQuestionPapersByExamCycle() {
+    this.examsList = [];
+    this.baseService.getQuestionPapersByExamCycle(this.examCycleValue).subscribe({
+      next: (res) => {
+        this.questionPapersList = res.responseData.exams;
+        console.log(this.questionPapersList);
+      }
+    })
   }
 
   onUploadQuesPaper(files:any){
-    console.log(files);
     const request ={
-      file: files.name,
+      // file: files.name,
       userId: this.userData?.id,
       examCycleId: this.examCycleValue
     }
@@ -103,48 +89,46 @@ export class ManageQuestionPapersComponent {
         for (let [key, value] of Object.entries(request)) {
           formData.append(`${key}`, `${value}`)
       }
+      formData.append("file", files, files.name);
     this.baseService.uploadQuestionPaper(formData).subscribe({
       next: (response) => {
-        console.log("Download question paper response", response);
+        console.log("Upload question paper response", response);
+        const dialogRef = this.dialog.open(ConformationDialogComponent, {
+          data: {
+            dialogType: 'success',
+            description: ['Question paper uploaded successfully'],
+            buttons: [
+              {
+                btnText: 'Ok',
+                positionClass: 'center',
+                btnClass: 'btn-full',
+                response: true,
+                // click:this.router.navigateByUrl('/manage-result/institute'),
+  
+              },
+            ],
+          },
+          width: '700px',
+          height: '400px',
+          maxWidth: '90vw',
+          maxHeight: '90vh'
+        })
+        dialogRef.afterClosed().subscribe(res => {
+          // call API to get question paper details;
+          this.getQuestionPapersByExamCycle();
+        })
       },
       error: (error) => {
-        console.log("Download question paper error", error);
+        console.log("Upload question paper error", error);
       }
     });
     // if(response.status === 200){
-          const dialogRef = this.dialog.open(ConformationDialogComponent, {
-            data: {
-              dialogType: 'success',
-              description: ['Internal marks uploaded successfully'],
-              buttons: [
-                {
-                  btnText: 'Ok',
-                  positionClass: 'center',
-                  btnClass: 'btn-full',
-                  response: true,
-                  // click:this.router.navigateByUrl('/manage-result/institute'),
-    
-                },
-              ],
-            },
-            width: '700px',
-            height: '400px',
-            maxWidth: '90vw',
-            maxHeight: '90vh'
-          })
-          dialogRef.afterClosed().subscribe(files => {
-            if (files) {
-            //  this.router.navigateByUrl('/manage-result/institute')
-            // console.log("hello")
-            // console.log(selectedFile)
-            }
-          })
         // }
       }
     
 
-  downloadQuestionPaper(questionPaperId: any) {
-    this.baseService.downloadQuestionPaper(questionPaperId).subscribe({
+  downloadQuestionPaper(questionPaper: any) {
+    this.baseService.downloadQuestionPaper(questionPaper.id).subscribe({
       next: (response) => {
         console.log("Download question paper response", response);
       },
@@ -154,14 +138,45 @@ export class ManageQuestionPapersComponent {
     });
   }
 
-  viewQuestionPapers(questionPaperId: any) {
-    console.log(questionPaperId);
-    console.log("viewQuestionPaper questionPaperId",questionPaperId)
-    this.baseService.getQuestionPaperPreviewUrl(questionPaperId).subscribe({
+  deleteQuestionPaper(questionPaper: any) {
+    this.baseService.deleteQuestionPaper(questionPaper.id).subscribe({
       next: (response) => {
-        console.log("question paper preview url response", response);
+        const dialogRef = this.dialog.open(ConformationDialogComponent, {
+          data: {
+            dialogType: 'success',
+            description: [response.responseData],
+            buttons: [
+              {
+                btnText: 'Ok',
+                positionClass: 'center',
+                btnClass: 'btn-full',
+                response: true,
+  
+              },
+            ],
+          },
+          width: '700px',
+          height: '400px',
+          maxWidth: '90vw',
+          maxHeight: '90vh'
+        })
+        dialogRef.afterClosed().subscribe(res => {
+          this.getQuestionPapersByExamCycle();
+        })
       },
       error: (error) => {
+      }
+    });
+  }
+
+  viewQuestionPapers(questionPaper: any) {
+    this.baseService.getQuestionPaperPreviewUrl(questionPaper?.id).subscribe({
+      next: (response) => {
+        console.log("question paper preview url response", response);
+        this.previewURL = response.responseData;
+      },
+      error: (error) => {
+        this.previewURL = "";
         console.log("question paper preview url error", error);
       }
     });

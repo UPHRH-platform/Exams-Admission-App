@@ -1,5 +1,5 @@
 <div>
-    <h2 class="hallticket-details-header">{{hallTicketDetails?.examCycle?.name|| "-" }}</h2>
+    <h2 class="hallticket-details-header">{{studentDetails?.examCyclename || "-" }}</h2>
     <div>
         <div class="details-row ">
             <div class="w-full">
@@ -7,7 +7,7 @@
                     <span>First name</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.firstName|| "-" }}</span>
+                    <span>{{studentDetails?.firstName|| "-" }}</span>
                 </div>
             </div>
             <div>
@@ -15,7 +15,7 @@
                     <span>Last name</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.lastName|| "-" }}</span>
+                    <span>{{studentDetails?.lastName|| "-" }}</span>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                     <span>Roll Number</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.studentEnrollmentNumber || "-" }}  </span>
+                    <span>{{studentDetails?.studentEnrollmentNumber || "-" }}  </span>
                 </div>
             </div>
             <div>
@@ -33,7 +33,7 @@
                     <span>DOB</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.dob|| "-" }}</span>
+                    <span>{{studentDetails?.dob|| "-" }}</span>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     <span>Course name</span>
                 </div>
                 <div class="value">
-                    <span>{{hallTicketDetails?.courseName|| "-" }}</span>
+                    <span>{{studentDetails?.courseName|| "-" }}</span>
                 </div>
             </div>
             <div>
@@ -51,7 +51,7 @@
                     <span>Course Year</span>
                 </div>
                 <div class="value value-right">
-                    <span>{{hallTicketDetails?.courseYear|| "-" }}</span>
+                    <span>{{studentDetails?.courseYear|| "-" }}</span>
                 </div>
             </div>
         </div>

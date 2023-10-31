@@ -58,14 +58,15 @@ export class ManageExamCycleListComponent {
     this.isDataLoading = true;
   this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
+      console.log("res =>", res);
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
-      this.examCycleData.map((obj, index) => {
+      this.examCycleData.map((obj) => {
         obj.courseName = obj.course?.courseName;
-      })
+      });
     },
     error: (error: HttpErrorResponse) => {
-      console.log(error);
+      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
       this.isDataLoading = false;
     }
   })
@@ -170,6 +171,7 @@ export class ManageExamCycleListComponent {
           next: (res) => {
             this.isDataLoading = false;
             this.toastrService.showToastr('Exam cycle deleted successfully', 'Success', 'success', '');
+            this.getExamCycleData()
           },
           error: (err: HttpErrorResponse) => {
             console.log("Entered error loop");

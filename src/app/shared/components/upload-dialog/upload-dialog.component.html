@@ -4,8 +4,8 @@
   </h1>
   <div class="inner-container">
     <form [formGroup]="uploadForm">
-    <div class="file-upload">
       <ng-container *ngIf="data.dateSelect == 'dateSelect'">
+      <div class="file-upload mb3">
         <div style="display: flex; flex-direction: column; row-gap: 4px">
           <span class="lable">{{ data.labelOne }}</span>
         </div>
@@ -21,10 +21,10 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #dispatchDate  (selectedChanged)="onDate($event)"></mat-datepicker>
         </mat-form-field>
-      </ng-container>
-    </div>
-    <div class="file-upload">
-      <ng-container *ngIf="data.select">
+      </div>
+    </ng-container>
+    <ng-container *ngIf="data.select">
+      <div class="file-upload mb3">
         <div style="display: flex; flex-direction: column; row-gap: 4px">
           <span class="lable">{{ data.labelOne }}</span>
         </div>
@@ -39,8 +39,8 @@
             </ng-container>
           </mat-select>
         </mat-form-field>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
     </form>
 
     <!-- </ng-container> -->
@@ -50,7 +50,6 @@
           display: flex;
           flex-direction: column;
           row-gap: 4px;
-          margin-top: 32px;
         "
       >
         <span class="lable">{{ data.labelTwo }}</span>
@@ -58,7 +57,7 @@
           <div *ngIf="files.length > 0" class="file-container">
             <span class="desc-section">{{files[0].name}}</span> <!-- File name will come  -->
             <ng-container *ngIf="!data.hidePreview">
-              <a href="" style="color: #045DAD;">Preview</a> <!-- Preview will only work when file.length -->
+              <a style="color: #045DAD;">Preview</a> <!-- Preview will only work when file.length -->
             </ng-container>
           </div>
         </div>
@@ -88,10 +87,9 @@
             id="fileUpload1"
             type="file"
             style="display: none"
-            enctype="multipart/form-data"
             (change)="changeListener($event, btn)"
             multiple="true"
-            accept=".csv"
+            [accept]="dialogDetails.acceptFiles"
           />
         </div>
       </ng-container>

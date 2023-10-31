@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
+// import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
 import { BaseService } from 'src/app/service/base.service';
 import { mergeMap, of } from 'rxjs';
+// import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
 
 interface Course {
@@ -88,266 +91,28 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       },
     },{
       header: '',
-      columnDef: 'viewProof',
+      columnDef: 'downloadProof',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['viewProof']}`,
+      cell: (element: Record<string, any>) => `${element['downloadProof']}`,
       cellStyle: {
-        'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
+        'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
       },
       isAction: true,
       showDeleteIcon: false,
     }
   ]
 
-  instituteTableData = [
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Pending',
-      viewProof: '-',
-      classes: {
-        viewProof: ['color-blue'],
-        dispatchStatus: ['color-blue'],
-      }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-    {
-      instituteName: 'NEW COLLEGE OF NURSING',
-      instituteId: '123',
-      exam: 'Exam 1',
-      dispatchDate: '29-06-2023',
-      dispatchStatus: 'Dispatched',
-      viewProof: 'View proof',
-      classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: ['color-green'],
-          }
-    },
-  ]
+  instituteTableData = []
   
-  examCycleControl = new FormControl('');
-  examControl = new FormControl('');
+  examCycleControl = new FormControl();
+  examControl = new FormControl();
 
   // searcControl = '';
   // searchKey = ''
   showInstitutesTable = true
+
+  pdfUrl: any
+  downloadPdf = false;
 
   breadcrumbItems = [
     { label: 'Manage Track Dispatches', url: '' },
@@ -357,6 +122,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
+    private toastrService: ToastrServiceService
   ) {}
 
   ngOnInit(): void {
@@ -368,33 +134,51 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   }
 
   getExamCycles() {
-    this.baseService.getExamCycles()
-      .subscribe((examCucles: any) => {
-        this.examCycleList = examCucles.examCyclesList;
+    this.baseService.getExamCycleList$()
+    .pipe(mergeMap((res: any) => {
+      return this.baseService.formatExamCyclesForDropdown(res.responseData)
+    }))
+      .subscribe({
+        next: (examCycles: any) => {
+          this.examCycleList = examCycles.examCyclesList;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.showToastr(err, 'Error', 'error', '')
+        }
       })
   }
 
   getExams(examCycleId: number) {
     this.courses = []
-    this.baseService.getExamsListByExamCycleId(examCycleId)
-      .subscribe((result: any) => {
-        this.courses = result.examsList
+    this.examControl.reset()
+    this.baseService.getExamsByExamCycleId(examCycleId)
+    .pipe(mergeMap((res: any) => {
+      return this.baseService.formateExams(res.responseData)
+    }))
+      .subscribe({
+        next: (result: any) => {
+          this.courses = result.examsList
+        },
+        error: (err) => {
+          this.toastrService.showToastr(err, 'Error', 'error', '')
+        }
       })
   }
 
   getDispatches(examId: number) {
     if (this.examCycleControl.value && examId) {
-      const formBody = {
-        examCycleId: this.examCycleControl.value,
-        examId: examId,
-      }
-      this.baseService.getDispatchesList$(formBody)
-        .pipe((response: any) => {
+      this.baseService.getDispatchesAllInstitutesList$(this.examCycleControl.value, examId)
+        .pipe(mergeMap((response: any) => {
           return this.formateDispatches(response?.responseData)
-        })
-        .subscribe((res: any) => {
-          if (res.dispatchesLsit && res.dispatchesLsit.length > 0) { // remove if when api working
-            this.instituteTableData = res.dispatchesLsit
+        }))
+        .subscribe({
+          next: (res: any) => {
+            if (res.dispatchesLsit && res.dispatchesLsit.length > 0) { // remove if when api working
+              this.instituteTableData = res.dispatchesLsit
+            }
+          },
+          error: (err) => {
+            this.toastrService.showToastr(err, 'Error', 'error', '')
           }
         })
     }
@@ -409,15 +193,18 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     if (dispatches && dispatches.length) {
       dispatches.forEach((element: any) => {
         const formatedDispatch = {
-          instituteName: element,
-          instituteId: element,
-          exam: element,
-          dispatchDate: element,
-          dispatchStatus: element,
-          viewProof: element,
+          instituteName: element.instituteName,
+          instituteId: element.instituteId,
+          exam: element.examName,
+          dispatchDate: element.updatedDate,
+          dispatchStatus: element.proofUploaded ? 'Dispatched' : 'Pending',
+          downloadProof: element.proofUploaded ? 'Download proof' : '-',
+          // viewProof: element.proofUploaded ? 'View proof' : '-',
+          dispatchProofFileLocation: element.dispatchProofFileLocation,
           classes: {
-            viewProof: ['color-blue'],
-            dispatchStatus: element.dispatchStatus === 'Pending' ? ['color-blue'] : ['color-green'],
+            // viewProof: ['color-blue'],
+            downloadProof: ['color-blue'],
+            dispatchStatus: element.proofUploaded ? ['color-green'] : ['color-blue'],
           }
         }
 
@@ -427,34 +214,84 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     return of(result);
   }
 
-  //#region (view proof)
-  viewProof(event: any) {
-    const dispatchId = event.row.id
-    this.baseService.getDispatchesViewProof$(dispatchId)
-    .subscribe((res: any) => {
-      const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
+  downloadProof(event: any) {
+    const fileLocation = event.row.dispatchProofFileLocation;
+    this.baseService.downloadPdf$(fileLocation)
+    .subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = event.row.instituteName + '_' + event.row.exam + '_dispatch_proof.pdf';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      window.URL.revokeObjectURL(url);
+      this.dialog.open(ConformationDialogComponent, {
         data: {
-          documentLink: res.responseData,
+          dialogType: 'success',
+          description: ['Dispatch proof downloaded successfully'],
           buttons: [
             {
-              btnText: 'Cancel',
-              positionClass: 'left',
-              btnClass: 'btn-outline-gray',
-              type: 'close'
-            }
+              btnText: 'Ok',
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
           ],
         },
         width: '700px',
+        height: '400px',
         maxWidth: '90vw',
         maxHeight: '90vh'
       })
-  
-      dialogRef.afterClosed().subscribe((response: any) => {
-        if (response) {
-        }
-      })
-    })
+    });
+
   }
+
+  //#region (view proof)
+  // viewProof(event: any) {
+  //   if (event.row.dispatchProofFileLocation && event.row.viewProof === 'View proof') {
+  //     this.dialog.open(ViewProofModalAdminComponent, {
+  //       data: {
+  //         documentLink: event.row.dispatchProofFileLocation,
+  //         buttons: [
+  //           {
+  //             btnText: 'Ok',
+  //             positionClass: 'left',
+  //             btnClass: 'btn-outline-gray',
+  //             type: 'close'
+  //           }
+  //         ],
+  //       },
+  //       width: '700px',
+  //       maxWidth: '90vw',
+  //       maxHeight: '90vh'
+  //     })
+  //     // this.baseService.getDispatchesViewProof$(dispatchId)
+  //     // .subscribe((res: any) => {
+  //     //   const dialogRef = this.dialog.open(ViewProofModalAdminComponent, {
+  //     //     data: {
+  //     //       documentLink: res.responseData,
+  //     //       buttons: [
+  //     //         {
+  //     //           btnText: 'Cancel',
+  //     //           positionClass: 'left',
+  //     //           btnClass: 'btn-outline-gray',
+  //     //           type: 'close'
+  //     //         }
+  //     //       ],
+  //     //     },
+  //     //     width: '700px',
+  //     //     maxWidth: '90vw',
+  //     //     maxHeight: '90vh'
+  //     //   })
+    
+  //     //   dialogRef.afterClosed().subscribe((response: any) => {
+  //     //     if (response) {
+  //     //     }
+  //     //   })
+  //     // })
+  //   }
+  // }
   //#endregion
 
 }

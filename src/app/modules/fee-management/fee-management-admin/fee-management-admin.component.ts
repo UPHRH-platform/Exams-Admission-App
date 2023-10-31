@@ -44,17 +44,19 @@ export class FeeManagementAdminComponent implements OnInit {
 
   constructor(
     private baseService : BaseService
-  ) {this.instituteTableData()}
+  ) {}
+
+  examCycleFormControl = new FormControl();
 
   ngOnInit(): void {
     this.intialisation()
+    this.getExamCycles();
   }
 
   intialisation() {
     // this.getExamCycles()
     // this.getInstitutesData()
     this.initializeColumns();
-    this.instituteTableData();
     this.initializeStudentColumns();
     // this.studentExamsTableData();
   }
@@ -114,7 +116,7 @@ export class FeeManagementAdminComponent implements OnInit {
     },{
       header: '',
       columnDef: 'viewList',
-      cell: (element: Record<string, any>) => `${element['viewList']}`,
+      cell: (element: Record<string, any>) => `View List`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
       },
@@ -123,19 +125,17 @@ export class FeeManagementAdminComponent implements OnInit {
     },
     ]
 }
-  instituteTableData() {
+  instituteTableData(examCycleId: number) {
     this.isDataLoading = true;
-    this.baseService.getInstituteFeeTableData$()
+    this.baseService.getFeeTableData$(examCycleId)
     .pipe((mergeMap((response: any) => {
-      return this.formateInstituteTableData(response)
+      return this.formateInstituteTableData(response.responseData)
     })))
     .subscribe({
       next:(res:any)=>{
-        this.instituteData = res.formatedInstituteTableDataList
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
-
+       console.log(res.formatedInstituteTableDataList)
+       this.instituteData = res.formatedInstituteTableDataList
+       this.isDataLoading = false;
       },
       error: (error: HttpErrorResponse) => {
         this.isDataLoading = false;
@@ -147,21 +147,26 @@ export class FeeManagementAdminComponent implements OnInit {
   }
 
   formateInstituteTableData(response: any) {
-    const formatedInstituteTableData: {
-      formatedInstituteTableDataList: any[]
-    } = {
+    const formatedInstituteTableData:any = {
       formatedInstituteTableDataList: []
-    }
+    } 
+  /*   = {
+      formatedInstituteTableDataList: []examCycle
+: 
+    } */
 
     if (response) {
-      response.forEach((instituteData: any) => {
+      console.log(response.examFees)
+let r = response.examFees
+      r.forEach((instituteData: any) => {
+        console.log(instituteData)
         const formatedInstitutesData = {
-          instituteName: instituteData.instituteName,
-          courseName: instituteData.courseName,
-          instituteCode: instituteData.instituteCode,
-          registerStudentsCount: instituteData.registerStudentsCount,
-          paidStudentsCount: instituteData.paidStudentsCount,
-          totalFeePaid: instituteData.totalFeePaid,
+          instituteName: instituteData.institute.instituteName,
+          courseName: instituteData.examCycle.course.courseName,
+          instituteCode: instituteData.institute.instituteCode,
+          registerStudentsCount: instituteData.totalStudentsCount,
+          paidStudentsCount: instituteData.totalPaidCount,
+          totalFeePaid: instituteData.totalPaidAmount,
           viewList: instituteData.viewList,
           classes: {
             viewList: ['cursor-pointer', 'color-blue']
@@ -232,18 +237,19 @@ export class FeeManagementAdminComponent implements OnInit {
     },
   ]
  }
-  studentExamsTableData(){
+
+ getStudentFeesListForInstitute(){
     this.isDataLoading = true;
-    this.baseService.getStudentFeeTableData$()
+    this.baseService.getStudentFeesListForInstitute$(8,5)
     .pipe(mergeMap((response: any)=> {
-      return this.formateStudentData(response)
+      console.log(response.responseData)
+      return this.formateStudentData(response.responseData)
     }))
     .subscribe({
       next:(res:any)=>{
+        console.log(res)
         this.studentData = res.studentsExamDetailsList;
-        setTimeout(() => {
-          this.isDataLoading = false;
-        }, 1000);
+     
 
       },
       error: (error: HttpErrorResponse) => {
@@ -261,16 +267,16 @@ export class FeeManagementAdminComponent implements OnInit {
     } = {
       studentsExamDetailsList: []
     }
-
     if (response) {
       response.forEach((examDetails: any) => {
+        console.log(examDetails.student)
         const studentExamDetial = {
-          studentName: examDetails.studentName,
-          enrolementNumber: examDetails.enrolementNumber,
-          courseName: examDetails.courseName,
-          exams: examDetails.exams,
-          numberOfExams: examDetails.numberOfExams,
-          fee: examDetails.fee,
+          studentName: examDetails.student.firstName +" "+ examDetails.student.surname,
+          enrolementNumber: examDetails.student.enrollmentNumber || "-",
+          courseName: examDetails.student.course.courseName,
+          exams: examDetails.student.intermediateSubjects,
+          numberOfExams: examDetails.student.intermediateSubjects,
+          fee: examDetails.amount,
           status: examDetails.status,
           classes: {
             status: ['color-green']
@@ -285,14 +291,27 @@ export class FeeManagementAdminComponent implements OnInit {
 
   }
   
- 
-  
+  getSelectedExamcycleId(e: any) {
+    this.getFeeDetailsByExamCycle(e)
+  }
+  getFeeDetailsByExamCycle(e: any) {
+    console.log(e)
+    this.instituteTableData(e);
+  }
 
   getExamCycles() {
-    // this.feeManagementService.getExamCycles()
-    // .subscribe((examCucles: any) => {
-    //   this.examCycleList = examCucles
-    // })
+    this.baseService.getExamCycleList$()
+      .subscribe({
+        next: (res: any) => {
+          this.examCycleList = res.responseData;
+          const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
+          this.examCycleFormControl.setValue(lastIndexSelected.id)
+          this.getFeeDetailsByExamCycle(lastIndexSelected.id)
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        }
+      })
   }
 
   getInstitutesData(searchKey: string = '') {
@@ -313,7 +332,7 @@ export class FeeManagementAdminComponent implements OnInit {
     this.showInstitutesTable = true
   }
 
-  onSelecteInstitute(event: any) {
+  onSelectedInstitute(event: any) {
     if (event) {
       // this.instituteTableData = []
       // this.feeManagementService.getExamsOfInstitute('')
@@ -321,7 +340,7 @@ export class FeeManagementAdminComponent implements OnInit {
       //   this.instituteTableData = exams
       // })
     }
-    this.studentExamsTableData()
+    this.getStudentFeesListForInstitute()
     this.showInstitutesTable = false
 
   }

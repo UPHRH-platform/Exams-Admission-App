@@ -1,55 +1,48 @@
-<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
-  <div class="secondary-container">
-    <mat-label class="title-header"> Fee management </mat-label>
-    <div class="mt3 mb2">
-      <div class="clearfix">
-        <div class="sm-col md-col-6">
-            <div class="mb1">
-              <label class="examCycleLable">Exam cycle</label>
-            </div>
-            <mat-form-field appearance="outline" class="feeManagementForms">
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
+  <mat-label class="title-header"> Fee management </mat-label>
+  <div class="mt3 mb2">
+    <div class="clearfix">
+      <div class="sm-col md-col-6">
+        <!--   <div class="mb1">
+          <label class="examCycleLable">Exam cycle</label>
+        </div>
+          <mat-form-field appearance="outline" class="feeManagementForms">
               <mat-select [formControl]="examCycleControl">
                   <ng-container *ngFor="let examCycle of examCycleList">
                       <mat-option [value]="examCycle.value">{{examCycle.examName}}</mat-option>
                   </ng-container>
                   <mat-option style="display: none;" value="">Select here</mat-option>
               </mat-select>
+          </mat-form-field> -->
+        <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
+          (selectedExamcycleId)="getSelectedExamcycleId($event)">
+        </app-shared-exam-cycle-select>
+      </div>
+      <div class="sm-col md-col-6">
+        <div class="flex right">
+          <mat-form-field appearance="outline" class="feeManagementForms searchField">
+            <mat-icon matPrefix class="search-icon">search</mat-icon>
+            <input matInput [(ngModel)]="searcControl" placeholder="Search">
           </mat-form-field>
-          </div>
-        <div class="sm-col md-col-6">
-          <div class="flex right">
-            <mat-form-field appearance="outline" class="feeManagementForms searchField">
-              <mat-icon matPrefix class="search-icon">search</mat-icon>
-              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
-            </mat-form-field>
-            <button class="search-btn ml2" (click)="search()">Search</button>
-          </div>
+          <button class="search-btn ml2" (click)="search()">Search</button>
         </div>
       </div>
     </div>
-    <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
-      <app-shared-skeleton-loading [isLoading]="isDataLoading">
-      </app-shared-skeleton-loading>
-      <div>
-        <app-shared-table 
-          [tableColumns]="instituteTableHeader" 
-          [tableData]="instituteData" 
-          [isHallTicket]="true" 
-          [removeTbodyColor]="true" 
-          [isPageable]="true" 
-          (cellClickAction)="onSelecteInstitute($event)"
-        ></app-shared-table>
-      </div>
-    </ng-container>
-    <ng-template #istitueExamsFeeDetails>
-     <div>
-        <app-shared-table 
-          [tableColumns]="studentExamsTableHeader" 
-          [tableData]="studentData" 
-          [isHallTicket]="true" 
-          [removeTbodyColor]="true" 
-          [isPageable]="true"
-        ></app-shared-table>
-      </div>
-    </ng-template>
   </div>
+  <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
+    <app-shared-skeleton-loading [isLoading]="isDataLoading">
+    </app-shared-skeleton-loading>
+    <div>
+      <app-shared-table [tableColumns]="instituteTableHeader" [tableData]="instituteData" [isHallTicket]="true"
+        [removeTbodyColor]="true" [isPageable]="true"
+        (cellClickAction)="onSelectedInstitute($event)"></app-shared-table>
+    </div>
+  </ng-container>
+  <ng-template #istitueExamsFeeDetails>
+    <div>
+      <app-shared-table [tableColumns]="studentExamsTableHeader" [tableData]="studentData" [isHallTicket]="true"
+        [removeTbodyColor]="true" [isPageable]="true"></app-shared-table>
+    </div>
+  </ng-template>
+</div>

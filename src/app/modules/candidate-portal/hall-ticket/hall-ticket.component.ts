@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
-import { BaseService } from '../../../service/base.service';
+import { BaseService } from 'src/app/service/base.service';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -12,7 +15,7 @@ export class HallTicketComponent implements OnInit {
 
   //#region (global variables)
 
-  hallTicketDetails: any
+  studentDetails: any
 
   examTableHeader = [
     {
@@ -48,17 +51,22 @@ export class HallTicketComponent implements OnInit {
   ]
 
   examTableData= []
-
+  isDataLoading: boolean = false;
   isHallTicket = true
+  stateData: any | undefined;
   //#endregion
 
   //#region (constructor)
   constructor(
     private router: Router,
+    private authService: AuthServiceService,
     private baseService: BaseService,
-    private authService: AuthServiceService
+    private dialog: MatDialog,
+    private toasterService: ToastrServiceService,
+    private renderer: Renderer2,
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state;
   }
   //#endregion
 
@@ -67,51 +75,83 @@ export class HallTicketComponent implements OnInit {
   }
 
   //#region (intialisation)
+
   intialisation() {
-
-    this.baseService.getHallTicketData$(1).subscribe({
-      next: (res: any) => {
-
-        if (res && res[0]) {
-      
-        this.hallTicketDetails = res[0];
-
-        this.examTableData  = res[0]!.examCycle.exams;
-        }
-
-        
-      },
-      error: (error: any) => {
-        console.log(error.message)
-      }
-    })
- 
+    if (this.stateData) {
+      this.studentDetails = {
+        examCyclename: this.stateData?.data.examCycle.examCyclename,
+        firstName: this.stateData?.data.firstName,
+        lastName: this.stateData?.data.lastName,
+        studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
+        dob: this.stateData?.data.dob,
+        actualDOB: this.stateData?.data.actualDOB,
+        courseName: this.stateData?.data.courseName,
+        courseYear: this.stateData?.data.courseYear,
+      };
+      this.examTableData  =  this.stateData?.data.examCycle.exams;
+    } else {
+      this.router.navigateByUrl('candidate-portal')
+    }
   }
 
-  getHallTicketDetails() {
-    //this.candidatePortalService.getHallTicketDetails()
-    // .pipe(mergeMap((res: any) => {
-    //   return this.formateExamDetails(res)
-    // })).subscribe((examDetails: any)) {
-
-    // }
-  }
-
-  // formateExamDetails(examData: any) {
-  //   let formatedData = examData
-  //   return formatedData;
-  // }
 
   //#endregion
 
   //#region (navigate to modify)
   redirectToModifyHallticket() {
-    this.router.navigateByUrl('/candidate-portal/modify-hallticket')
+    this.router.navigate(['/candidate-portal/modify-hallticket'],{ 
+      state: {
+        studentDetails: this.studentDetails,
+        exams: this.examTableData
+      }
+    })
   }
 
   cancel() {
     this.router.navigateByUrl('/hall-ticket-management')
   }
   //#endregion
+
+  downloadHallTicket(event: boolean) {
+    const studentID = this.authService.getUserRepresentation().attributes.studentId;
+    this.baseService.downloadHallTicket$(this.studentDetails.actualDOB,studentID[0])
+    .subscribe((data: any) => {
+
+      console.log(data)
+      const link = this.renderer.createElement('a');
+      link.setAttribute('target', '_blank');
+      link.setAttribute('href', data.responseData);
+      link.click();
+      link.remove();
+
+      const dialogRef = this.dialog.open(ConformationDialogComponent, {
+        data: {
+          dialogType: 'success',
+          description: ['Hall ticket downloaded successfully'],
+          buttons: [
+            {
+              btnText: 'Ok',
+              positionClass: 'center',
+              btnClass: 'btn-full',
+              response: true
+            },
+          ],
+        },
+        width: '700px',
+        height: '400px',
+        maxWidth: '90vw',
+        maxHeight: '90vh'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+         this.router.navigateByUrl('/candidate-portal')
+        }
+      })
+    },
+     error => {
+      this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+     console.log(error)
+    },)
+  }
 
 }

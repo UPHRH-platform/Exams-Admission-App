@@ -2,37 +2,37 @@
 <div class="secondary-container" id="enrollment">
   <div class="selector">
     <mat-form-field
-      class="exam-form"
+      class="exam-form-enrollment"
       appearance="outline"
       *ngIf="this.loggedInUserRole === 'exams_admin'"
     >
       <mat-label>Select Institute</mat-label>
       <mat-select (selectionChange)="getSelectedInstitute($event)">
         <mat-option *ngFor="let institute of instituteList" [value]="institute.id">
-          {{ institute.name }}
+          {{ institute.instituteCode }} - {{institute.instituteName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="exam-form" appearance="outline">
+    <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label class="label">Select Course</mat-label>
       <mat-select (selectionChange)="getSelectedCourse($event)">
         <mat-option *ngFor="let course of courses" [value]="course.course_id">
-          {{ course.courseName }}
+          {{course.courseCode}} - {{ course.courseName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="exam-form" appearance="outline">
+    <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
       <mat-select (selectionChange)="getSelectedAcademicYear($event)">
-        <mat-option *ngFor="let year of years" [value]="year.value">
-          {{ year.viewValue }}
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
         </mat-option>
       </mat-select>
       </mat-form-field>
   </div>
 <div class="buttons flex" style="justify-content: end;" *ngIf="loggedInUserRole === 'exams_institute'">
     <div >
-      <button class="btn-1">Download List</button>
+      <button class="btn-1" (click)="downLoadStudentList()">Download List</button>
     </div>
     <div>
       <button class="btn-2" (click)="addNewEnrollment()">New Student Enrolment</button>

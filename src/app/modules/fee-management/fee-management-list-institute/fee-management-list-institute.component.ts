@@ -5,6 +5,8 @@ import { LoadingDialogComponent } from '../loading-dialog/loading-dialog.compone
 import { BaseService } from 'src/app/service/base.service';
 import { Tabs } from 'src/app/shared';
 import { mergeMap, of } from 'rxjs';
+import { AuthServiceService } from 'src/app/core/services';
+import { ActivatedRoute } from '@angular/router';
 
 interface Course {
   value: string;
@@ -26,13 +28,13 @@ export class FeeManagementListInstituteComponent implements OnInit {
   // currentTabIndex: number;
 
   courses: Course[] = [
-    {value: 'bsc', viewValue: 'BSc'},
-    {value: 'msc', viewValue: 'MSc'},
+    { value: 'bsc', viewValue: 'BSc' },
+    { value: 'msc', viewValue: 'MSc' },
   ];
   years: Year[] = [
-    {value: 'sem-1', viewValue: '2020'},
-    {value: 'sem-2', viewValue: '2021'},
-    {value: 'sem-3', viewValue: '2022'},
+    { value: 'sem-1', viewValue: '2020' },
+    { value: 'sem-2', viewValue: '2021' },
+    { value: 'sem-3', viewValue: '2022' },
   ];
 
   isHallTicket = true;
@@ -57,28 +59,28 @@ export class FeeManagementListInstituteComponent implements OnInit {
         'background-color': '#0000000a',
         'color': '#00000099'
       },
-    },{
+    }, {
       header: 'Exam',
       columnDef: 'examNames',
       cell: (element: Record<string, any>) => `${element['examNames']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '300px', 'color': '#00000099'
       },
-    },{
+    }, {
       header: 'No. of Exams',
       columnDef: 'noOfExams',
       cell: (element: Record<string, any>) => `${element['noOfExams']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       },
-    },{
+    }, {
       header: 'Fee',
       columnDef: 'fee',
       cell: (element: Record<string, any>) => `${element['fee']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
       },
-    },{
+    }, {
       header: '',
       columnDef: 'status',
       cell: (element: Record<string, any>) => `${element['status']}`,
@@ -88,8 +90,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
     }
   ]
 
-  pendingFeeTableData= [
-  ]
+  pendingFeeTableData = []
 
   paidFeeTableHeader = [
     {
@@ -100,28 +101,28 @@ export class FeeManagementListInstituteComponent implements OnInit {
         'background-color': '#0000000a',
         'color': '#00000099'
       }
-    },{
+    }, {
       header: 'Exam',
       columnDef: 'examNames',
       cell: (element: Record<string, any>) => `${element['examNames']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '300px', 'color': '#00000099'
       }
-    },{
+    }, {
       header: 'No. of Exams',
       columnDef: 'noOfExams',
       cell: (element: Record<string, any>) => `${element['noOfExams']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
-    },{
+    }, {
       header: 'Fee',
       columnDef: 'fee',
       cell: (element: Record<string, any>) => `${element['fee']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
       }
-    },{
+    }, {
       header: '',
       columnDef: 'status',
       cell: (element: Record<string, any>) => `${element['status']}`,
@@ -131,19 +132,25 @@ export class FeeManagementListInstituteComponent implements OnInit {
     },
   ]
 
-  paidFeeTableData= [
+  paidFeeTableData = [
   ]
 
   filterForm: FormGroup
   tabHeader = 'Pending'
 
-  payingExams:any = []
+  payingExams: any = []
   breadcrumbItems = [
     { label: 'Fee Management', url: '' },
   ]
+  examCycleId: string;
+  isDataLoading: boolean;
+  loggedInUserId: any;
+  instituteId: any;
   constructor(
     private dialog: MatDialog,
-    private baseService: BaseService
+    private baseService: BaseService,
+    private authService: AuthServiceService,
+    private route: ActivatedRoute
   ) {
     this.filterForm = new FormGroup({
       search: new FormControl(''),
@@ -160,132 +167,89 @@ export class FeeManagementListInstituteComponent implements OnInit {
   intialisation() {
     // this.initializeTabs()
     // this.initializeTableColumns()
-    this.getStudentsFeeDetails()
+
+    this.examCycleId = this?.route?.snapshot?.paramMap?.get('id') || '0';
+    this.getInstituteDetailsByUser()
   }
 
-  getStudentsFeeDetails() {
-    this.baseService.getStudentFeeTableData$()
-    .pipe((mergeMap((response: any) => {
-      return this.formateStudentFeeDetails(response);
-    })))
-    .subscribe((feeDetails: any) => {
-      this.paidFeeTableData = feeDetails.paidFeeDetails
-      this.pendingFeeTableData = feeDetails.pendingFeeDetails
+  getInstituteDetailsByUser() {
+    this.loggedInUserId = this.authService.getUserRepresentation().id;
+    this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
+      next: (res) => {
+        if (this.examCycleId !== undefined) {
+          this.getRegdStudents(res.responseData[0].id);
+          this.instituteId = res.responseData[0].id;
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      }
     })
   }
 
-  formateStudentFeeDetails(response: any) {
-    const studentsFeeDetails: {
-      // studentFeeDetails: any[],
-      pendingFeeDetails: any[],
-      paidFeeDetails: any[]
-    } = {
-      // studentFeeDetails: [],
-      pendingFeeDetails: [],
-      paidFeeDetails: []
-    }
+  getRegdStudents(instituteId: any) {
+    this.isDataLoading = true;
+    this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId)
+      .pipe((mergeMap((response: any) => {
+        this.isDataLoading = false;
+        return this.formateStudentFeeDetails(response.responseData);
+      })))
+      .subscribe((feeDetails: any) => {
+        this.paidFeeTableData = feeDetails.paidFeeDetails
+        this.pendingFeeTableData = feeDetails.pendingFeeDetails
+      })
 
+  }
+
+  formateStudentFeeDetails(response: any) {
+    let studentsFeeDetails: any = {
+      paidFeeDetails: [],
+      pendingFeeDetails: []
+    };
+    let foramtedFeeDetails: any
     if (response) {
       response.forEach((feeDetails: any) => {
-        let foramtedFeeDetails: any = {
-          studentName: feeDetails.studentName,
-          examNames: feeDetails.exams,
-          noOfExams: feeDetails.numberOfExams,
-          fee: feeDetails.fee,
-          status: feeDetails.status,
+        let examsNameArray = [];
+        let examsIdArray = []
+        let TotalFee = 0
+        let feePaidStatus: boolean = false;
+        for (let exam of feeDetails.exams) {
+          examsNameArray.push(exam.name)
+          examsIdArray.push(exam.id)
+          TotalFee = TotalFee + exam.amount
+          feePaidStatus = exam.feesPaid
         }
-        switch (feeDetails.status) {
-          case 'Paid': {
+        foramtedFeeDetails = {
+          studentName: feeDetails.firstName + " " + feeDetails.surname,
+          examNames: examsNameArray,
+          examsId: examsIdArray,
+          noOfExams: examsNameArray.length,
+          fee: TotalFee,
+          studentId: feeDetails.id,
+
+          status: feePaidStatus ? "Paid" : "Pending",
+        }
+        switch (feePaidStatus) {
+          case true: {
             foramtedFeeDetails['classes'] = {
               status: ['color-green'],
             }
             studentsFeeDetails.paidFeeDetails.push(foramtedFeeDetails)
             break;
           }
-          case 'Pending': {
+          case false: {
             foramtedFeeDetails['classes'] = {
               status: ['color-blue'],
             }
             studentsFeeDetails.pendingFeeDetails.push(foramtedFeeDetails)
             break;
           }
-          // studentsFeeDetails.studentFeeDetails.push(foramtedFeeDetails)
         }
       })
-    }
 
+    }
     return of(studentsFeeDetails)
   }
-
-  // initializeTabs() {
-  //   this.tabs = Tabs['Fee_Management'];
-  // }
-
-  // initializeTableColumns() {
-  //   this.tableColumns = []
-  //   const tableColumns = [
-  //     {
-  //       header: 'Full name',
-  //       columnDef: 'studentName',
-  //       cell: (element: Record<string, any>) => `${element['studentName']}`,
-  //       cellStyle: {
-  //         'background-color': '#0000000a',
-  //         'color': '#00000099'
-  //       }
-  //     },{
-  //       header: 'Exam',
-  //       columnDef: 'examNames',
-  //       cell: (element: Record<string, any>) => `${element['examNames']}`,
-  //       cellStyle: {
-  //         'background-color': '#0000000a', 'width': '300px', 'color': '#00000099'
-  //       }
-  //     },{
-  //       header: 'No. of Exams',
-  //       columnDef: 'noOfExams',
-  //       cell: (element: Record<string, any>) => `${element['noOfExams']}`,
-  //       cellStyle: {
-  //         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
-  //       }
-  //     },{
-  //       header: 'Fee',
-  //       columnDef: 'fee',
-  //       cell: (element: Record<string, any>) => `${element['fee']}`,
-  //       cellStyle: {
-  //         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
-  //       }
-  //     },{
-  //       header: '',
-  //       columnDef: 'status',
-  //       cell: (element: Record<string, any>) => `${element['status']}`,
-  //       cellStyle: {
-  //         'background-color': '#0000000a', 'width': '130px', 'color': '#00000099'
-  //       }
-  //     },
-  //   ]
-
-  //   switch (this.currentTabIndex) {
-  //     case 0: {
-  //       const selectOption = {
-  //         header: '',
-  //         columnDef: 'select',
-  //         isSortable: false,
-  //         isCheckBox: true,
-  //         cell: (element: Record<string, any>) => ``,
-  //         cellStyle: {
-  //           'background-color': '#0000000a', 'width': '30px', 'color': '#00000099'
-  //         },
-  //       }
-  //       tableColumns.unshift(selectOption);
-  //       break;
-  //     }
-  //     case 1: {
-  //       break;
-  //     }
-  //   }
-
-  //   this.tableColumns = tableColumns
-  // }
-
 
   getExamFeeDetails() {
     // this.baseService.getExamFeeDetails('')
@@ -301,47 +265,42 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   payFee() {
-    const postData = {
-      endpoint: "https://eazypayuat.icicibank.com/EazyPG",
-      returnUrl: "https://payment.uphrh.in/api/v1/user/payment",
-      paymode: "9",
-      secret: "",
-      merchantId: "600547",
-      mandatoryFields: {
-        referenceNo: '', //generate random number (this.baseService.generate_uuidv4())
-        submerchantId: "45",
-        transactionAmount: this.filterForm.get('amount')?.value,
-        invoiceId: "x1",
-        invoiceDate: "x",
-        invoiceTime: "x",
-        merchantId: "x",
-        payerType: "registration", //module you create
-        payerId: 'instituteId',
-        transactionId: "x",
-        transactionDate: "x",
-        transactionTime: "x",
-        transactionStatus: "x",
-        refundId: "x",
-        refundDate: "x",
-        refundTime: "x",
-        refundStatus: "x",
-      },
-      optionalFields: "registration", //module you create
-    };
-    // this.feeManagementService.getPaymentUrl(postData)
-    // .subscribe((result: any) => {
-    //   window.open(result.url, "_blank");
-    // })
+    let examDetails: any = []
 
-    // const dialogRef = this.dialog.open(LoadingDialogComponent, {
-    //   data: {
-    //     description: 'Please wait a while. you are redirecting to payment page'
-    //   },
-    //   width: '800px',
-    //   height: '500px',
-    //   maxWidth: '90vw',
-    //   maxHeight: '90vh'
-    // })
+    if (this.payingExams) {
+
+      for (let item of this.payingExams) {
+        let examArrayObject = []
+        for (let examid of item.examsId) {
+          examArrayObject.push({
+            id: examid,
+            fee: item.fee
+          })
+        }
+
+        examDetails.push({
+          studentId: item.studentId,
+          exam: examArrayObject
+
+        })
+      }
+    }
+    const reqBody: any = {
+      "examCycleId": this.examCycleId,
+      "instituteId": this.instituteId,
+      "studentExam": examDetails,
+      "amount": this.filterForm.value.amount,
+      "payerType": "EXAM",
+      "createdBy": this.loggedInUserId
+    }
+
+    this.baseService.payFees(reqBody)
+      .subscribe((result: any) => {
+        window.open(result.responseData.redirectUrl, "_blank");
+        //  window.location.href=result.responseData.redirectUrl;
+      })
+
+
   }
 
   onSelectedRows(event: any) {

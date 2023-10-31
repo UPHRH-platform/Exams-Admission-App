@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BaseService } from 'src/app/service/base.service';
 
 
 @Component({
@@ -22,8 +23,10 @@ export class UploadDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<UploadDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private baseService: BaseService
   ) {
-    this.dialogDetails = data
+    this.dialogDetails = data;
+    this.dialogDetails.acceptFiles = data.acceptFiles ? data.acceptFiles : '.csv';
     this.uploadForm = new FormGroup({
       dispatchDate: new FormControl(),
       idType: new FormControl()
@@ -35,28 +38,20 @@ export class UploadDialogComponent implements OnInit {
   }
   
 
-  formatBytes(bytes: any, decimals = 2) {
-   if (!+bytes) return '0 Bytes';
-   const k = 1024;
-   const dm = decimals < 0 ? 0 : decimals;
-   const sizes = ['Bytes', 'KB', 'MB'];
-   const i = Math.floor(Math.log(bytes) / Math.log(k));
-   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
- }
 
  public changeListener(event: any, btn: any){
    this.fileUploadError = '';
      let selectedFile = event.target.files[0];
      const extension = selectedFile.name.split('.').pop();
      const fileSize = selectedFile.size;
-     const allowedExtensions = ['csv'];
+     const allowedExtensions = this.dialogDetails.acceptFiles;
      if (allowedExtensions.includes(extension)) {
        // validate file size to be less than 2mb if the file has a valid extension
        if (fileSize < 2000000) {
          if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
            this.files.push(selectedFile);
            this.listOfFiles.push(
-             selectedFile.name.concat(this.formatBytes(selectedFile.size))
+             selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
            );
          } else {
            console.log('file already exists');
@@ -65,7 +60,7 @@ export class UploadDialogComponent implements OnInit {
          this.fileUploadError = 'Please upload files with size less than 2MB';
        }
      } else {
-       this.fileUploadError = `Please upload ${allowedExtensions.join(', ')} files`;
+       this.fileUploadError = `Please upload ${allowedExtensions} files`;
      }
      if (this.files.length > 0) {
       btn.hideButton = true
