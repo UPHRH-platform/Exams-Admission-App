@@ -174,7 +174,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
   getInstituteDetailsByUser() {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
-    console.log(this.loggedInUserId)
     this.baseService.getInstituteDetailsByUser(this.loggedInUserId).subscribe({
       next: (res) => {
         if (this.examCycleId !== undefined) {
@@ -193,7 +192,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
     this.baseService.getStudentRegistrationByExamCycleAndInstId(this.examCycleId, instituteId)
       .pipe((mergeMap((response: any) => {
         this.isDataLoading = false;
-        console.log(response.responseData)
         return this.formateStudentFeeDetails(response.responseData);
       })))
       .subscribe((feeDetails: any) => {
@@ -209,58 +207,37 @@ export class FeeManagementListInstituteComponent implements OnInit {
       pendingFeeDetails: []
     };
     let foramtedFeeDetails: any
-    response = [
-      {
-        firstName: 'mansur 2', surname: 'tom',
-        exams: [
-          { id: 8, name: 'Mathematics 101' },
-          { id: 9, name: 'Mathematics 10' }
-        ],
-        fee: 1000,
-        id: null,
-        status: "Pending",
-        enrollmentNumber: 'EN202312', courseName: 'Mathematics', session: '2023-2024'
-      },
-      {
-        firstName: 'mansur',
-        exams: [
-          { id: 18, name: 'Mathematics 101' },
-          { id: 91, name: 'Mathematics 10000' }
-        ],
-        fee: 1000,
-        id: null,
-        status: "Paid",
-        surname: 'tom', enrollmentNumber: 'EN202311', courseName: 'Mathematics', session: '2023-2024'
-      }
-    ]
     if (response) {
       response.forEach((feeDetails: any) => {
         let examsNameArray = [];
         let examsIdArray = []
+        let TotalFee = 0
+        let feePaidStatus: boolean = false;
         for (let exam of feeDetails.exams) {
           examsNameArray.push(exam.name)
           examsIdArray.push(exam.id)
-
+          TotalFee = TotalFee + exam.amount
+          feePaidStatus = exam.feesPaid
         }
         foramtedFeeDetails = {
-          studentName: feeDetails.firstName,
+          studentName: feeDetails.firstName + " " + feeDetails.surname,
           examNames: examsNameArray,
           examsId: examsIdArray,
           noOfExams: examsNameArray.length,
-          fee: feeDetails.fee,
+          fee: TotalFee,
           studentId: feeDetails.id,
 
-          status: feeDetails.status,
+          status: feePaidStatus ? "Paid" : "Pending",
         }
-        switch (feeDetails.status) {
-          case 'Paid': {
+        switch (feePaidStatus) {
+          case true: {
             foramtedFeeDetails['classes'] = {
               status: ['color-green'],
             }
             studentsFeeDetails.paidFeeDetails.push(foramtedFeeDetails)
             break;
           }
-          case 'Pending': {
+          case false: {
             foramtedFeeDetails['classes'] = {
               status: ['color-blue'],
             }
@@ -288,7 +265,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   payFee() {
-    console.log(this.payingExams)
     let examDetails: any = []
 
     if (this.payingExams) {
@@ -298,7 +274,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
         for (let examid of item.examsId) {
           examArrayObject.push({
             id: examid,
-            fee:''
+            fee: item.fee
           })
         }
 
@@ -309,7 +285,6 @@ export class FeeManagementListInstituteComponent implements OnInit {
         })
       }
     }
-console.log(examDetails)
     const reqBody: any = {
       "examCycleId": this.examCycleId,
       "instituteId": this.instituteId,
@@ -318,13 +293,12 @@ console.log(examDetails)
       "payerType": "EXAM",
       "createdBy": this.loggedInUserId
     }
-    
- /*        this.baseService.payFees(reqBody)
-          .subscribe((result: any) => {
-            console.log(result.responseData.redirectUrl)
-            window.open(result.responseData.redirectUrl, "_blank");
-            //  window.location.href=result.responseData.redirectUrl;
-          }) */
+
+    this.baseService.payFees(reqBody)
+      .subscribe((result: any) => {
+        window.open(result.responseData.redirectUrl, "_blank");
+        //  window.location.href=result.responseData.redirectUrl;
+      })
 
 
   }
