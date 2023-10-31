@@ -397,56 +397,13 @@ export class BaseService extends HttpService {
     return this.hallTktData.asObservable();
   } */
 
-  getHallTicketData$(studentId: string, examCycleId: number) {
-      // const requestParam: RequestParam = {
-      //   url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
-      //   data: {},
-      // }
-      // return this.get(requestParam);
+  getHallTicketData$(studentId: number, examCycleId: number) {
+       const requestParam: RequestParam = {
+         url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DETAILS+`?studentId=${studentId}&examCycleId=${examCycleId}`,
+         data: {},
+       }
+       return this.get(requestParam);
 
-      return of({
-        responseData: {
-            "firstName": "jay",
-            "lastName": "singh",
-            "courseYear": '2013',
-            "courseName": "Mechanical Engineering",
-            "hallTicketStatus": "PENDING",
-            "examCycle": {
-                "examCyclename": "gjhg",
-                "exams": [
-                    {
-                        "examDate": "2023-08-23",
-                        "createdBy": null,
-                        "examName": "asdfd sdf",
-                        "isResultsPublished": false,
-                        "obsolete": 0,
-                        "startTime": "09:00:00",
-                        "modifiedBy": null,
-                        "endTime": "12:00:00"
-                    },
-                    {
-                        "examDate": "2023-08-26",
-                        "createdBy": null,
-                        "examName": "asdf",
-                        "isResultsPublished": false,
-                        "obsolete": 0,
-                        "startTime": "14:00:00",
-                        "modifiedBy": null,
-                        "endTime": "17:00:00"
-                    }
-                ],
-                "endDate": "2023-06-11",
-                "createdBy": null,
-                "obsolete": 0,
-                "modifiedBy": null,
-                "id": 64,
-                "startDate": "2023-06-02",
-                "status": "DRAFT"
-            },
-            "enrollmentNumber": "EN2023 ABC36",
-            "dateOfBirth": "1995-12-15"
-        }
-      })
   }
 
   getStudentResults$(enrolmentNumber: string, dateOfBirth: string, examCycleID: string) {
@@ -532,9 +489,9 @@ export class BaseService extends HttpService {
   }
 
 
-  downloadHallTicket(){
+  downloadHallTicket$(dob:string, studentId: number){
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+'?dateOfBirth=1995-12-15&id=4',
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+`?dateOfBirth=${dob}&id=${studentId}`,
       data: {},
     }
     return this.get(requestParam);

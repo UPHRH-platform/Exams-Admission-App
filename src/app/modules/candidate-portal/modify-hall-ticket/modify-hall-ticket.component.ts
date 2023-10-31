@@ -6,6 +6,7 @@ import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/u
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 
 @Component({
   selector: 'app-modify-hall-ticket',
@@ -61,6 +62,7 @@ export class ModifyHallTicketComponent implements OnInit {
     private router: Router,
     private baseService: BaseService,
     private dialog: MatDialog,
+    private authService: AuthServiceService,
     private toasterService: ToastrServiceService,
   ) {
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
@@ -108,6 +110,7 @@ export class ModifyHallTicketComponent implements OnInit {
         labelOne: 'Select ID type',
         labelTwo: 'Attach file(s)',
         hidePreview: true,
+        acceptFiles:['.pdf','.jpg','.jpeg'],
         select: {
           selectCycleList: [
             {
@@ -158,7 +161,7 @@ export class ModifyHallTicketComponent implements OnInit {
   makeDataCorrectionRequest() {
     const Dob = new Date(this.studentDetails.value.DOB);
     const formData = new FormData();
-    formData.append("studentId", "12");
+    formData.append("studentId", this.authService.getUserRepresentation().attributes.studentId[0]);
     formData.append("proof", this.uplodedDocuments[0],this.uplodedDocuments[0].name);
     formData.append("updatedFirstName",this.studentDetails.value.firstName);
     formData.append("updatedLastName", this.studentDetails.value.lastName);

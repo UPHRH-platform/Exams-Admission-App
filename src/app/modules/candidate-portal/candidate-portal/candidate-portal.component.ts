@@ -5,6 +5,7 @@ import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, forkJoin, mergeMap, of } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 
 @Component({
   selector: 'app-candidate-portal',
@@ -20,7 +21,7 @@ export class CandidatePortalComponent implements OnInit {
   selectedExamCycle: any;
   hallTicketDetails: any;
   isDataLoading: boolean = false;
-  studentID = '1';
+  studentID :string;
   studentDetails: any = {};
   studentResultsDetails: any = {}
 
@@ -28,6 +29,7 @@ export class CandidatePortalComponent implements OnInit {
   constructor(
     private router: Router,
     private baseService: BaseService,
+    private authService: AuthServiceService,
     private toasterService: ToastrServiceService
   ) { }
 
@@ -57,9 +59,12 @@ export class CandidatePortalComponent implements OnInit {
   getResultAndHallticketDetails(event: any) {
     this.cardList = [];
     this.isDataLoading = true;
-    let hallTicketDetail = this.baseService.getHallTicketData$(this.studentID, event);
-    let studentResults = this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)
-    forkJoin([hallTicketDetail, studentResults])
+    this.studentID = this.authService.getUserRepresentation().attributes.studentId;
+    console.log(this.studentID[0])
+    forkJoin([this.baseService.getHallTicketData$(parseInt(this.studentID[0]), event), 
+    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)])
+ /*    forkJoin([this.baseService.getHallTicketData$(2, 5), 
+    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)]) */
     .pipe(
       catchError(error => {
         this.toasterService.showToastr(error, 'Error', 'error')
@@ -70,10 +75,11 @@ export class CandidatePortalComponent implements OnInit {
       if(res[0] && res[0].responseData) {
         this.hallTicketDetails = res[0].responseData;
         this.hallTicketDetails.dob = this.baseService.reverseDate(res[0].responseData.dateOfBirth);
+        this.hallTicketDetails.actualDOB = res[0].responseData.dateOfBirth;
         this.cardList.push({
           title: 'Hall Ticket',
           lable: 'Generated on',
-          date: this.baseService.reverseDate(this.hallTicketDetails.hallTicketGenerationDate),
+          date: this.hallTicketDetails.hallTicketGenerationDate,
           status: this.hallTicketDetails.hallTicketStatus,
         })
       }
@@ -85,7 +91,7 @@ export class CandidatePortalComponent implements OnInit {
         this.cardList.push({
           title: 'Results',
           lable: 'Published on',
-          date: this.baseService.reverseDate(this.studentResultsDetails.publishedDate),
+          date: this.studentResultsDetails.publishedDate,
           status: this.studentResultsDetails.publishStatus,
         })
       }

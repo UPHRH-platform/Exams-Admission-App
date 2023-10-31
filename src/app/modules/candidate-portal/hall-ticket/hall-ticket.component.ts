@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 import { BaseService } from 'src/app/service/base.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 @Component({
   selector: 'app-hall-ticket',
   templateUrl: './hall-ticket.component.html',
@@ -61,6 +62,7 @@ export class HallTicketComponent implements OnInit {
     private authService: AuthServiceService,
     private baseService: BaseService,
     private dialog: MatDialog,
+    private toasterService: ToastrServiceService,
     private renderer: Renderer2,
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -82,6 +84,7 @@ export class HallTicketComponent implements OnInit {
         lastName: this.stateData?.data.lastName,
         studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
         dob: this.stateData?.data.dob,
+        actualDOB: this.stateData?.data.actualDOB,
         courseName: this.stateData?.data.courseName,
         courseYear: this.stateData?.data.courseYear,
       };
@@ -110,7 +113,9 @@ export class HallTicketComponent implements OnInit {
   //#endregion
 
   downloadHallTicket(event: boolean) {
-    this.baseService.downloadHallTicket().subscribe((data: any) => {
+    const studentID = this.authService.getUserRepresentation().attributes.studentId;
+    this.baseService.downloadHallTicket$(this.studentDetails.actualDOB,studentID[0])
+    .subscribe((data: any) => {
 
       console.log(data)
       const link = this.renderer.createElement('a');
@@ -142,7 +147,11 @@ export class HallTicketComponent implements OnInit {
          this.router.navigateByUrl('/candidate-portal')
         }
       })
-    })
+    },
+     error => {
+      this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+     console.log(error)
+    },)
   }
 
 }

@@ -15,6 +15,7 @@ export interface Exam {
   endTime:string | undefined | null;
   id?: number;
   course?: any;
+  amount?: number;
 }
 @Component({
   selector: 'app-manage-exam-cycle-form',
@@ -136,7 +137,8 @@ export class ManageExamCycleFormComponent {
     examDate: this.convertDateFormat(examDate),
     startTime: startTime ? startTime : '10:00 AM',
     endTime: endTime ? endTime: '10:00 PM',
-    course: selectedCourse
+    course: selectedCourse,
+    amount: 1000
    }
    this.exams.push(examDetail);
    this.examsToAdd.push(examDetail);

@@ -11,7 +11,7 @@
                 <mat-card class="card" *ngFor="let item of cardList">
                     <mat-card-content class="content-container">
                         <span class="title-section">{{item.title}}</span>
-                        <span class="desc-section">{{item.lable}} : {{item.date}}</span>
+                        <span class="desc-section">{{item.lable}} : {{item.date || "NA"}}</span>
                         <div class="status-card">
                             <span class="status">status: {{item.status}}</span>
                         </div>
