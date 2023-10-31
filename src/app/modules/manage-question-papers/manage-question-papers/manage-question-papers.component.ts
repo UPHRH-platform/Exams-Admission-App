@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthServiceService } from 'src/app/core/services';
@@ -26,7 +26,6 @@ export class ManageQuestionPapersComponent {
   fileUploadError: string;
   listOfFiles: any[] = [];
   files: any[] = [];
-  previewURL: string = "";
   
 
   isDataLoading: boolean = false;
@@ -36,6 +35,7 @@ export class ManageQuestionPapersComponent {
     private baseService: BaseService,
     private authService: AuthServiceService, 
     private dialog: MatDialog,
+    private renderer: Renderer2
 
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -173,10 +173,14 @@ export class ManageQuestionPapersComponent {
     this.baseService.getQuestionPaperPreviewUrl(questionPaper?.id).subscribe({
       next: (response) => {
         console.log("question paper preview url response", response);
-        this.previewURL = response.responseData;
+        //console.log(data)
+        const link = this.renderer.createElement('a');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', response.responseData);
+        link.click();
+        link.remove();
       },
       error: (error) => {
-        this.previewURL = "";
         console.log("question paper preview url error", error);
       }
     });
