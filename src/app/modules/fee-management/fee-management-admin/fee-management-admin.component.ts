@@ -240,9 +240,9 @@ let r = response.examFees
 
  getStudentFeesListForInstitute(){
     this.isDataLoading = true;
-    let paymentRefNo = "1851697786049740a04b2866-5e5f-4056-94e8-73f29affacfd";
-    this.baseService.getStudentFeesListForInstitute$(paymentRefNo)
+    this.baseService.getStudentFeesListForInstitute$(8,5)
     .pipe(mergeMap((response: any)=> {
+      console.log(response.responseData)
       return this.formateStudentData(response.responseData)
     }))
     .subscribe({
@@ -272,11 +272,11 @@ let r = response.examFees
         console.log(examDetails.student)
         const studentExamDetial = {
           studentName: examDetails.student.firstName +" "+ examDetails.student.surname,
-          enrolementNumber: examDetails.student.enrollmentNumber,
+          enrolementNumber: examDetails.student.enrollmentNumber || "-",
           courseName: examDetails.student.course.courseName,
           exams: examDetails.student.intermediateSubjects,
           numberOfExams: examDetails.student.intermediateSubjects,
-          fee: examDetails.student.amount,
+          fee: examDetails.amount,
           status: examDetails.status,
           classes: {
             status: ['color-green']
