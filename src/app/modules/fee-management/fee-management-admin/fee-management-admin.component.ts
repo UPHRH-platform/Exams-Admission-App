@@ -329,10 +329,10 @@ let r = response.examFees
     // })
   }
 
-  search() {
-    this.searchKey = this.searcControl
-    this.showInstitutesTable = true
-  }
+  // search() {
+  //   this.searchKey = this.searcControl
+  //   this.showInstitutesTable = true
+  // }
 
   onSelectedInstitute(event: any) {
   

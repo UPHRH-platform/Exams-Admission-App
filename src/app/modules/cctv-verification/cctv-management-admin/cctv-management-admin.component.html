@@ -31,13 +31,13 @@
           <app-shared-skeleton-loading [isLoading]="isDataLoading">
           </app-shared-skeleton-loading>
           <ng-container *ngIf="!isDataLoading">
-            <div>
+            <!-- <div>
               <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
                 <mat-icon matPrefix class="search-icon">search</mat-icon>
                 <input matInput [(ngModel)]="searcControl" placeholder="Search" >
               </mat-form-field>
-            </div>
-            <div>
+            </div> -->
+            <div class="mt2">
               <ng-container *ngIf="instituteesTableColumns.length > 0">
                 <app-shared-table 
                   [tableColumns]="instituteesTableColumns" 

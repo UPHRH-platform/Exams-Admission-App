@@ -45,8 +45,8 @@
         <app-shared-skeleton-loading [isLoading]="isDataLoading">
         </app-shared-skeleton-loading>
         <div style="display: flex; flex-direction: row;" *ngIf="!isDataLoading">
-            <div>
-            <form [formGroup]="searchForm">
+            <div class="mb2">
+            <!-- <form [formGroup]="searchForm">
             <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
               <mat-icon matPrefix class="search-icon">search</mat-icon>
               <input
@@ -56,7 +56,7 @@
                 placeholder="Search"
               />
             </mat-form-field>          
-          </form>
+          </form> -->
           
         </div>
         <!-- <app-common-filter *ngIf="!isDataLoading && userRole === 'Secretary'" (filteredvalue)="onClickApplyFilter($event)" (resetFilterValue)="resetFilterValueData($event)"></app-common-filter> -->
