@@ -1,11 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, OnInit, inject} from '@angular/core';
-import { FormGroup ,AbstractControl, FormControl, Validators, ValidatorFn} from '@angular/forms';
+import { Component, inject} from '@angular/core';
+import { FormGroup , FormControl, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 // import { DateTime } from 'luxon';
 
 export interface Exam {
@@ -54,11 +54,12 @@ export class ManageExamCycleFormComponent {
   examCycleDetails: any = {};
   subjects: any = [];
   afterExamCycleStartDate: Date= new Date();
+  newForm: boolean = false;
   constructor(
     private router: Router, 
     private toasterService: ToastrServiceService,
     private baseService: BaseService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
     ) {
       this.route.params.subscribe(param => {
         this.examcycleId = param['id'];
@@ -70,6 +71,8 @@ export class ManageExamCycleFormComponent {
    this.getAllCourses();
    if(this.examcycleId !== undefined) {
     this.getExamCycleDetailsById();
+   } else {
+    this.newForm = true ;
    }
  }
 
@@ -88,6 +91,7 @@ export class ManageExamCycleFormComponent {
   this.baseService.getExamsByExamCycleId(this.examcycleId).subscribe({
     next: (res) => {
       this.exams = res.responseData;
+      console.log(this.exams)
     },
     error: (err: HttpErrorResponse) => {
       this.exams = [];
@@ -110,6 +114,7 @@ export class ManageExamCycleFormComponent {
   this.baseService.getExamCycleDetails(this.examcycleId).subscribe({
     next:(res) => {
         this.examCycleDetails = res.responseData;
+        console.log( this.examCycleDetails )
         this.initializeFormValues();
         this.getExamsByExamCycle();
        

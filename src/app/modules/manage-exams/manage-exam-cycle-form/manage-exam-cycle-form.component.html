@@ -90,7 +90,7 @@
             </div>
 
             <!-- exam input -->
-            <form [formGroup]="createExamForm">
+            <form *ngIf="newForm" [formGroup]="createExamForm">
             <div class="clearfix">
               <div class="sm-col sm-col-12 md-col-12 lg-col-12">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
