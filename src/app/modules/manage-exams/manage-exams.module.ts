@@ -2,7 +2,7 @@
 
 //#region ()
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 //#endregion
 
 //#region (created modules && components)
@@ -14,6 +14,7 @@ import { MaterialModule } from 'src/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared';
 import { UploadFileComponent } from './upload-file/upload-file.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 //#endregion
 
 //#endregion
@@ -33,6 +34,10 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
     MaterialModule,
     ReactiveFormsModule,
     SharedModule
-  ]
+  ],
+  providers: [
+    DatePipe,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+  ],
 })
 export class ManageExamsModule { }
