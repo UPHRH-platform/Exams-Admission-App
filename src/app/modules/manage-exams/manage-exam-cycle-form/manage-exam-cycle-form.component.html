@@ -53,6 +53,7 @@
                     <mat-label>Choose a date</mat-label>
                     <input
                       matInput
+                      [min]="pickerMinDate"
                       [matDatepicker]="picker"
                       formControlName="startDate"
                       (dateInput)="startDateChangeEvent('input', $event)" 
@@ -71,24 +72,25 @@
                     <mat-label>Choose a date</mat-label>
                     <input
                       matInput
+                      [min]="afterExamCycleStartDate"
                       [matDatepicker]="picker1"
                       formControlName="endDate"
-                      (dateInput)="endDateChangeEvent('input', $event)"
-                       (dateChange)="endDateChangeEvent('change', $event)"
                     />
                     <mat-datepicker-toggle
                       matIconSuffix
                       [for]="picker1"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="createExamCycle.controls['endDate'].invalid">
+                      End date cannot be before start date</mat-error>
                   </mat-form-field>
-                  <mat-error *ngIf="endDateError">End date cannot be before start date</mat-error>
+                 
                 </div>
               </div>
             </div>
 
             <!-- exam input -->
-            <form [formGroup]="createExamForm">
+            <form *ngIf="newForm" [formGroup]="createExamForm">
             <div class="clearfix">
               <div class="sm-col sm-col-12 md-col-12 lg-col-12">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
@@ -116,13 +118,17 @@
                       matInput
                       [matDatepicker]="picker2"
                       formControlName="examDate"
-                      [min]="pickerMinDate"
+                      [min]="afterExamCycleStartDate"
                     />
                     <mat-datepicker-toggle
                       matIconSuffix
                       [for]="picker2"
                     ></mat-datepicker-toggle>
-                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-datepicker #picker2>
+                    </mat-datepicker>
+                    <mat-error *ngIf="createExamForm.controls['examDate'].invalid">
+                      Date of exam must be post exam cycle start date
+                  </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
