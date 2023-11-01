@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Component, OnInit, inject} from '@angular/core';
-import { FormGroup ,AbstractControl, FormControl, Validators} from '@angular/forms';
+import { FormGroup ,AbstractControl, FormControl, Validators, ValidatorFn} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
@@ -23,6 +23,7 @@ export interface Exam {
   styleUrls: ['./manage-exam-cycle-form.component.scss']
 })
 export class ManageExamCycleFormComponent {
+
   exams: Exam[]=[];
   examsToAdd: Exam[]=[];
   courses: any[]= [];
@@ -41,7 +42,8 @@ export class ManageExamCycleFormComponent {
   });
   createExamForm = new FormGroup({
     'examName':new FormControl('', Validators.required),
-    'examDate':new FormControl('', Validators.required),
+    'examDate':new FormControl('', [
+      Validators.required/* ,this.validateExamDate() as ValidatorFn */]),
     'startTime':new FormControl('', Validators.required),
     'endTime':new FormControl('', Validators.required),
   })
@@ -51,6 +53,7 @@ export class ManageExamCycleFormComponent {
   examcycleId: string;
   examCycleDetails: any = {};
   subjects: any = [];
+  afterExamCycleStartDate: Date= new Date();
   constructor(
     private router: Router, 
     private toasterService: ToastrServiceService,
@@ -178,6 +181,22 @@ export class ManageExamCycleFormComponent {
   }
   }
 
+  validateExamDate() {
+/*     if (input1Date.getTime() < input2Date.getTime()) {
+
+    } */
+    return (control: FormControl) => {
+      const selectedDate = control.value;
+      const examCycleStartDate = this.createExamCycle.value.startDate || ""
+
+      if (selectedDate < examCycleStartDate) {
+        return { invalidMinAge: true };
+      }
+
+      return null;
+    };
+  }
+
   //   this.baseService.createExamCycle(examCycleDetail).pipe(
   //     switchMap((examCycleResponse) => {
   //       alert("1");
@@ -209,7 +228,6 @@ export class ManageExamCycleFormComponent {
       }
     })
   }
-      
 
  remove(exam:Exam): void{
    const index = this.exams.indexOf(exam);
@@ -234,26 +252,19 @@ export class ManageExamCycleFormComponent {
 
   startDateChangeEvent(input: string, event: Event) {
     this.endDateError = false;
-    const startdate = this.createExamCycle.value.startDate;
+    if(this.createExamCycle.value.startDate){
+      this.afterExamCycleStartDate = new Date(this.createExamCycle.value.startDate)
+    }
+  /*   const startdate = this.createExamCycle.value.startDate;
     const enddate = this.createExamCycle.value.endDate;
     if(enddate !== '' && enddate && startdate) {
       if(enddate < startdate) {
         // this.createExamCycle.controls['endDate'].setErrors({'incorrect': true})
         this.endDateError = true;
       }
-    }
+    } */
   }
 
-  endDateChangeEvent(input: string, event: Event) {
-    this.endDateError = false;
-    const startdate = this.createExamCycle.value.startDate;
-    const enddate = this.createExamCycle.value.endDate;
-    if(startdate !== '' && enddate && startdate) {
-      if(enddate < startdate) {
-        this.endDateError = true;
-      }
-    }
-  }
 
   startTimeChangeEvent(event: Event) {
     this.endTimeError = false;
