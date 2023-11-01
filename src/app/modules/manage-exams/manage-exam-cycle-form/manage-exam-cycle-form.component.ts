@@ -255,6 +255,13 @@ export class ManageExamCycleFormComponent {
    }
  }
 
+ onEditClick(){
+  this.editForm=true;
+  this.showEditButton = !this.showEditButton;
+  this.createExamCycle.enable();
+ }
+
+
 
   goBack() {
     this.router.navigate(['/manage-exam-cycle']);
