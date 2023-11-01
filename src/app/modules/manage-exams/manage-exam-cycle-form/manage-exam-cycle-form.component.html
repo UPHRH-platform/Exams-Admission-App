@@ -53,6 +53,7 @@
                     <mat-label>Choose a date</mat-label>
                     <input
                       matInput
+                      [min]="pickerMinDate"
                       [matDatepicker]="picker"
                       formControlName="startDate"
                       (dateInput)="startDateChangeEvent('input', $event)" 
