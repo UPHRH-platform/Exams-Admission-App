@@ -543,7 +543,7 @@ export class StudentEnrollmentFormComponent {
       request = {
         id: this.enrollmentId,
         status: param,
-        remarks: remarks !== undefined ? remarks : 'ver', // hardcoded as backend is expecting remarks
+        remarks: remarks !== undefined ? remarks : 'New Cooment', // hardcoded as backend is expecting remarks
       }
       this.baseService.updateStudentEnrollmentStatus(request).subscribe({
         next: (res) => {

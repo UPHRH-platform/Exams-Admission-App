@@ -19,9 +19,16 @@
       </mat-drawer>
       <div *ngIf="enrollmentDetails.id && enrollmentDetails?.verificationStatus !== 'PENDING'" class="statusBackground">
       <p>
-        <span class="span" [ngStyle]="enrollmentDetails?.verificationStatus === 'VERIFIED'? {'color': 'green'} : enrollmentDetails?.verificationStatus === 'REJECTED' ? {'color': 'red'}: ''">Status: {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'Approved' : enrollmentDetails?.verificationStatus === 'REJECTED'? 'Rejected': ''}}</span>
+        <span class="span"
+         [ngStyle]="enrollmentDetails?.verificationStatus === 'VERIFIED'? {'color': 'green'} : enrollmentDetails?.verificationStatus === 'REJECTED' ? {'color': 'red'}: ''">
+         Status: {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'Approved': enrollmentDetails?.verificationStatus === 'REJECTED'? 'Rejected': ''}}</span>
       </p>
-      <p>{{enrollmentDetails?.adminRemarks}}</p>
+      <p>
+        <span 
+        >
+          {{enrollmentDetails?.verificationStatus === 'VERIFIED'? 'This application is reviewed and approved on  '+enrollmentDetails?.verificationDate : enrollmentDetails?.verificationStatus === 'REJECTED'? 'This application is reviewed and rejected on  '+enrollmentDetails?.verificationDate: 'This application is reviewed and closed on  '+enrollmentDetails?.verificationDate}}</span>
+      </p>
+      <p *ngIf="enrollmentDetails?.adminRemarks"> Comments : {{enrollmentDetails?.adminRemarks}}</p>
       </div>
       <div class="px2 py2 outer-bg" [ngClass]="enrollmentDetails?.verificationStatus !== 'PENDING' ? 'mt2': ''">
         <div class="content-container">
