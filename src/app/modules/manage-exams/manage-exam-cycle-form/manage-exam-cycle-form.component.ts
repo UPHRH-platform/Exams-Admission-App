@@ -54,7 +54,8 @@ export class ManageExamCycleFormComponent {
   examCycleDetails: any = {};
   subjects: any = [];
   afterExamCycleStartDate: Date= new Date();
-  newForm: boolean = false;
+  editForm: boolean = false;
+  showEditButton: boolean =false;
   constructor(
     private router: Router, 
     private toasterService: ToastrServiceService,
@@ -71,8 +72,10 @@ export class ManageExamCycleFormComponent {
    this.getAllCourses();
    if(this.examcycleId !== undefined) {
     this.getExamCycleDetailsById();
+    this.showEditButton = true;
+    this.createExamCycle.disable();
    } else {
-    this.newForm = true ;
+    this.editForm = true ;
    }
  }
 
@@ -101,12 +104,14 @@ export class ManageExamCycleFormComponent {
  }
 
  initializeFormValues() {
+  this.pickerMinDate = new Date ( this.examCycleDetails?.startDate)
   this.createExamCycle.patchValue({
     'examCycleName': this.examCycleDetails?.examCycleName,
     'courseId': this.examCycleDetails?.course.id,
     'startDate': this.examCycleDetails?.startDate,
     'endDate': this.examCycleDetails?.endDate,
   })
+
   
  }
 
@@ -249,6 +254,13 @@ export class ManageExamCycleFormComponent {
     }
    }
  }
+
+ onEditClick(){
+  this.editForm=true;
+  this.showEditButton = !this.showEditButton;
+  this.createExamCycle.enable();
+ }
+
 
 
   goBack() {

@@ -9,7 +9,8 @@
         <h2 class="title-header">{{examcycleId !== undefined ? 'View' : 'Add'}}</h2>
         <div class="button-group">
           <button class="btn-1" (click)="goBack()">Cancel</button>
-          <button class="btn-2" type="submit" [disabled]="!createExamCycle.valid">Save</button>
+          <button *ngIf="editForm" class="btn-2" type="submit" [disabled]="!createExamCycle.valid">Save</button>
+          <button *ngIf="examcycleId && showEditButton" class="btn-2" type="button" (click)="onEditClick()">Edit</button>
         </div>
       </div>
 
@@ -90,7 +91,7 @@
             </div>
 
             <!-- exam input -->
-            <form *ngIf="newForm" [formGroup]="createExamForm">
+            <form *ngIf="editForm" [formGroup]="createExamForm">
             <div class="clearfix">
               <div class="sm-col sm-col-12 md-col-12 lg-col-12">
                 <div class="sm-col sm-col-12 md-col-12 lg-col-3 mr2">
