@@ -68,9 +68,9 @@ export class ManageResultInstituteListComponent implements OnInit {
     this.activatedRoutes.queryParams.subscribe((params: any) => {
       if(params && params.examId) {
         const formBody = {
-          examCycle: params.examCycleId,
-          exam: params.examId,
-          institute: params.instituteId
+          examCycleId: params.examCycleId,
+          examId: params.examId,
+          instituteId: params.instituteId
         }
         this.getInternalMarksOfExam(formBody)
       } else {

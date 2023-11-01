@@ -82,6 +82,7 @@ export class CandidatePortalComponent implements OnInit {
           date: this.hallTicketDetails.hallTicketGenerationDate,
           status: this.hallTicketDetails.hallTicketStatus,
         })
+        this.hallTicketDetails.examCycleId = this.examCycleFormControl.value
       }
       if(res[1] && res[1].responseData) {
         this.studentResultsDetails = res[1].responseData;

@@ -114,7 +114,7 @@ export class HallTicketComponent implements OnInit {
 
   downloadHallTicket(event: boolean) {
     const studentID = this.authService.getUserRepresentation().attributes.studentId;
-    this.baseService.downloadHallTicket$(this.studentDetails.actualDOB,studentID[0])
+    this.baseService.downloadHallTicket$(this.stateData.examCycleId,studentID[0])
     .subscribe((data: any) => {
 
       console.log(data)
