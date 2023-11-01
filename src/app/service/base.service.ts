@@ -246,9 +246,9 @@ export class BaseService extends HttpService {
   }
 
 
-  downloadHallTicket$(dob:string, studentId: number){
+  downloadHallTicket$(examCycleId:string, studentId: number){
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+`?dateOfBirth=${dob}&id=${studentId}`,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.DOWNLOAD+`?id=${studentId}&examCycleId=${examCycleId}`,
       data: {},
     }
     return this.get(requestParam);
@@ -568,47 +568,47 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   }
 
   getStudentResultData$(examCycleId: any, instituteId: string):Observable<any>{
-    // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RESULTS_BY_INSTITUTE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
-    //   data: {},
-    // }
-    // return this.get(requestParam);
-    return of( {
-      responseData: [
-        {
-          "id": 2,
-                "instituteName": "IIT",
-                "instituteId": 8,
-                "firstName": 'John',
-                "lastName": 'Smith',
-                "enrollmentNumber": 'Enrolment Number',
-                "motherName": 'Mary',
-                "fatherName": 'Robert',
-                "courseValue": 'ANM1',
-                "examCycleValue": 'Fall 2023',
-                "examValue": 'Exam',
-                "internalMarks": 30,
-                "passingInternalMarks": 12,
-                "internalMarksObtained": 13,
-                "practicalMarks": 23,
-                "passingPracticalMarks": 12,
-                "practicalMarksObtained": 12,
-                "otherMarks": 12,
-                "passingOtherMarks": 12,
-                "otherMarksObtained": 12,
-                "externalMarks": 12,
-                "passingExternalMarks": 12,
-                "externalMarksObtained": 12,
-                "totalMarks": 12,
-                "passingTotalMarks": 12,
-                "totalMarksObtained": 12,
-                "grade": 'c',
-                "result": 'PASS',
-                "status": 12,
-                "published": false
-        },
-      ]
-    })
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RESULTS_BY_INSTITUTE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
+      data: {},
+    }
+    return this.get(requestParam);
+    // return of( {
+    //   responseData: [
+    //     {
+    //       "id": 2,
+    //             "instituteName": "IIT",
+    //             "instituteId": 8,
+    //             "firstName": 'John',
+    //             "lastName": 'Smith',
+    //             "enrollmentNumber": 'Enrolment Number',
+    //             "motherName": 'Mary',
+    //             "fatherName": 'Robert',
+    //             "courseValue": 'ANM1',
+    //             "examCycleValue": 'Fall 2023',
+    //             "examValue": 'Exam',
+    //             "internalMarks": 30,
+    //             "passingInternalMarks": 12,
+    //             "internalMarksObtained": 13,
+    //             "practicalMarks": 23,
+    //             "passingPracticalMarks": 12,
+    //             "practicalMarksObtained": 12,
+    //             "otherMarks": 12,
+    //             "passingOtherMarks": 12,
+    //             "otherMarksObtained": 12,
+    //             "externalMarks": 12,
+    //             "passingExternalMarks": 12,
+    //             "externalMarksObtained": 12,
+    //             "totalMarks": 12,
+    //             "passingTotalMarks": 12,
+    //             "totalMarksObtained": 12,
+    //             "grade": 'c',
+    //             "result": 'PASS',
+    //             "status": 12,
+    //             "published": false
+    //     },
+    //   ]
+    // })
   }
 
   publishResults$(request: any) {
@@ -676,31 +676,31 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
   }
 
   getInternalMarksOfExam$(formBody: any) {
-    // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAM_MARKS_BY_INSTITUTE}`,
-    //   data: formBody
-    // }
-    // return this.get(requestParam);
-    return of({
-      responseData: [
-        {
-          "firstName": "jay (static data)",
-          "courseName": "Mechanical Engineering",
-          "exam": "Data Structure",
-          "internalMark": 13,
-          "lastName": "singh",
-          enrolementNumber: 'EN2023 ABC37',
-        },
-        {
-          "firstName": "jay",
-          "courseName": "Mechanical Engineering",
-          "exam": "Data Structure",
-          "internalMark": 13,
-          "lastName": "singh",
-          enrolementNumber: 'EN2023 ABC37',
-        },
-      ]
-    })
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAM_MARKS_BY_INSTITUTE}?examCycle=${formBody.examCycleId}&exam=${formBody.examId}&institute=${formBody.instituteId}`,
+      data: {}
+    }
+    return this.get(requestParam);
+    // return of({
+    //   responseData: [
+    //     {
+    //       "firstName": "jay (static data)",
+    //       "courseName": "Mechanical Engineering",
+    //       "exam": "Data Structure",
+    //       "internalMark": 13,
+    //       "lastName": "singh",
+    //       enrolementNumber: 'EN2023 ABC37',
+    //     },
+    //     {
+    //       "firstName": "jay",
+    //       "courseName": "Mechanical Engineering",
+    //       "exam": "Data Structure",
+    //       "internalMark": 13,
+    //       "lastName": "singh",
+    //       enrolementNumber: 'EN2023 ABC37',
+    //     },
+    //   ]
+    // })
   }
 
   requestRetotalling(formBody: any) {

@@ -521,7 +521,7 @@ export class ManageResultAdminComponent {
   getStudentExamsTableData(){
     this.isDataLoading = true;
     this.studentMarksDetails = [];
-    this.baseService.getStudentResultData$(this.examCycleControl.value, this.selectedCellDetails.row.id)
+    this.baseService.getStudentResultData$(this.examCycleControl.value, this.selectedCellDetails.row.instituteId)
     .subscribe({
       next:(res:any)=>{
         this.studentMarksDetails = res.responseData

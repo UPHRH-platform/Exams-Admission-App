@@ -1075,7 +1075,7 @@
                 type="button"
                 mat-raised-button
                 color="primary"
-                [disabled]="!basicDetailsForm.valid"
+                [disabled]="basicDetailsForm.invalid && iseditable"
                 (click)="next()"
               >
                 Next<mat-icon>arrow_right_alt</mat-icon>

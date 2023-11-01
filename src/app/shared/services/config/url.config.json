@@ -68,7 +68,7 @@
         },
         "HALL_TICKET": {
             "GET_ALL_DETAILS": "/v1/admin/hallticket/hallTicketRegistrationDetails",
-            "DOWNLOAD":"/v1/admin/hallticket/downloadHallTicket",
+            "DOWNLOAD":"/v1/admin/hallticket/examCycle",
             "DETAILS":"/v1/admin/hallticket/hallTicketDetail",
             "MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
