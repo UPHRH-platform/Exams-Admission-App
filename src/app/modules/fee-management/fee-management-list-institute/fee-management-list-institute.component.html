@@ -9,7 +9,7 @@
           <div class="container clearfix form-fields mt3">
             <form [formGroup]="filterForm" class="px1">
               <div class="sm-col md-col-4 lg-col-5">
-                <mat-form-field appearance="outline" class="search">
+                <mat-form-field style="visibility: hidden;" appearance="outline" class="search">
                   <mat-icon matPrefix class="search-icon">search</mat-icon>
                   <input matInput formControlName="search" placeholder="Search">
                 </mat-form-field>
@@ -47,10 +47,10 @@
           <div class="container clearfix form-field mt3">
             <form [formGroup]="filterForm" class="px1">
               <div class="sm-col md-col-5">
-                <mat-form-field appearance="outline" class="search">
+                <!-- <mat-form-field appearance="outline" class="search">
                   <mat-icon matPrefix class="search-icon">search</mat-icon>
                   <input matInput formControlName="search" placeholder="Search">
-                </mat-form-field>
+                </mat-form-field> -->
               </div>
               <div>
                 <app-shared-table [tableColumns]="paidFeeTableHeader" [tableData]="paidFeeTableData"
