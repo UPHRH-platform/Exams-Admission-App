@@ -243,7 +243,7 @@ export class StudentEnrollmentFormComponent {
     this.educationalDetailsForm.patchValue({
         centerCode: `${this.enrollmentDetails?.instituteDTO.instituteCode} - ${this.enrollmentDetails?.instituteDTO.instituteName}`,
         courseCode: this.enrollmentDetails?.course,
-        examBatch: this.enrollmentDetails?.examBatch,
+        examBatch: Number(this.enrollmentDetails?.examBatch),
         admissionDate: this.enrollmentDetails?.admissionDate,
         intermediateStream: this.enrollmentDetails?.intermediateStream? this.enrollmentDetails?.intermediateStream: '',
         intermediatePassedBoard: this.enrollmentDetails?.intermediatePassedBoard,
@@ -575,6 +575,8 @@ export class StudentEnrollmentFormComponent {
     }
 
     navigateToList() {
+      debugger
+      this.educationalDetailsForm
       if(this.loggedInUserRole === 'exams_admin') {
       this.router.navigate(['/student-enrollment/admin']);
       }
