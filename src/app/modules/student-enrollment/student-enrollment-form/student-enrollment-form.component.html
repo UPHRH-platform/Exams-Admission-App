@@ -457,7 +457,7 @@
                   <mat-form-field appearance="outline" class="w-full">
                     <mat-select
                       [compareWith]="compareFn"
-                   
+                      [(value)]="examBatch"
                       formControlName="examBatch"
                       placeholder="Select here"
                       [readonly]="!iseditable"
