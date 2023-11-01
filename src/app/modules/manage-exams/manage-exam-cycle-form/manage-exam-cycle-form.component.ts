@@ -150,6 +150,7 @@ export class ManageExamCycleFormComponent {
    }
    this.exams.push(examDetail);
    this.examsToAdd.push(examDetail);
+   this.createExamForm.reset();
  }
 
   onSubmit(value: any){
