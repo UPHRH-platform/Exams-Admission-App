@@ -596,8 +596,6 @@ export class StudentEnrollmentFormComponent {
     }
 
     navigateToList() {
-      debugger
-      this.educationalDetailsForm
       if(this.loggedInUserRole === 'exams_admin') {
       this.router.navigate(['/student-enrollment/admin']);
       }
