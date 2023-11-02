@@ -195,10 +195,19 @@ export class CctvManagementAdminComponent {
     .pipe(mergeMap((response: any) => {
       return this.getformatInstitutesTablesData(response.responseData)
     }))
-    .subscribe((InstituteesCCTVtableData: any) => {
-      this.getTablesData(InstituteesCCTVtableData)
-      this.isDataLoading = false
+    .subscribe({
+      next: (InstituteesCCTVtableData: any) => {
+        this.getTablesData(InstituteesCCTVtableData)
+        this.isDataLoading = false
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isDataLoading = false
+        console.log(error);
+        this.toasterService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+    
+      }
     })
+
   }
 
   getInstitutesCCTVtableDataByExamCycle(examCycleId: number | string) {

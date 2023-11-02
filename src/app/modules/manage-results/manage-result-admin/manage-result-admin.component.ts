@@ -163,9 +163,15 @@ export class ManageResultAdminComponent {
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
-    .subscribe((examCucles: any) => {
-      this.examCycleList = examCucles.examCyclesList
-    })
+    .subscribe({
+      next: (examCycles: any) => {
+        this.examCycleList = examCycles.examCyclesList
+    },
+    error: (err: HttpErrorResponse) => {
+      this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+         console.log(err)
+    }
+  })
   }
 
   getInstitutesData(examCycleId: any) {

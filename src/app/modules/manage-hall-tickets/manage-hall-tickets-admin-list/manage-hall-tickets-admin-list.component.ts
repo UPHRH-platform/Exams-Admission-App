@@ -267,6 +267,7 @@ export class ManageHallTicketsAdminListComponent {
         this.institutes = res.responseData;
       },
       error: (error: HttpErrorResponse) => {
+        this.toasterService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
         console.log(error.message)
       }
     })
