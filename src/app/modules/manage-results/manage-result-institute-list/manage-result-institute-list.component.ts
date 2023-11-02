@@ -17,8 +17,8 @@ export class ManageResultInstituteListComponent implements OnInit {
   examTableHeader = [
     {
       header: 'Full name',
-      columnDef: 'fullName',
-      cell: (element: Record<string, any>) => `${element['fullName']}`,
+      columnDef: 'firstName',
+        cell: (element: Record<string, any>) => `${element['firstName']} ${element['lastName']}`,
       cellStyle: {
         'background-color': '#0000000a',
         'color': '#00000099'
@@ -39,16 +39,16 @@ export class ManageResultInstituteListComponent implements OnInit {
       }
     },{
       header: 'Exam name',
-      columnDef: 'examName',
-      cell: (element: Record<string, any>) => `${element['examName']}`,
+      columnDef: 'exam',
+      cell: (element: Record<string, any>) => `${element['exam']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
     },
     {
       header: 'Internal marks',
-      columnDef: 'internalMarks',
-      cell: (element: Record<string, any>) => `${element['internalMarks']}`,
+      columnDef: 'internalMark',
+      cell: (element: Record<string, any>) => `${element['internalMark']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
       }
@@ -82,9 +82,6 @@ export class ManageResultInstituteListComponent implements OnInit {
   getInternalMarksOfExam(examDetails: any) {
     const formBody = examDetails
     this.baseService.getInternalMarksOfExam$(formBody)
-    .pipe((mergeMap((res: any) => {
-      return this.formateMarksOfExam(res.responseData)
-    })))
     .subscribe({
       next: (res) => {
         if(res && res.responseData) {
@@ -94,22 +91,6 @@ export class ManageResultInstituteListComponent implements OnInit {
     })
   }
 
-  formateMarksOfExam(examMarks: any) {
-    const foramtedMarks: any = []
-    if(examMarks.length > 0) {
-      examMarks.forEach((element: any) => {
-        const studentMarks = {
-          fullName: element.lastName + ' ' + element.firstName,
-          enrollmentNumber: element.enrolementNumber,
-          courseName: element.courseName,
-          examName: element.exam,
-          internalMarks: element.internalMark
-        }
-        foramtedMarks.push(studentMarks)
-      })
-    }
-    return of(foramtedMarks)
-  }
 
   goToList() {
     this.router.navigate(['/manage-result/institute'])
