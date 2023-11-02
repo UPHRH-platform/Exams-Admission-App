@@ -79,6 +79,7 @@ export class HallTicketComponent implements OnInit {
   intialisation() {
     if (this.stateData) {
       this.studentDetails = {
+        hallticketId: this.stateData?.data.id,
         examCyclename: this.stateData?.data.examCycle.examCyclename,
         firstName: this.stateData?.data.firstName,
         lastName: this.stateData?.data.lastName,
