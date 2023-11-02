@@ -124,7 +124,7 @@ export class ManageExamCycleFormComponent {
     },
     error:(err: HttpErrorResponse) => {
       console.log(err);
-      this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+      this.toasterService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
     }
   })
  }

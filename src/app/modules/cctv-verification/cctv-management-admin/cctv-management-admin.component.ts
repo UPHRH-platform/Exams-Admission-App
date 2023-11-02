@@ -487,63 +487,72 @@ export class CctvManagementAdminComponent {
       .pipe(mergeMap((res: any) => {
         return this.formatNearestInstitutesList(res.responseData)
       }))
-      .subscribe((response: any) => {
-        const institutesList = response
-        this.isDataLoading = false
-        if (institutesList) {
-          let nearestInstitutesList = institutesList
-          const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
-            data: {
-              controls: [
-                {
-                  controlLable: 'Institute District',
-                  controlName: 'instituteDistrict',
-                  controlType: 'input',
-                  placeholder: 'Type here',
-                  value: 'Agra',
-                  validators: ['required'],
-                  readonly: true
-                }, {
-                  controlLable: 'Near Institute List',
-                  controlName: 'institute',
-                  controlType: 'select',
-                  optionsList: nearestInstitutesList,
-                  value: null,
-                  placeholder: 'Select the Institute',
-                  validators: ['required'],
-                },
-              ],
-              instituteId: event.instituteId,
-              buttons: [
-                {
-                  btnText: 'Cancel',
-                  positionClass: 'left',
-                  btnClass: 'btn-outline',
-                  type: 'close'
-                },
-                {
-                  btnText: 'Assign',
-                  positionClass: 'right',
-                  btnClass: 'btn-full',
-                  type: 'assign'
-                },
-              ],
-            },
-            width: '700px',
-            maxWidth: '90vw',
-            maxHeight: '90vh'
-          })
-          dialogRef.afterClosed().subscribe((response: any) => {
-            if (response) {
-              const formBody = {
-                instituteID: response.instituteId,
-                alternateInstituteId: response.form.institute
+      .subscribe({
+        next:(response: any) => {
+          const institutesList = response
+          this.isDataLoading = false
+          if (institutesList) {
+            let nearestInstitutesList = institutesList
+            const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
+              data: {
+                controls: [
+                  {
+                    controlLable: 'Institute District',
+                    controlName: 'instituteDistrict',
+                    controlType: 'input',
+                    placeholder: 'Type here',
+                    value: event.district,
+                    validators: ['required'],
+                    readonly: true
+                  }, {
+                    controlLable: 'Near Institute List',
+                    controlName: 'institute',
+                    controlType: 'select',
+                    optionsList: nearestInstitutesList,
+                    value: null,
+                    placeholder: 'Select the Institute',
+                    validators: ['required'],
+                  },
+                ],
+                instituteId: event.instituteId,
+                buttons: [
+                  {
+                    btnText: 'Cancel',
+                    positionClass: 'left',
+                    btnClass: 'btn-outline',
+                    type: 'close'
+                  },
+                  {
+                    btnText: 'Assign',
+                    positionClass: 'right',
+                    btnClass: 'btn-full',
+                    type: 'assign'
+                  },
+                ],
+              },
+              width: '700px',
+              maxWidth: '90vw',
+              maxHeight: '90vh'
+            })
+            dialogRef.afterClosed().subscribe((response: any) => {
+              if (response) {
+                const formBody = {
+                  instituteID: response.instituteId,
+                  alternateInstituteId: response.form.institute
+                }
+                this.assignAlternateExamCenter(formBody)
               }
-              this.assignAlternateExamCenter(formBody)
-            }
-          })
+            })
+          }
+           
+        },
+        error:(err: HttpErrorResponse) => {
+          this.isDataLoading = false
+          console.log(err);
+          this.toasterService.showToastr(err, 'Error', 'error', '');
         }
       })
+ 
   }
 
   formatNearestInstitutesList(institutes: any) {
