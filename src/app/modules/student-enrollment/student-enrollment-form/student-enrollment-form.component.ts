@@ -543,7 +543,7 @@ export class StudentEnrollmentFormComponent {
       request = {
         id: this.enrollmentId,
         status: param,
-        remarks: remarks !== undefined ? remarks : 'New Cooment', // hardcoded as backend is expecting remarks
+        remarks: remarks !== undefined ? remarks : '', // hardcoded as backend is expecting remarks
       }
       this.baseService.updateStudentEnrollmentStatus(request).subscribe({
         next: (res) => {
@@ -590,7 +590,8 @@ export class StudentEnrollmentFormComponent {
   
       dialogRef.afterClosed().subscribe((response: any) => {
         if (response) {
-          this.updateEnrollmentStatus('REJECTED', response.remarks);
+          console.log(response.form.remarks)
+          this.updateEnrollmentStatus('REJECTED', response.form.remarks);
         }
       })
     }

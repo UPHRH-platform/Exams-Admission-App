@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { NgFor } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services';
 import { Tabs } from 'src/app/shared/config';
@@ -15,21 +11,8 @@ import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.serv
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-import { map } from 'rxjs/internal/operators/map';
-import { mergeMap } from 'rxjs/internal/operators/mergeMap';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { catchError } from 'rxjs/internal/operators/catchError';
-import { combineLatest } from 'rxjs';
 import { of } from 'rxjs/internal/observable/of';
-
-interface Course {
-  value: string;
-  viewValue: string;
-}
-interface Year {
-  value: string;
-  viewValue: string;
-}
 
 interface InstituteDetail {
   id: number | string,
@@ -69,7 +52,8 @@ export class StudentEnrollmentComponent {
   instituteDetail: InstituteDetail;
   selectedCourse: any;
   selectedAcademicYear: any;
-  constructor(private router: Router, private authService: AuthServiceService, private baseService: BaseService, private toastrService: ToastrServiceService) { }
+  constructor(private router: Router, private authService: AuthServiceService,
+     private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
@@ -166,7 +150,8 @@ export class StudentEnrollmentComponent {
     },
     error: (error: any) => {
       this.isDataLoading = false;
-      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+      error.error.error?  this.toastrService.showToastr(error.error.error.message, 'Error', 'error', ''):  this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+    
 
     }
   })

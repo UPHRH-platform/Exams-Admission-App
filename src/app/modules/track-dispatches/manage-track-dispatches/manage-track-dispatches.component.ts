@@ -143,7 +143,8 @@ export class ManageTrackDispatchesComponent implements OnInit  {
           this.examCycleList = examCycles.examCyclesList;
         },
         error: (err: HttpErrorResponse) => {
-          this.toastrService.showToastr(err, 'Error', 'error', '')
+          this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+      console.log(err)
         }
       })
   }

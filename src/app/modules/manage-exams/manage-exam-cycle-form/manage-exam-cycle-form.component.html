@@ -35,9 +35,9 @@
                   <h4 class="label w-full">Course name</h4>
                   <mat-form-field appearance="outline" class="w-full">
                     <mat-label>Course name</mat-label>
-                    <mat-select formControlName="courseId" (selectionChange)="getSelectedCourse($event)">
+                    <mat-select formControlName="courseId" (selectionChange)="getSelectedCourse()">
                       <ng-container *ngFor="let course of courses">
-                        <mat-option [value]="course.id">
+                        <mat-option [(value)]="course.id">
                           {{course.courseCode}} - {{ course.courseName }}
                         </mat-option>
                       </ng-container>
