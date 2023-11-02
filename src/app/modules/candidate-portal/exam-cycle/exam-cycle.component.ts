@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from '../../../service/base.service';
@@ -21,6 +21,7 @@ export class ExamCycleComponent {
   @Input() isHallTicket: any;
 
   @Output() download: EventEmitter<boolean> = new EventEmitter<boolean>();
+  stateData: { [k: string]: any; } | undefined;
 
   constructor(
     private router: Router,
@@ -28,9 +29,9 @@ export class ExamCycleComponent {
     private authService: AuthServiceService,
     private baseService: BaseService,
     private toasterService: ToastrServiceService,
-    private route: ActivatedRoute
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.stateData = this.router?.getCurrentNavigation()?.extras.state;
   }
 
   downloadHallTicket() {
@@ -42,7 +43,7 @@ export class ExamCycleComponent {
   }
 
   getTicketID(){
-    return parseFloat(this?.route?.snapshot?.paramMap?.get('id') || '0'); 
+    return parseFloat(this?.stateData?.['data'].id); 
   }
 
   onApprove() {
@@ -50,17 +51,22 @@ export class ExamCycleComponent {
   }
 
   approveHallticket(id: number){
-    this.baseService.approveHallTicket$(id).subscribe({
+    let ticketId: any =[]
+    ticketId.push(id)
+    this.baseService.generateHallTkt$(ticketId).subscribe({
       next: (res: any) => {
-        if(res.responseData.status === 'APPROVED'){
+        console.log(res)
+        if(res.responseData.responseCodeNumeric === 200){
           this.toasterService.showToastr('Hall ticket approved successfully !!', 'Success', 'success', '');
           this.router.navigate(['/hall-ticket-management']);
         } else {
           this.toasterService.showToastr('Hall ticket approval failed', 'Error', 'error', '');
+          this.router.navigate(['/hall-ticket-management']);
         }
       },
       error: (error: any) => {
         console.log(error.message);
+        this.router.navigate(['/hall-ticket-management']);
         this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
       }
     })
