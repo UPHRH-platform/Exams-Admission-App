@@ -2,20 +2,20 @@
     <div class="secondary-container">
     <div class="header-container">
         <div class="head-details">
-            <h2>{{examName | uppercase}}</h2>
+            <h2 class="m0">{{examName | uppercase}}</h2>
 
         </div>
     </div>
     <div class="container clearfix mt3">
         <div class="sm-col md-col-7 lg-col-6">
-            <mat-form-field appearance="outline" class="search-field">
+            <mat-form-field style="visibility: hidden;" appearance="outline" class="search-field">
                 <mat-icon matPrefix class="search-icon">search</mat-icon>
                 <input matInput [(ngModel)]="searcKey" placeholder="Search">
             </mat-form-field>
         </div>
         <div class="sm-col md-col-5 lg-col-6">
             <div class="w-full">
-                <button class="registerBtn right px2" (click)="openRegistrationPopup()">Register</button>
+                <button class="registerBtn right px2 mr4" (click)="openRegistrationPopup()">Register</button>
             </div>
         </div>
     </div>
