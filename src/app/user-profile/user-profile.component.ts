@@ -46,12 +46,10 @@ export class UserProfileComponent {
 
   ngOnInit(): void {
     this.userData = this.authService.getUserRepresentation();
-    this.baseService.getUserProfileInfo$(6)
+    this.baseService.getUserProfileInfo$(this.userData.attributes.studentId[0])
     .subscribe({
       next:(res:any)=>{
-        console.log(res.responseData)
        // this.studentData = res.studentsExamDetailsList;
-     
        this.setUserFormData(res.responseData);
       },
       error: (error: HttpErrorResponse) => {

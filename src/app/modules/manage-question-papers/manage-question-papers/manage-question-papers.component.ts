@@ -6,6 +6,7 @@ import { AuthServiceService } from 'src/app/core/services';
 import { QuestionPaper } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class ManageQuestionPapersComponent {
     private baseService: BaseService,
     private authService: AuthServiceService, 
     private dialog: MatDialog,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private toastrService: ToastrServiceService
 
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
@@ -61,6 +63,8 @@ export class ManageQuestionPapersComponent {
     error: (error: HttpErrorResponse) => {
       console.log(error);
       this.isDataLoading = false;
+      this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+          
     }
   })
   }
