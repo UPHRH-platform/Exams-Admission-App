@@ -21,9 +21,9 @@ export class ManageHallTicketsAdminListComponent {
   institutes: Institute[];
   courses: Course[];
   years: Year[];
-  generatedHallTicketsData: HallTicket[]=[];
-  pendingHallTicketsData: HallTicket[]=[];
-  selectedCandidatesForHallTicketsGenerate: HallTicket[]= [];
+  generatedHallTicketsData: HallTicket[] = [];
+  pendingHallTicketsData: HallTicket[] = [];
+  selectedCandidatesForHallTicketsGenerate: HallTicket[] = [];
   pendingHallTicketsTableColumns: TableColumn[] = [];
   generatedHallTicketsTableColumns: TableColumn[] = [];
 
@@ -32,6 +32,7 @@ export class ManageHallTicketsAdminListComponent {
     { label: 'Manage Hall Tickets', url: '' },
   ]
   unformattedHallTickets: any;
+  hallTktType: any;
   constructor(
     private baseService: BaseService,
     private router: Router,
@@ -43,15 +44,15 @@ export class ManageHallTicketsAdminListComponent {
 
     this.initializeTableColumns();
     this.initializePageData();
-   
+
     //this.getGeneratedHallTickets();
   }
 
 
-  hallTicketControl = new FormControl('', [Validators.required]);
-  courseControl = new FormControl('', [Validators.required]);
-  examCycleControl = new FormControl('', [Validators.required]);
-  instituteControl = new FormControl('', [Validators.required]);
+  hallTicketControl = new FormControl('');
+  courseControl = new FormControl('');
+  examCycleControl = new FormControl('');
+  instituteControl = new FormControl('');
 
   initializeTableColumns(): void {
 
@@ -208,17 +209,19 @@ export class ManageHallTicketsAdminListComponent {
 
   }
 
-  getHallTickets() {
+  getHallTickets(courseId?: number, examCycleId?: number, instituteId?: number) {
     this.isDataLoading = true;
-    this.baseService.getHallTickets$()
+    this.pendingHallTicketsData = []
+    this.generatedHallTicketsData = []
+    this.baseService.getHallTickets$(courseId, examCycleId, instituteId)
       .pipe((mergeMap((response: any) => {
+        console.log(response)
         this.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
         next: (res: any) => {
           //console.log(res)
-
           this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus != 'GENERATED'));
           this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
 
@@ -227,6 +230,7 @@ export class ManageHallTicketsAdminListComponent {
         error: (error: HttpErrorResponse) => {
           this.isDataLoading = false;
           console.log(error)
+          this.toasterService.showToastr('No Data found for this filter', 'Error', 'error', '');
         }
 
       })
@@ -234,6 +238,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   formateHallTicketsData(response: any) {
+    console.log(response)
     const formatedHallTicketsDetails: {
       hallTicketsDetailsList: any[]
     } = {
@@ -262,7 +267,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   getAllInstitutes() {
-     this.baseService.getAllInstitutes$().subscribe({
+    this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
         this.institutes = res.responseData;
       },
@@ -273,14 +278,31 @@ export class ManageHallTicketsAdminListComponent {
     })
   }
 
-  onSelectionChangeHallTicketType(e: any){
-    console.log(e.value)
-    e.value === 'modification_hall_ticket'? this.getHallTicketsForDataCorrections() : this.getHallTickets();
+  onSelectionChangeHallTicketType(e: any) {
+    console.log(e)
+    let courseId: any
+    let examCycleId:any
+    let instituteId: any
+
+    if (this?.courseControl?.value) {
+      courseId = this?.courseControl?.value
+    }
+    if (this?.examCycleControl?.value) {
+      examCycleId = this?.examCycleControl?.value
+    }
+    if (this?.instituteControl?.value) {
+      instituteId = this?.instituteControl?.value
+    }
+    this.hallTktType = e.value
+    this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(courseId, examCycleId, instituteId) : this.getHallTickets(courseId, examCycleId, instituteId);
 
   }
-  getHallTicketsForDataCorrections() {
+  getHallTicketsForDataCorrections(courseId?: number,examCycleId?: number, instituteId?: number) {
     this.isDataLoading = true;
-    this.baseService.getHallTicketsForDataCorrections$()
+     //console.log(res)
+     this.pendingHallTicketsData=[]
+     this.generatedHallTicketsData=[]
+    this.baseService.getHallTicketsForDataCorrections$(courseId,examCycleId,instituteId)
       .pipe((mergeMap((response: any) => {
         return this.formateHallTicketsData(response.responseData)
       })))
@@ -310,11 +332,40 @@ export class ManageHallTicketsAdminListComponent {
 
       }
     ]
+    this.hallTicketControl.patchValue('new_hall_ticket')
 
     this.getAllInstitutes();
     this.getCoursesList();
     this.getExamCycleList();
+    this.getHallTickets();
+  }
 
+  getOtherSelectedFilters() {
+    const selectedFiltersArray = []
+    selectedFiltersArray.push({
+      instituteId: this.instituteControl.value,
+      examCycleId: this.examCycleControl.value,
+      courseId: this.courseControl.value
+    })
+
+    return selectedFiltersArray;
+  }
+
+  onCourseChangeSelected(e: any) {
+    const selectedFilters: any = this.getOtherSelectedFilters();
+    this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(e.value, selectedFilters[0].examCycleId, selectedFilters[0].instituteId) :   this.getHallTickets(e.value, selectedFilters[0].examCycleId, selectedFilters[0].instituteId)
+  }
+
+  onExamcycleSelected(e: any) {
+    const selectedFilters: any = this.getOtherSelectedFilters();
+    this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(selectedFilters[0].courseId, e, selectedFilters[0].instituteId) :  this.getHallTickets(selectedFilters[0].courseId, e, selectedFilters[0].instituteId)
+   
+  }
+
+  onInstituteSelected(e: any) {
+    const selectedFilters: any = this.getOtherSelectedFilters();
+    this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(selectedFilters[0].courseId, selectedFilters[0].examCycleId, e.value) :  this.getHallTickets(selectedFilters[0].courseId, selectedFilters[0].examCycleId, e.value)
+   
   }
 
   getExamCycleList() {
@@ -368,12 +419,32 @@ export class ManageHallTicketsAdminListComponent {
     } else {
       this.toasterService.showToastr('Please select candidates', 'Error', 'error', '');
     }
+  }
 
+  onAttendanceFilterClick(event: any) {
+    console.log(event)
+    if (this.tabGroup.selectedIndex === 0) {
+      if (event.includes(">")) {
+        this.pendingHallTicketsData = this.pendingHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage >= 75);
+      } else {
+        this.pendingHallTicketsData = this.pendingHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage < 75);
+      }
+    } else {
+      if (event.includes(">")) {
+        this.generatedHallTicketsData = this.generatedHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage >= 75);
+
+      } else {
+        this.generatedHallTicketsData = this.generatedHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage < 75);
+      }
+    }
 
   }
 
-  onAttendanceFilterClick(e: any) {
-    console.log(e)
+  onFilterClear() {
+    this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections() : this.getHallTickets();
+    this.instituteControl.patchValue('')
+    this.courseControl.patchValue('')
+    this.examCycleControl.patchValue('')
   }
 
   onViewClick(event: any) {
