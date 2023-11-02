@@ -7,7 +7,7 @@
       *ngIf="this.loggedInUserRole === 'exams_admin'"
     >
       <mat-label>Select Institute</mat-label>
-      <mat-select (selectionChange)="getSelectedInstitute($event)">
+        <mat-select [formControl]="institute" (selectionChange)="getCoursesByInstitute($event.value)">
         <mat-option *ngFor="let institute of instituteList" [value]="institute.id">
           {{ institute.instituteCode }} - {{institute.instituteName}}
         </mat-option>
@@ -15,7 +15,7 @@
     </mat-form-field>
     <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label class="label">Select Course</mat-label>
-      <mat-select (selectionChange)="getSelectedCourse($event)">
+      <mat-select (selectionChange)="getSelectedCourse($event)" [(ngModel)]="selectedCourse">
         <mat-option *ngFor="let course of courses" [value]="course.course_id">
           {{course.courseCode}} - {{ course.courseName }}
         </mat-option>
@@ -23,7 +23,7 @@
     </mat-form-field>
     <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
-      <mat-select (selectionChange)="getSelectedAcademicYear($event)">
+      <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
         <mat-option *ngFor="let year of years" [value]="year">
           {{ year }}
         </mat-option>

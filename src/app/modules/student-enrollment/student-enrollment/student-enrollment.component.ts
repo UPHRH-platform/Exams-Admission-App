@@ -13,6 +13,7 @@ import jsPDF from 'jspdf';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
+import { mergeMap } from 'rxjs';
 
 interface InstituteDetail {
   id: number | string,
@@ -52,13 +53,14 @@ export class StudentEnrollmentComponent {
   instituteDetail: InstituteDetail;
   selectedCourse: any;
   selectedAcademicYear: any;
+  institute = new FormControl();
   constructor(private router: Router, private authService: AuthServiceService,
      private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
-    this.years = this.baseService.getAdmissionSessionList()
+    this.getAdmissionSessionList();
     this.initializeTabs();
     this.initializeSearchForm();
     // courses to be fetched based on institute
@@ -71,10 +73,14 @@ export class StudentEnrollmentComponent {
     else {
       this.getAllCourses();
       this.getAllInstitutes();
-      this.getEnrollmentData();
+      // this.getEnrollmentData();
     }
   }
 
+  getAdmissionSessionList() {
+    this.years = this.baseService.getAdmissionSessionList()
+    this.selectedAcademicYear = this.years[4]
+  }
 
   getPendingEnrollment() {
 
@@ -86,11 +92,25 @@ export class StudentEnrollmentComponent {
   }
 
   getAllCourses() {
-    this.baseService.getAllCourses$().subscribe({
+    this.baseService.getAllCourses$()
+    .pipe(mergeMap((res) => {
+      const courses: any = []
+      if(res.responseData) {
+        res.responseData.forEach((elemment: any) => {
+          const course = {
+            courseCode: elemment.courseCode,
+            courseName: elemment.courseName,
+            course_id: elemment.id,
+          }
+          courses.push(course)
+        })
+      }
+      return of(courses)
+    }))
+    .subscribe({
       next: (res) => {
-        console.log(res.responseData);
-        console.log("courses =>", res.responseData);
-        this.courses = res.responseData;
+        console.log("courses =>", res);
+        this.courses = res;
       },
       error: (err: HttpErrorResponse) => {
         console.log(err);
@@ -102,6 +122,10 @@ export class StudentEnrollmentComponent {
     this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
         this.instituteList = res.responseData;
+        if(this.instituteList.length > 0) {
+          this.institute.patchValue(this.instituteList.length - 1)
+          this.getCoursesByInstitute(this.institute.value)
+        }
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message)
@@ -126,13 +150,13 @@ export class StudentEnrollmentComponent {
 
   }
 
-  getEnrollmentData(instituteId?: string, courseId?: string, academicYear?: string) {
+  getEnrollmentData(academicYear?: string) {
     this.enrollmentTableData = [];
 
   let request = {
-    instituteId: instituteId !== undefined? instituteId : '',
-    courseId: courseId !== undefined? courseId : '',
-    academicYear: academicYear !== undefined? academicYear: '',
+    instituteId: this.institute.value !== undefined? this.institute.value : '',
+    courseId: this.selectedCourse !== undefined? this.selectedCourse : '',
+    academicYear: this.selectedAcademicYear !== undefined? this.selectedAcademicYear: '',
     verificationStatus: this.selectedTab.name === 'Approved'? 'VERIFIED' : this.selectedTab.name.toUpperCase()
   }
  if(this.loggedInUserRole === 'exams_institute') {
@@ -148,7 +172,7 @@ export class StudentEnrollmentComponent {
       })
       this.enrollmentTableData = res.responseData;
     },
-    error: (error: any) => {
+    error: (error: HttpErrorResponse) => {
       this.isDataLoading = false;
       error.error.error?  this.toastrService.showToastr(error.error.error.message, 'Error', 'error', ''):  this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
     
@@ -170,7 +194,7 @@ export class StudentEnrollmentComponent {
       },
       error: (error: any) => {
         this.isDataLoading = false;
-        this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+        this.toastrService.showToastr(error.message, 'Error', 'error', '');
       }
     })
   }
@@ -345,19 +369,14 @@ export class StudentEnrollmentComponent {
     this.router.navigate(['student-enrollment/add-enrollment']);
   }
 
-  getSelectedInstitute(event: any) {
-    const selectedInsitute = event.value;
-    this.getEnrollmentData(selectedInsitute, '', '');
-  }
-
   getSelectedCourse(event: any) {
     this.selectedCourse = event.value
-    this.getEnrollmentData('', this.selectedCourse, '');
+    this.getEnrollmentData();
   }
 
   getSelectedAcademicYear(event: any) {
     this.selectedAcademicYear = event.value;
-    this.getEnrollmentData('', '', this.selectedAcademicYear);
+    this.getEnrollmentData();
   }
 
   onTabChange(event: MatTabChangeEvent) {
@@ -373,7 +392,7 @@ export class StudentEnrollmentComponent {
         next: (res) => {
           console.log(res.responseData);
           this.instituteDetail = res.responseData[0];
-          this.getEnrollmentData();
+          // this.getEnrollmentData();
           this.getCoursesByInstitute(this.instituteDetail.id);
         }
       })
@@ -382,9 +401,13 @@ export class StudentEnrollmentComponent {
 
   getCoursesByInstitute(id: string | number) {
     const instituteId = id;
+    this.courses = [];
+    this.selectedCourse = undefined
     this.baseService.getCoursesBasedOnInstitute(instituteId).subscribe({
       next: (res) => {
         this.courses = res.responseData[0].institute.courses;
+        this.selectedCourse = this.courses[this.courses.length - 1].course_id
+        this.getEnrollmentData()
       }
     })
   }
