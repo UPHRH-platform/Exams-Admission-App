@@ -27,9 +27,9 @@
                                 <input readonly matInput  [(ngModel)]="amountToPay">
                             </mat-form-field>
                         </div>
-                        <div>
+                        <!-- <div>
                             <button class="btn-pay-fee" (click)="payFee()">Pay fee</button>
-                        </div>
+                        </div> -->
                     </div>
                     <app-shared-table [tableColumns]="examTableHeader" [tableData]="examTableData"
                         [isHallTicket]="isHallTicket" (checkBoxAction)="onSelectedRows($event)"></app-shared-table>
@@ -39,8 +39,7 @@
             <mat-card-actions>
                 <div class="footer">
                     <button class="cancel-btn" (click)="redirectToViewResults()">Cancel</button>
-                    <button class="revalution-btn" (click)="requestRevalution()"
-                    [disabled]="paymentDone">Request revalution</button>
+                    <button class="revalution-btn" [disabled]="paymentDone" (click)="payFee()">Pay fee</button>
                 </div>
             </mat-card-actions>
         </mat-card>
