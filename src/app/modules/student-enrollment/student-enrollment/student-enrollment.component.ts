@@ -70,7 +70,11 @@ export class StudentEnrollmentComponent {
     }
     else if (this.loggedInUserRole === 'exams_superadmin') {
       
-      this.loadSuperAdminScreenDetails();
+      //this.loadSuperAdminScreenDetails();
+    }
+    else if (this.loggedInUserRole === 'exams_secretary') {
+      
+      this.loadSecretaryScreenDetails();
     }
     else {
       this.getAllCourses();
@@ -92,7 +96,7 @@ export class StudentEnrollmentComponent {
     })
   }
 
-  loadSuperAdminScreenDetails() {
+  loadSecretaryScreenDetails() {
     forkJoin([
       this.getAllCourses(),
       this.getLongPendingStudentEnrollmentList()
@@ -388,45 +392,6 @@ export class StudentEnrollmentComponent {
             isLink: false,
             cell: (element: Record<string, any>) => `${element['createdDate']}`
           },
-        ]
-        break;
-      case 'exams_superadmin':
-        this.enrollmentTableColumns = [
-          {
-            columnDef: 'firstName',
-            header: 'Applicant Name',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
-          },
-          {
-            columnDef: 'provisionalEnrollmentNumber',
-            header: 'Provisional Enrollment Number',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
-          },
-          {
-            columnDef: 'course',
-            header: 'Course Name',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['courseName']}`
-          },
-          {
-            columnDef: 'admissionYear',
-            header: 'Admission Year',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
-          },
-          {
-            columnDef: 'createdDate',
-            header: 'Created Date',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['createdDate']}`
-          },
           {
             columnDef: 'viewStudentEnrollment',
             header: '',
@@ -448,7 +413,7 @@ export class StudentEnrollmentComponent {
 
   getSelectedCourse(event: any) {
     this.selectedCourse = event.value
-    this.loggedInUserRole === 'exams_superadmin' ? this.getLongPendingStudentEnrollmentList(event.value,this.selectedAcademicYear) : this.getEnrollmentData();
+    this.loggedInUserRole === 'exams_secretary' ? this.getLongPendingStudentEnrollmentList(event.value,this.selectedAcademicYear) : this.getEnrollmentData();
     
   }
 
