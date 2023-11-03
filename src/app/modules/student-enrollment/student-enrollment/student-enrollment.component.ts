@@ -70,8 +70,7 @@ export class StudentEnrollmentComponent {
     }
     else if (this.loggedInUserRole === 'exams_superadmin') {
       
-      this.getAllCourses();
-      this.getLongPendingStudentEnrollmentList();
+      this.loadSuperAdminScreenDetails();
     }
     else {
       this.getAllCourses();
@@ -93,25 +92,26 @@ export class StudentEnrollmentComponent {
     })
   }
 
+  loadSuperAdminScreenDetails() {
+    forkJoin([
+      this.getAllCourses(),
+      this.getLongPendingStudentEnrollmentList()
+    ]).subscribe({
+      next: (res: any) => {
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
 
-  // getPendingEnrollment() {
-  // this.baseService.getPendingEnrollmentList().subscribe({
-  //   next:(res)=>{
-  //     console.log(res)
-  //   },
-  //   error:(err)=>{
-  //     console.log(err)
-  //   }
-  // })
-  // }
+      }
+    }
+    )
+  }
+
   getAdmissionSessionList() {
     this.years = this.baseService.getAdmissionSessionList()
     this.selectedAcademicYear = this.years[4]
   }
 
-  getPendingEnrollment() {
-
-  }
   initializeSearchForm() {
     this.searchForm = new FormGroup({
       searchData: new FormControl('')
