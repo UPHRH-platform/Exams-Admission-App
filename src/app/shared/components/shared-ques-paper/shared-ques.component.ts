@@ -79,8 +79,7 @@ export class SharedQuestionPaperComponent {
     }
   }
 
-  emitUploadQuesPaper(event: any) {
-    
+  emitUploadQuesPaper(event: any, examId: string) {
     this.fileUploadError = '';
       let selectedFile = event.target.files[0];
       // const formData = new FormData();
@@ -91,25 +90,27 @@ export class SharedQuestionPaperComponent {
       const fileSize = selectedFile.size;
       const allowedExtensions = ['pdf'];
       if (allowedExtensions.includes(extension)) {
-        // validate file size to be less than 2mb if the file has a valid extension
-        if (fileSize < 2000000) {
+        // validate file size to be less than 1mb if the file has a valid extension
+        if (fileSize < 1000000) {
           if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
             this.files.push(selectedFile);
             this.listOfFiles.push(
               selectedFile.name.concat(this.baseService.formatBytes(selectedFile.size))
             );
+            const details = {
+              file: selectedFile,
+              examId: examId
+            }
+            this.uploadQuesPaper.emit(details);
           } else {
             console.log('file already exists');
           }
         } else {
-          this.fileUploadError = 'Please upload files with size less than 2MB';
+          this.fileUploadError = 'Please upload files with size less than 1MB';
         }
       } else {
         this.fileUploadError = `Please upload ${allowedExtensions.join(', ')} files`;
       }
-      // if (this.examCycleControl.valid) {
-         this.uploadQuesPaper.emit(selectedFile);
-    // }
     }
   //     
 
