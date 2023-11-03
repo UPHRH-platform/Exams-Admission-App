@@ -35,7 +35,6 @@ export class CandidatePortalComponent implements OnInit {
 
   ngOnInit(): void {
     this.getExamCycles()
-    this.getResultAndHallticketDetails(3) // remove when apis working
   }
 
   getExamCycles() {
@@ -56,48 +55,58 @@ export class CandidatePortalComponent implements OnInit {
       })
   }
 
-  getResultAndHallticketDetails(event: any) {
+  getResultAndHallticketDetails(examCycleId: any) {
     this.cardList = [];
     this.isDataLoading = true;
     this.studentID = this.authService.getUserRepresentation().attributes.studentId;
     console.log(this.studentID[0])
-    forkJoin([this.baseService.getHallTicketData$(parseInt(this.studentID[0]), event), 
-    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)])
- /*    forkJoin([this.baseService.getHallTicketData$(2, 5), 
-    this.baseService.getStudentResults$(this.studentID, '25 mar 2021' ,event)]) */
-    .pipe(
-      catchError(error => {
+
+    this.baseService.getHallTicketData$(parseInt(this.studentID[0]), examCycleId)
+      .subscribe({
+        next: (res: any) => {
+          if (res && res.responseData) {
+            this.hallTicketDetails = res.responseData;
+            this.hallTicketDetails.dob = this.baseService.reverseDate(res.responseData.dateOfBirth);
+            this.hallTicketDetails.actualDOB = res.responseData.dateOfBirth;
+            this.cardList.push({
+              title: 'Hall Ticket',
+              lable: 'Generated on',
+              date: this.hallTicketDetails.hallTicketGenerationDate,
+              status: this.hallTicketDetails.hallTicketStatus,
+            })
+            this.hallTicketDetails.examCycleId = examCycleId
+          }
+          this.isDataLoading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isDataLoading = false;
+          this.toasterService.showToastr(error, 'Error', 'error');
+        }
+      });
+
+    this.baseService.getStudentResults$(this.studentID,examCycleId)
+    .subscribe({
+      next: (res: any) => {
+        if (res && res.responseData) {
+          this.studentResultsDetails = res.responseData;
+          this.studentResultsDetails.dob = this.baseService.reverseDate(res.responseData.dateOfBirth)
+          const examCycle: any = this.examCycleList.find(((element: any) => element.id === examCycleId))
+          this.studentResultsDetails['examCyclename'] = examCycle ? examCycle.examCycleName : '';
+          this.studentResultsDetails['examCycleId'] = examCycleId;
+          this.cardList.push({
+            title: 'Results',
+            lable: 'Published on',
+            date: this.studentResultsDetails.publishedDate,
+            status: this.studentResultsDetails.publishStatus,
+          })
+        }
+        this.isDataLoading = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isDataLoading = false;
         this.toasterService.showToastr(error, 'Error', 'error')
-        return of([])
-      })
-    )
-    .subscribe((res) => {
-      if(res[0] && res[0].responseData) {
-        this.hallTicketDetails = res[0].responseData;
-        this.hallTicketDetails.dob = this.baseService.reverseDate(res[0].responseData.dateOfBirth);
-        this.hallTicketDetails.actualDOB = res[0].responseData.dateOfBirth;
-        this.cardList.push({
-          title: 'Hall Ticket',
-          lable: 'Generated on',
-          date: this.hallTicketDetails.hallTicketGenerationDate,
-          status: this.hallTicketDetails.hallTicketStatus,
-        })
-        this.hallTicketDetails.examCycleId = this.examCycleFormControl.value
       }
-      if(res[1] && res[1].responseData) {
-        this.studentResultsDetails = res[1].responseData;
-        this.studentResultsDetails.dob = this.baseService.reverseDate(res[1].responseData.dateOfBirth)
-        const examCycle: any = this.examCycleList.find(((element: any) => element.id === event))
-        this.studentResultsDetails['examCyclename'] = examCycle ? examCycle.examCycleName : '';
-        this.cardList.push({
-          title: 'Results',
-          lable: 'Published on',
-          date: this.studentResultsDetails.publishedDate,
-          status: this.studentResultsDetails.publishStatus,
-        })
-      }
-      this.isDataLoading = false;
-    })
+    });
   }
 
 

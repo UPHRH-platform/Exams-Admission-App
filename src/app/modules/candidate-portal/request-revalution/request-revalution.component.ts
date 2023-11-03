@@ -5,6 +5,7 @@ import { mergeMap, of } from 'rxjs';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthServiceService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-request-revalution',
@@ -65,7 +66,7 @@ export class RequestRevalutionComponent implements OnInit {
     },
   ]
 
-  examTableData = []
+  examTableData: any = []
   selectedExams = []
 
   isHallTicket = true
@@ -82,7 +83,8 @@ export class RequestRevalutionComponent implements OnInit {
     private router: Router,
     private candidatePortalService: CandidatePortalService,
     private baseService: BaseService,
-    private toasterService: ToastrServiceService
+    private toasterService: ToastrServiceService,
+    private authService: AuthServiceService
   ) { 
     this.stateData = this.router?.getCurrentNavigation()?.extras.state
   }
@@ -100,10 +102,11 @@ export class RequestRevalutionComponent implements OnInit {
         firstName: studentDetails.firstName,
         lastName: studentDetails.lastName,
         studentEnrollmentNumber: studentDetails.studentEnrollmentNumber,
-        dob: new Date(studentDetails.dob),
+        dob: studentDetails.dob,
         courseName: studentDetails.courseName,
         courseYear: studentDetails.courseYear,
-        examCyclename: studentDetails.examCyclename
+        examCyclename: studentDetails.examCyclename,
+        examCycleId: studentDetails.examCycleId
       }
       this.examTableData = this.stateData.exams;
     } else {
@@ -120,17 +123,7 @@ export class RequestRevalutionComponent implements OnInit {
   //#endregion
 
   //#region (Request revalution)
-  requestRevalution() {
-    const formatedData = this.formateRevaluationData()
-    this.candidatePortalService.requestRevolution(formatedData)
-    // .subscribe((response: any) => {
-    //   if(response) {
-    this.router.navigateByUrl('/candidate-portal')
-    //   }
-    // })
-  }
 
-  formateRevaluationData() { }
   //#endregion
 
   onSelectedRows(event: any) {
@@ -140,72 +133,40 @@ export class RequestRevalutionComponent implements OnInit {
   }
 
   payFee() {
-    const postData = {
-      endpoint: "https://eazypayuat.icicibank.com/EazyPG",
-      returnUrl: "https://payment.uphrh.in/api/v1/user/payment",
-      paymode: "9",
-      secret: "",
-      merchantId: "600547",
-      mandatoryFields: {
-        referenceNo: '', //generate random number (this.baseService.generate_uuidv4())
-        submerchantId: "45",
-        transactionAmount: this.amountToPay,
-        invoiceId: "x1",
-        invoiceDate: "x",
-        invoiceTime: "x",
-        merchantId: "x",
-        payerType: "registration", //module you create
-        payerId: 'instituteId',
-        transactionId: "x",
-        transactionDate: "x",
-        transactionTime: "x",
-        transactionStatus: "x",
-        refundId: "x",
-        refundDate: "x",
-        refundTime: "x",
-        refundStatus: "x",
-      },
-      optionalFields: "registration", //module you create
-    };
-    // this.candidatePortalService.getPaymentUrl(postData)
-    // .subscribe((result: any) => {
-    //   window.open(result.url, "_blank");
-    // })
-
-    // const dialogRef = this.dialog.open(LoadingDialogComponent, {
-    //   data: {
-    //     description: 'Please wait a while. you are redirecting to payment page'
-    //   },
-    //   width: '800px',
-    //   height: '500px',
-    //   maxWidth: '90vw',
-    //   maxHeight: '90vh'
-    // })
-    this.paymentDone = true
-  }
-
-  requestRetotalling() {
-    const formBody = {
-      student: {
-        enrollmentNumber: this.studentDetails.studentEnrollmentNumber
-      },
-      exams: [],
-      remarks: "Requesting for retotalling of marks 1",
+    const studentDetails = this.authService.getUserRepresentation();
+    const formBody: {
+      examCycleId: string,
+      instituteId: number,
+      studentExam: [{
+        studentId: string,
+        exam: any[],
+      }
+      ],
+      amount: number,
+      payerType: string,
+      createdBy: string
+    } = {
+      examCycleId: this.studentDetails.examCycleId,
+      instituteId: 1,
+      studentExam: [{
+        studentId: studentDetails.attributes.studentId[0],
+        exam: [],
+      }
+      ],
+      amount: this.amountToPay,
+      payerType: "EXAM",
+      createdBy: studentDetails.id
     }
     this.selectedExams.forEach((element: any) => {
-      const exam = {
-        id: element.id
+      const examDetails: any = {
+        id: element.examId,
+        fee: this.costOfExam,
       }
+      formBody.studentExam[0].exam.push(examDetails)
     })
-    this.baseService.requestRetotalling(formBody)
-    .subscribe({
-      next: (res) => {
-        this.toasterService.showToastr('Retotaling request submited successfully', 'Success', 'success')
-        this.router.navigateByUrl('')
-      },
-      error: (err: HttpErrorResponse) => {
-        this.toasterService.showToastr(err, 'Error', 'error')
-      }
+    this.baseService.payFees(formBody)
+    .subscribe((result: any) => {
+      window.open(result.responseData.redirectUrl, "_blank");
     })
   }
 
