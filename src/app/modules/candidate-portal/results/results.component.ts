@@ -78,6 +78,7 @@ export class ResultsComponent implements OnInit {
       console.log('data', this.resultsDetails)
       this.studentDetails = {
         examCyclename: this.resultsDetails?.data.examCyclename,
+        examCycleId: this.resultsDetails?.data.examCycleId,
         firstName: this.resultsDetails?.data.firstName,
         lastName: this.resultsDetails?.data.lastName,
         studentEnrollmentNumber: this.resultsDetails?.data.enrollmentNumber,

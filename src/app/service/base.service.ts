@@ -207,15 +207,10 @@ export class BaseService extends HttpService {
 
   }
 
-  getStudentResults$(enrolmentNumber: string, dateOfBirth: string, examCycleID: string) {
-    const formBody = {
-      enrolmentNumber: enrolmentNumber,
-      dateOfBirth: dateOfBirth,
-      examCycleID: examCycleID
-    }
+  getStudentResults$(StudentId: string, examCycleID: string) {
     const requestParam: RequestParam = {
-      url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}`,
-      data: formBody
+      url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}?StudentId=${StudentId}&examCycleId=${examCycleID}`,
+      data: {}
     }
     return this.get(requestParam)
   }
@@ -731,13 +726,6 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     // })
   }
 
-  requestRetotalling(formBody: any) {
-    const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RETOTALLING_REQUEST}`,
-      param: formBody
-    }
-    return this.post(requestParam)
-  }
 
   //#endregion
 

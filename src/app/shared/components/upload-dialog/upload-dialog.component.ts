@@ -45,7 +45,7 @@ export class UploadDialogComponent implements OnInit {
      const extension = selectedFile.name.split('.').pop();
      const fileSize = selectedFile.size;
      const allowedExtensions = this.dialogDetails.acceptFiles;
-     if (allowedExtensions.includes(extension)) {
+     if (allowedExtensions.includes(extension) || allowedExtensions.includes('.'+extension)) {
        // validate file size to be less than 2mb if the file has a valid extension
        if (fileSize < 2000000) {
          if (this.listOfFiles.indexOf(selectedFile?.name) === -1) {
