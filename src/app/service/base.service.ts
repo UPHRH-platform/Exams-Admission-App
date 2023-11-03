@@ -413,6 +413,23 @@ getEnrollmentList(request: any) {
   return this.get(requestParam);
 }
 
+getPendingEnrollmentList(request: any) {
+  const requestParam: RequestParam = {
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_PENDINGLIST_ENROLLEMENT}?courseId=${request.courseId}&academicYear=${request.academicYear}`,
+    data: request,
+  }
+  return this.get(requestParam);
+}
+
+getPendingEnrollmentLi(request: any) {
+  const requestParam: RequestParam = {
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_PENDINGLIST_ENROLLEMENT}`,
+    data: request,
+  }
+  return this.get(requestParam);
+}
+// ?courseId=&academicYear=2023' \
+
 /** verify student(Approve/reject) */
 
   //#region (CCTV management admin) 
