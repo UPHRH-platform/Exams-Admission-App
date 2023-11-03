@@ -83,12 +83,12 @@ export class BaseService extends HttpService {
     return this.get(requestParam)
   }
 
-  deleteResults(): Observable<any> {
-    return of({
-      statusInfo: {
-        statusMessage: 'deleted'
-      }
-    })
+  deleteResults(examCycleId: any, instituteId: string): Observable<any> {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.DELETE_EXTERNAL_MARKS}examCycleId=${examCycleId}&instituteId=${instituteId}`
+    }
+
+    return this.delete(requestParam)
     
   }
 

@@ -97,7 +97,8 @@ export class CandidatePortalComponent implements OnInit {
             title: 'Results',
             lable: 'Published on',
             date: this.studentResultsDetails.publishedDate,
-            status: this.studentResultsDetails.publishStatus,
+            status: 'PUBLISHED'
+            // status: this.studentResultsDetails.publishStatus,
           })
         }
         this.isDataLoading = false;
