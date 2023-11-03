@@ -57,6 +57,7 @@ export class StudentEnrollmentComponent {
   constructor(private router: Router, private authService: AuthServiceService,
      private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
+    // this.getPendingList()
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
@@ -77,6 +78,28 @@ export class StudentEnrollmentComponent {
     }
   }
 
+  // getPendingList(){
+  //   this.baseService.getPendingEnrollmentLi('').subscribe({
+  //     next:(res)=>{
+  //      console.log('list',res)
+  //     },
+  //     error:(err)=>{
+  //       console.log(err)
+  //     }
+  //   })
+  // }
+
+
+  // getPendingEnrollment() {
+  // this.baseService.getPendingEnrollmentList().subscribe({
+  //   next:(res)=>{
+  //     console.log(res)
+  //   },
+  //   error:(err)=>{
+  //     console.log(err)
+  //   }
+  // })
+  // }
   getAdmissionSessionList() {
     this.years = this.baseService.getAdmissionSessionList()
     this.selectedAcademicYear = this.years[4]
@@ -141,6 +164,11 @@ export class StudentEnrollmentComponent {
   initializeTabs() {
     if (this.loggedInUserRole === 'exams_secretary') {
       this.tabs = Tabs['Student_Enrollment_Secretary'];
+    }
+    else if(this.loggedInUserRole=== 'exams_superadmin'){
+      this.tabs = Tabs['student_Enrollment_dgme']
+      this.initializeColumns();
+
     }
     else {
       this.tabs = Tabs['student_enrollment'];
@@ -358,6 +386,54 @@ export class StudentEnrollmentComponent {
             isSortable: false,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['createdDate']}`
+          },
+        ]
+        break;
+      case 'exams_superadmin':
+        this.enrollmentTableColumns = [
+          {
+            columnDef: 'firstName',
+            header: 'Applicant Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
+          },
+          {
+            columnDef: 'provisionalEnrollmentNumber',
+            header: 'Provisional Enrollment Number',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
+          },
+          {
+            columnDef: 'course',
+            header: 'Course Name',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['courseName']}`
+          },
+          {
+            columnDef: 'admissionYear',
+            header: 'Admission Year',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
+          },
+          {
+            columnDef: 'createdDate',
+            header: 'Created Date',
+            isSortable: false,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['createdDate']}`
+          },
+          {
+            columnDef: 'viewStudentEnrollment',
+            header: '',
+            isSortable: false,
+            isLink: true,
+            isAction: true,
+            cell: (element: Record<string, any>) => `View Enrollment`,
+            classes: ['color-blue'],
           },
         ]
         break;
