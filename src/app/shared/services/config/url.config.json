@@ -103,7 +103,8 @@
             "EXAMS_OF_INSTITUTE_EXMACYCLE": "/v1/studentResults/resultUploadStatusForInstitute",
             "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute",
             "STUDENT_RESULTS": "/v1/studentResults/results",
-            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling"
+            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling",
+            "DELETE_EXTERNAL_MARKS": "/v1/studentResults/deleteFinalMarks?"
         }
     }
 }

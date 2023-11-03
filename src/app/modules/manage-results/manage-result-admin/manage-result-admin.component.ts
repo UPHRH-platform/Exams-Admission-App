@@ -344,7 +344,7 @@ export class ManageResultAdminComponent {
 
   deleteMarksHander() {
     this.isDataLoading = true;
-    this.baseService.deleteResults().subscribe({
+    this.baseService.deleteResults(this.examCycleControl.value, this.selectedCellDetails.row.instituteId).subscribe({
       next: (res:any) => {
         this.toastrService.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '')
         this.isDataLoading = false;
@@ -526,6 +526,7 @@ export class ManageResultAdminComponent {
               heading: heading,     
               labelTwo:'Attach file(s)',
               acceptFiles: '.xlsx',
+              hidePreview: true,
               buttons: [
                 {
                   btnText: 'Browse',
