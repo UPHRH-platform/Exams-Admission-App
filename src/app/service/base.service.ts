@@ -146,9 +146,20 @@ export class BaseService extends HttpService {
     return this.post(requestParam);
   }
 
-  getHallTicketsForDataCorrections$() {
+  getHallTicketsForDataCorrections$(courseId?: number,examCycleId?: number, instituteId?: number) {
+    let appendToReqParams = "";
+
+    if(courseId){
+      appendToReqParams = appendToReqParams+"courseId="+courseId;
+    }
+    if(examCycleId){
+      appendToReqParams =  appendToReqParams+"&examCycleId="+examCycleId;
+    }
+    if(instituteId){
+      appendToReqParams = appendToReqParams+"&instituteId="+instituteId;
+    }
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION+`?`+appendToReqParams,
       data: {},
     }
     return this.get(requestParam);
@@ -162,10 +173,10 @@ export class BaseService extends HttpService {
       appendToReqParams = appendToReqParams+"courseId="+courseId;
     }
     if(examCycleId){
-      appendToReqParams =  appendToReqParams+"examCycleId="+examCycleId;
+      appendToReqParams =  appendToReqParams+"&examCycleId="+examCycleId;
     }
     if(instituteId){
-      appendToReqParams = appendToReqParams+"instituteId="+instituteId;
+      appendToReqParams = appendToReqParams+"&instituteId="+instituteId;
     }
 
     const requestParam: RequestParam = {

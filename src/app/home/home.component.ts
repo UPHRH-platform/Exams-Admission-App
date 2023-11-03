@@ -119,12 +119,12 @@ export class HomeComponent {
       visibility: 'exams_institute' // has to be added for both admin and institute
     },
     
-    {
-      title: 'Result Dashboard',
-      type: 'resultDashboard',
-      url: '/dashboard',
-      visibility: 'exams_admin'
-    },
+    // {
+    //   title: 'Result Dashboard',
+    //   type: 'resultDashboard',
+    //   url: '/dashboard',
+    //   visibility: 'exams_admin'
+    // },
     {
       title: 'Student Enrollment',
       type: 'student-enrollment-secretary',

@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TableColumn } from 'src/app/interfaces/interfaces';
-import { Tabs } from 'src/app/shared/config/tabs.config';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { UploadFileComponent } from 'src/app/modules/manage-exams/upload-file/upload-file.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from 'src/app/service/base.service';
-import { ToastrService } from 'ngx-toastr';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 interface Course {
@@ -33,7 +31,8 @@ export class ManageExamCycleListComponent {
   breadcrumbItems = [
     { label: 'Manage Exam Cycles and Exams', url: '' },
   ];
-  constructor(private router: Router, private dialog: MatDialog, private baseService: BaseService, private toastrService: ToastrServiceService){}
+  constructor(private router: Router, private dialog: MatDialog,
+     private baseService: BaseService, private toastrService: ToastrServiceService){}
   courses: Course[] = [
     {value: 'bsc', viewValue: 'BSc'},
     {value: 'msc', viewValue: 'MSc'},
@@ -60,14 +59,19 @@ export class ManageExamCycleListComponent {
     next: (res) => {
       console.log("res =>", res);
       this.isDataLoading = false;
-      this.examCycleData = res.responseData;
+      this.examCycleData = res.responseData.reverse();
       this.examCycleData.map((obj) => {
         obj.courseName = obj.course?.courseName;
       });
     },
     error: (error: HttpErrorResponse) => {
-      this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
       this.isDataLoading = false;
+      if(error.error.error){
+        this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '');
+      } else{
+        this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+      }
+      
     }
   })
   }
@@ -176,7 +180,7 @@ export class ManageExamCycleListComponent {
           error: (err: HttpErrorResponse) => {
             console.log("Entered error loop");
             this.isDataLoading = false;
-            this.toastrService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+            this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
           }
         })
         

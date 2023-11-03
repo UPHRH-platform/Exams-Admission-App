@@ -25,11 +25,9 @@ export interface Exam {
 export class ManageExamCycleFormComponent {
 
   exams: Exam[]=[];
-  examsToAdd: Exam[]=[];
   courses: any[]= [];
   startMinTime:"08:00";
   startMaxTime: "24:00";
-  savingDetails = false;
   announcer = inject(LiveAnnouncer);
   endDateError: boolean = false;
   endTimeError: boolean = false;
@@ -90,7 +88,7 @@ export class ManageExamCycleFormComponent {
   })
  }
 
- getExamsByExamCycle() {
+ getExamsByExamCycle() { // get previosly saved exams for already cretead exam cycle
   this.baseService.getExamsByExamCycleId(this.examcycleId).subscribe({
     next: (res) => {
       this.exams = res.responseData;
@@ -111,8 +109,8 @@ export class ManageExamCycleFormComponent {
     'startDate': this.examCycleDetails?.startDate,
     'endDate': this.examCycleDetails?.endDate,
   })
+    this.getSelectedCourse();
 
-  
  }
 
  getExamCycleDetailsById() {
@@ -126,7 +124,7 @@ export class ManageExamCycleFormComponent {
     },
     error:(err: HttpErrorResponse) => {
       console.log(err);
-      this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
+      this.toasterService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
     }
   })
  }
@@ -154,7 +152,6 @@ export class ManageExamCycleFormComponent {
     amount: 1000
    }
    this.exams.push(examDetail);
-   this.examsToAdd.push(examDetail);
    this.createExamForm.reset();
  }
 
@@ -168,7 +165,6 @@ export class ManageExamCycleFormComponent {
       startDate: this.convertDateFormat(startDate),
       endDate: this.convertDateFormat(endDate),
     };
-    this.savingDetails = true;
     // console.log(examCycleDetail);
     if(this.examcycleId === undefined) {
     this.baseService.createExamCycle(examCycleDetail).subscribe({
@@ -188,6 +184,7 @@ export class ManageExamCycleFormComponent {
     })
   } 
   else {
+    console.log(examCycleDetail)
     this.updateExamCycleDetails(examCycleDetail);
   }
   }
@@ -208,30 +205,11 @@ export class ManageExamCycleFormComponent {
     };
   }
 
-  //   this.baseService.createExamCycle(examCycleDetail).pipe(
-  //     switchMap((examCycleResponse) => {
-  //       alert("1");
-  //       const examCycleId = examCycleResponse.responseData.id; 
-  
-  //       // Call the createExam API with examCycleId
-  //       return this.baseService.createExam(this.exams, examCycleId);
-  //     })
-  //   ).subscribe({
-  //     next: (res) => {
-  //       this.examsToAdd = [];
-  //       this.toasterService.showToastr("Exam Cycle and Exam is created successfully!", 'Success', 'success', '');
-  //       this.savingDetails = false;
-  //       this.router.navigate(['/manage-exam-cycle'])
-  //     },
-  //   });
-  // }
-
   createExams(examCycleId: string | number) {
     this.baseService.createExam(this.exams, examCycleId).subscribe({
       next: (res) => {
         this.toasterService.showToastr('Exam cycle and Exams created successfully', 'Success', 'success', '');
-        this.examsToAdd = [];
-        this.savingDetails = false;
+        this.exams = [];
         this.router.navigate(['/manage-exam-cycle']);
       },
       error: (err: HttpErrorResponse) => {
@@ -244,7 +222,6 @@ export class ManageExamCycleFormComponent {
    const index = this.exams.indexOf(exam);
    if(index >= 0){
      this.exams.splice(index, 1);
-     this.examsToAdd.splice(index, 1);
      this.announcer.announce('Removed ${exam}');
      
    } else {
@@ -306,7 +283,8 @@ export class ManageExamCycleFormComponent {
     }
   }
   
-  updateExamCycleDetails(request: object) {
+  updateExamCycleDetails(request: any) {
+    request.subjects = this.exams;
     this.baseService.updateExamCycleDetails(request, this.examcycleId).subscribe({
       next: (res) => {
         this.toasterService.showToastr('Exam cycle details updated successfully', 'Success', 'success', '');
@@ -320,7 +298,7 @@ export class ManageExamCycleFormComponent {
         this.router.navigate(['/manage-exam-cycle']);
       },
       error: (err: HttpErrorResponse) => {
-        this.toasterService.showToastr(err, 'Error', 'error', '');
+        this.toasterService.showToastr(err, 'Something went wrong !!', 'error', '');
       }
     })
   }
@@ -334,9 +312,10 @@ export class ManageExamCycleFormComponent {
     })
   }
 
-  getSelectedCourse(event: any) {
+  getSelectedCourse() {
     if(this.createExamCycle.value.courseId) {
     this.getSubjectsByCourse(this.createExamCycle.value.courseId);
+    this.exams=[];
     }
   }
  }

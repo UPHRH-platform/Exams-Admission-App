@@ -163,9 +163,15 @@ export class ManageResultAdminComponent {
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
-    .subscribe((examCucles: any) => {
-      this.examCycleList = examCucles.examCyclesList
-    })
+    .subscribe({
+      next: (examCycles: any) => {
+        this.examCycleList = examCycles.examCyclesList
+    },
+    error: (err: HttpErrorResponse) => {
+      this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+         console.log(err)
+    }
+  })
   }
 
   getInstitutesData(examCycleId: any) {
@@ -289,97 +295,51 @@ export class ManageResultAdminComponent {
   //#endregion
 
   downloadMarksHandler() {
-    const internalMarks = [
-      [
-        `First Name`, 
-        `Last Name`, 
-        `Enrolment Number`,
-        `Mother's Name`,
-        `Father's Name`,
-        `Course`,
-        `Exam Cycle`,
-        `Exam`,
-        `Internal Marks`,
-        `Passing Internal Marks`,
-        `Internal Marks Obtained`,
-        `Practical Marks`,
-        `Passing Practical Marks`,
-        `Practical Marks Obtained`,
-        `Other Marks`,
-        `Passing Other Marks`,
-        `Other Marks Obtained`,
-        `External Marks`,
-        `Passing External Marks`,
-        `External Marks Obtained`,
-        `Total Marks`,
-        `Passing Total Marks`,
-        `Total Marks Obtained`,
-        `Grade`,
-        `Result`,
-      ],
-    ];
+    let xlsx = require("json-as-xlsx")
 
-    if(this.studentMarksDetails.length > 0) {
-      this.studentMarksDetails.forEach((element: any) => {
-        const stuentMarks = [
-          element.firstName,
-          element.lastName,
-          element.enrollmentNumber,
-          element.motherName,
-          element.fatherName,
-          element.courseValue,
-          element.examCycleValue,
-          element.examValue,
-          element.internalMarks,
-          element.passingInternalMarks,
-          element.internalMarksObtained,
-          element.practicalMarks,
-          element.passingPracticalMarks,
-          element.practicalMarksObtained,
-          element.otherMarks,
-          element.passingOtherMarks,
-          element.otherMarksObtained,
-          element.externalMarks,
-          element.passingExternalMarks,
-          element.externalMarksObtained,
-          element.totalMarks,
-          element.passingTotalMarks,
-          element.totalMarksObtained,
-          element.grade,
-          element.result
-        ]
-        internalMarks.push(stuentMarks)
-      });
+    let data = [
+      {
+        sheet: "Adults",
+        columns: [
+          { label: `First Name`, value: 'firstName' }, 
+          { label: `Last Name`, value: 'lastName' }, 
+          { label: `Enrolment Number`, value: 'enrollmentNumber' },
+          { label: `Mother's Name`, value: 'motherName' },
+          { label: `Father's Name`, value: 'fatherName' },
+          { label: `Course`, value: 'courseValue' },
+          { label: `Exam Cycle`, value: 'examCycleValue' },
+          { label: `Exam`, value: 'examValue' },
+          { label: `Internal Marks`, value: 'internalMarks' },
+          { label: `Passing Internal Marks`, value: 'passingInternalMarks' },
+          { label: `Internal Marks Obtained`, value: 'internalMarksObtained' },
+          { label: `Practical Marks`, value: 'practicalMarks' },
+          { label: `Passing Practical Marks`, value: 'passingPracticalMarks' },
+          { label: `Practical Marks Obtained`, value: 'practicalMarksObtained' },
+          { label: `Other Marks`, value: 'otherMarks' },
+          { label: `Passing Other Marks`, value: 'passingOtherMarks' },
+          { label: `Other Marks Obtained`, value: 'otherMarksObtained' },
+          { label: `External Marks`, value: 'externalMarks' },
+          { label: `Passing External Marks`, value: 'passingExternalMarks' },
+          { label: `External Marks Obtained`, value: 'externalMarksObtained' },
+          { label: `Total Marks`, value: 'totalMarks' },
+          { label: `Passing Total Marks`, value: 'passingTotalMarks' },
+          { label: `Total Marks Obtained`, value: 'totalMarksObtained' },
+          { label: `Grade`, value: 'grade' },
+          { label: `Result`, value: 'result' },
+        ],
+        content: this.studentMarksDetails,
+      }
+    ]
+
+    let settings = {
+      fileName: this.selectedCellDetails.row.instituteName, // Name of the resulting spreadsheet
+      extraLength: 3, // A bigger number means that columns will be wider
+      writeMode: "writeFile", // The available parameters are 'WriteFile' and 'write'. This setting is optional. Useful in such cases https://docs.sheetjs.com/docs/solutions/output#example-remote-file
+      writeOptions: {}, // Style options from https://docs.sheetjs.com/docs/api/write-options
+      RTL: false, // Display the columns from right-to-left (the default value is false)
     }
 
-    // Create a 2D array to hold the Excel data
-    const csvContent: any = [];
-    internalMarks.forEach((row: any) => {
-      csvContent.push(row.join(','));
-    });
-
-    // Convert the array to a CSV string
-    const csvString = csvContent.join('\n');
-
-    // Create a Blob containing the CSV data
-    const blob = new Blob([csvString], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-    // Create a download link
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = this.selectedCellDetails.row.instituteName + '.xlsx';
-
-    // Append the download link to the body
-    document.body.appendChild(a);
-
-    // Trigger the download
-    a.click();
-
-    // Clean up
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-    this.showInstituteTable();
+    xlsx(data, settings) // Will download the excel file
   }
 
   deleteMarksHander() {

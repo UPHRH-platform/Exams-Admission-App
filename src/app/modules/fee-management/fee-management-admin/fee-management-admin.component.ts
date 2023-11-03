@@ -4,6 +4,7 @@ import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TableColumn } from 'src/app/interfaces/interfaces';
 import { mergeMap, of } from 'rxjs';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
 
 interface Course {
@@ -43,7 +44,8 @@ export class FeeManagementAdminComponent implements OnInit {
   examCycleControl = new FormControl('',[Validators.required]);
 
   constructor(
-    private baseService : BaseService
+    private baseService : BaseService,
+    private toastrService: ToastrServiceService
   ) {}
 
   examCycleFormControl = new FormControl();
@@ -311,7 +313,10 @@ let r = response.examFees
           this.getFeeDetailsByExamCycle(lastIndexSelected.id)
         },
         error: (error: HttpErrorResponse) => {
+          
           console.log(error);
+           this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+    
         }
       })
   }

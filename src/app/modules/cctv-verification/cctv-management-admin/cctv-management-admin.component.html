@@ -4,17 +4,22 @@
     <div class="mt3">
       <div class="clearfix">
         <div class="sm-col md-col-6">
-            <div class="mb1">
+          <!--   <div class="mb1">
               <label class="examCycleLable">Exam cycle</label>
             </div>
             <mat-form-field appearance="outline" class="feeManagementForms">
               <mat-select [formControl]="examCycleControl" (ngModelChange)="getInstitutesCCTVtableDataByExamCycle($event)">
                   <ng-container *ngFor="let examCycle of examCycleList">
-                      <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                      <mat-option [(value)]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
                   </ng-container>
                   <mat-option style="display: none;" value="">Select here</mat-option>
               </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
+          <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl"
+          class="feeManagementForms"
+           [examCycleList]="examCycleList"
+          (selectedExamcycleId)="getInstitutesCCTVtableDataByExamCycle($event)">
+        </app-shared-exam-cycle-select>
           </div>
         <div class="sm-col md-col-6">
           <div class="flex right">

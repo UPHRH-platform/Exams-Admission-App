@@ -37,7 +37,7 @@ export class HeaderComponent {
   }
 
   generateUserName() {
-    console.log(this.userData);
+    //console.log(this.userData);
     const firstName = this.userData?.firstName;
     const lastName = this.userData?.lastName;
     this.userName = firstName?.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
