@@ -96,15 +96,7 @@ export class StudentEnrollmentComponent {
     forkJoin([
       this.getAllCourses(),
       this.getLongPendingStudentEnrollmentList()
-    ]).subscribe({
-      next: (res: any) => {
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-
-      }
-    }
-    )
+    ])
   }
 
   getAdmissionSessionList() {
