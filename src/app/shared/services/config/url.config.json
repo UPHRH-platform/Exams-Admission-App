@@ -19,7 +19,8 @@
             "GET_INSTITUTE_BY_ID": "/v1/admin/institutes",
             "GET_INTERMEDIATE_SUBJECT_LIST": "/v1/admin/subject/list", 
             "VERIFY_STUDENT":"/v1/students",
-            "GET_PENDING_ENROLLENT": "/https://exams.uphrh.in/api/v1/students/pendingFor21Days"
+            "GET_PENDING_ENROLLENT": "/https://exams.uphrh.in/api/v1/students/pendingFor21Days",
+            "GET_PENDINGLIST_ENROLLEMENT":"/v1/students/pendingFor21Days"
         }, 
         "EXAM_MANAGEMENT": {
             "GET_EXAM_CYCLE_LIST": "/v1/admin/examCycle/list", 
