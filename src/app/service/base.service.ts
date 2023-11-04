@@ -83,12 +83,12 @@ export class BaseService extends HttpService {
     return this.get(requestParam)
   }
 
-  deleteResults(): Observable<any> {
-    return of({
-      statusInfo: {
-        statusMessage: 'deleted'
-      }
-    })
+  deleteResults(examCycleId: any, instituteId: string): Observable<any> {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.DELETE_EXTERNAL_MARKS}examCycleId=${examCycleId}&instituteId=${instituteId}`
+    }
+
+    return this.delete(requestParam)
     
   }
 
@@ -207,15 +207,10 @@ export class BaseService extends HttpService {
 
   }
 
-  getStudentResults$(enrolmentNumber: string, dateOfBirth: string, examCycleID: string) {
-    const formBody = {
-      enrolmentNumber: enrolmentNumber,
-      dateOfBirth: dateOfBirth,
-      examCycleID: examCycleID
-    }
+  getStudentResults$(StudentId: string, examCycleID: string) {
     const requestParam: RequestParam = {
-      url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}`,
-      data: formBody
+      url:`${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.STUDENT_RESULTS}?StudentId=${StudentId}&examCycleId=${examCycleID}`,
+      data: {}
     }
     return this.get(requestParam)
   }
@@ -423,6 +418,17 @@ getEnrollmentList(request: any) {
   }
   return this.get(requestParam);
 }
+
+
+
+getLongPendingStudentEnrollmentList$(courseId?: number, session?: string) {
+  const requestParam: RequestParam = {
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.STUDENT_ENROLLMENT.GET_LONG_PENDING_ENROLLENTS}`,
+    data: {},
+  }
+  return this.get(requestParam);
+}
+// ?courseId=&academicYear=2023' \
 
 /** verify student(Approve/reject) */
 
@@ -714,13 +720,6 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     // })
   }
 
-  requestRetotalling(formBody: any) {
-    const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.RETOTALLING_REQUEST}`,
-      param: formBody
-    }
-    return this.post(requestParam)
-  }
 
   //#endregion
 

@@ -68,6 +68,9 @@ export class StudentGuard implements CanActivate {
   } 
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 export class SecretaryGuard implements CanActivate {
   constructor(private authService: AuthServiceService, private router: Router) {}
 

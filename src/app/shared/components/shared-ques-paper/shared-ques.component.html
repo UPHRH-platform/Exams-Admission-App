@@ -30,23 +30,23 @@
             </mat-card >
         </div>
 
-        <mat-card style="margin-top: 38px;" *ngFor="let questionPpr of questionPapersList">
+        <mat-card style="margin-top: 38px;" *ngFor="let questionPpr of questionPapersList; index as i">
            <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
             <mat-card-content>
                 <ng-container *ngIf="loggedInUserRole ==='exams_admin'">
                     <div class="button-group" style="display: flex;flex-direction: column; gap: 4px;">
                         <button class="button" mat-raised-button color="primary">
-                            <label for="fileUpload1" class="custom-file-upload">
+                            <label [for]="'fileUpload' + i" class="custom-file-upload">
                                 <a>Upload Question Paper</a>
                               </label>
                         </button>
                         
               <input
-                id="fileUpload1"
+                [id]="'fileUpload' + i"
                 type="file"
                 style="display: none"
                 enctype="multipart/form-data"
-                (change)="emitUploadQuesPaper($event)"
+                (change)="emitUploadQuesPaper($event, questionPpr.examId)"
                 multiple="true"
                 accept=".pdf"
               />

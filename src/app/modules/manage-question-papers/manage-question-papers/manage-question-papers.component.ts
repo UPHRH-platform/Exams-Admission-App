@@ -83,17 +83,18 @@ export class ManageQuestionPapersComponent {
     })
   }
 
-  onUploadQuesPaper(files:any){
+  onUploadQuesPaper(detilas:any){
     const request ={
       // file: files.name,
       userId: this.userData?.id,
-      examCycleId: this.examCycleValue
+      examCycleId: this.examCycleValue,
+      examId: detilas.examId
     }
     const formData = new FormData();
         for (let [key, value] of Object.entries(request)) {
           formData.append(`${key}`, `${value}`)
       }
-      formData.append("file", files, files.name);
+      formData.append("file", detilas.file, detilas.file.name);
     this.baseService.uploadQuestionPaper(formData).subscribe({
       next: (response) => {
         console.log("Upload question paper response", response);

@@ -131,6 +131,12 @@ export class HomeComponent {
       url: '/student-enrollment/secretary',
       visibility: 'exams_secretary'
     },
+    {
+      title: 'Exam Management',
+      type: 'student-enrollment_dgme',
+      url: '/student-enrollment/DGME',
+      visibility: 'exams_superadmin'
+    },
     
    
     

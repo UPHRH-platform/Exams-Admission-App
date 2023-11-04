@@ -55,8 +55,9 @@ export class StudentEnrollmentComponent {
   selectedAcademicYear: any;
   institute = new FormControl();
   constructor(private router: Router, private authService: AuthServiceService,
-     private baseService: BaseService, private toastrService: ToastrServiceService) { }
+    private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
+    // this.getPendingList()
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
@@ -67,8 +68,13 @@ export class StudentEnrollmentComponent {
     if (this.loggedInUserRole === 'exams_institute') {
       this.getInstituteByuserId();
     }
+    else if (this.loggedInUserRole === 'exams_superadmin') {
+      
+      //this.loadSuperAdminScreenDetails();
+    }
     else if (this.loggedInUserRole === 'exams_secretary') {
-
+      
+      this.loadSecretaryScreenDetails();
     }
     else {
       this.getAllCourses();
@@ -77,14 +83,31 @@ export class StudentEnrollmentComponent {
     }
   }
 
+  getLongPendingStudentEnrollmentList(courseId?: number, session?: string) {
+    this.baseService.getLongPendingStudentEnrollmentList$(courseId,session).subscribe({
+      next: (res) => {
+        this.enrollmentTableData = res.responseData;
+       },
+      error: (err) => {
+        console.log(err)
+        this.toastrService.showToastr(err.error.error.message, 'Error', 'error', '')
+       //    this.enrollmentTableData =[{"id":22,"keycloakId":null,"session":"2023-2024","examBatch":"26","admissionDate":"2023-10-31","firstName":"Saranya","surname":"Selvaraj","motherName":"Visa","fatherName":"Selva","dateOfBirth":"2000-05-27","gender":"Female","caste":"General","category":"Freedom Fighter Dependant","intermediatePassedBoard":"U.P. BOARD OF HIGH SCHOOL, ALLAHABAD","intermediateSubjects":"Physics,Biotechnology","intermediatePercentage":80,"mobileNo":"9952149539","emailId":"dharani255558@gmail.com","aadhaarNo":"765487659876","address":"2/127, south street","pinCode":"641687","country":"India","state":"Tamil Nadu","district":"Tirupur","highSchoolMarksheetPath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819881503_Certificate%20(2).pdf?generation=1698819881731988&alt=media","highSchoolCertificatePath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819881753_file-example_PDF_1MB.pdf?generation=1698819881933229&alt=media","intermediateMarksheetPath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819881950_file-example_PDF_1MB.pdf?generation=1698819882138316&alt=media","intermediateCertificatePath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819882156_file-example_PDF_1MB.pdf?generation=1698819882341068&alt=media","highSchoolRollNo":"345354","highSchoolYearOfPassing":"2020","intermediateRollNo":"255558","intermediateYearOfPassing":"2023","verificationStatus":"PENDING","provisionalEnrollmentNumber":"MEC103-01bfd21b-0984-405a-9682-43ccb3374712","adminRemarks":null,"enrollmentDate":"2023-11-01","verificationDate":"2023-11-01","verifiedBy":null,"requiresRevision":false,"enrollmentNumber":null,"course":{"id":1,"courseCode":"MEC103","courseName":"Mathematics","description":"This course covers the fundamentals of computer science.","courseYear":null,"subjects":[{"id":1,"subjectCode":"MATH101","subjectName":"Mathematics 101","description":"Introduction to Mathematics","createdBy":"JohnDoe","createdOn":"2023-10-11T05:46:29.109+00:00","modifiedBy":"JaneDoe","modifiedOn":"2023-10-10T15:00:00.000+00:00","obsolete":0},{"id":2,"subjectCode":"MATH102","subjectName":"Mathematics 102","description":"Physiology is the study of how the human body works","createdBy":null,"createdOn":"2023-10-24T08:43:48.354+00:00","modifiedBy":null,"modifiedOn":null,"obsolete":0}]},"instituteDTO":null,"examCenter":null,"intermediateStream":"U.P. BOARD","courseName":"Mathematics"},{"id":21,"keycloakId":null,"session":"2023-2024","examBatch":"26","admissionDate":"2023-10-31","firstName":"Saranya","surname":"Selvaraj","motherName":"Visa","fatherName":"Selva","dateOfBirth":"2000-05-27","gender":"Female","caste":"General","category":"Freedom Fighter Dependant","intermediatePassedBoard":"U.P. BOARD OF HIGH SCHOOL, ALLAHABAD","intermediateSubjects":"Physics,Biotechnology","intermediatePercentage":80,"mobileNo":"9952149539","emailId":"dharuamuthu@gmail.com","aadhaarNo":"765487659876","address":"2/127, south street","pinCode":"641687","country":"India","state":"Tamil Nadu","district":"Tirupur","highSchoolMarksheetPath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819875085_Certificate%20(2).pdf?generation=1698819875353903&alt=media","highSchoolCertificatePath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819875375_file-example_PDF_1MB.pdf?generation=1698819875581157&alt=media","intermediateMarksheetPath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819875598_file-example_PDF_1MB.pdf?generation=1698819875795951&alt=media","intermediateCertificatePath":"https://storage.googleapis.com/download/storage/v1/b/dev-public-upsmf/o/exam%2F1698819875812_file-example_PDF_1MB.pdf?generation=1698819875992115&alt=media","highSchoolRollNo":"345354","highSchoolYearOfPassing":"2020","intermediateRollNo":"255558","intermediateYearOfPassing":"2023","verificationStatus":"PENDING","provisionalEnrollmentNumber":"MEC103-995de4a7-2c3a-47f4-87da-f244cd29f9cc","adminRemarks":null,"enrollmentDate":"2023-11-01","verificationDate":"2023-11-01","verifiedBy":"c86d6f67-d03f-450c-b474-4d31fd9e7c3f","requiresRevision":false,"enrollmentNumber":null,"course":{"id":1,"courseCode":"MEC103","courseName":"Mathematics","description":"This course covers the fundamentals of computer science.","courseYear":null,"subjects":[{"id":1,"subjectCode":"MATH101","subjectName":"Mathematics 101","description":"Introduction to Mathematics","createdBy":"JohnDoe","createdOn":"2023-10-11T05:46:29.109+00:00","modifiedBy":"JaneDoe","modifiedOn":"2023-10-10T15:00:00.000+00:00","obsolete":0},{"id":2,"subjectCode":"MATH102","subjectName":"Mathematics 102","description":"Physiology is the study of how the human body works","createdBy":null,"createdOn":"2023-10-24T08:43:48.354+00:00","modifiedBy":null,"modifiedOn":null,"obsolete":0}]},"instituteDTO":null,"examCenter":null,"intermediateStream":"U.P. BOARD","courseName":"Mathematics"}]
+      }
+    })
+  }
+
+  loadSecretaryScreenDetails() {
+    forkJoin([
+      this.getAllCourses(),
+      this.getLongPendingStudentEnrollmentList()
+    ])
+  }
+
   getAdmissionSessionList() {
     this.years = this.baseService.getAdmissionSessionList()
     this.selectedAcademicYear = this.years[4]
   }
 
-  getPendingEnrollment() {
-
-  }
   initializeSearchForm() {
     this.searchForm = new FormGroup({
       searchData: new FormControl('')
@@ -93,37 +116,41 @@ export class StudentEnrollmentComponent {
 
   getAllCourses() {
     this.baseService.getAllCourses$()
-    .pipe(mergeMap((res) => {
-      const courses: any = []
-      if(res.responseData) {
-        res.responseData.forEach((elemment: any) => {
-          const course = {
-            courseCode: elemment.courseCode,
-            courseName: elemment.courseName,
-            course_id: elemment.id,
-          }
-          courses.push(course)
-        })
-      }
-      return of(courses)
-    }))
-    .subscribe({
-      next: (res) => {
-        console.log("courses =>", res);
-        this.courses = res;
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-      }
-    })
+      .pipe(mergeMap((res) => {
+        const courses: any = []
+        if (res.responseData) {
+          res.responseData.forEach((elemment: any) => {
+            const course = {
+              courseCode: elemment.courseCode,
+              courseName: elemment.courseName,
+              course_id: elemment.id,
+            }
+            courses.push(course)
+          })
+        }
+        return of(courses)
+      }))
+      .subscribe({
+        next: (res) => {
+         // console.log("courses =>", res);
+          this.courses = res;
+          console.log("courses =>", this.courses[0]);
+          this.selectedCourse = this.courses[0].course_id
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      })
   }
 
   getAllInstitutes() {
     this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
         this.instituteList = res.responseData;
-        if(this.instituteList.length > 0) {
-          this.institute.patchValue(this.instituteList.length - 1)
+        if (this.instituteList.length > 0) {
+          console.log(this.instituteList.length-1)
+          this.institute.patchValue(this.instituteList[this.instituteList.length - 2].id)
+          
           this.getCoursesByInstitute(this.institute.value)
         }
       },
@@ -142,6 +169,11 @@ export class StudentEnrollmentComponent {
     if (this.loggedInUserRole === 'exams_secretary') {
       this.tabs = Tabs['Student_Enrollment_Secretary'];
     }
+    else if (this.loggedInUserRole === 'exams_superadmin') {
+      this.tabs = Tabs['student_Enrollment_dgme']
+      this.initializeColumns();
+
+    }
     else {
       this.tabs = Tabs['student_enrollment'];
       this.initializeColumns();
@@ -153,32 +185,32 @@ export class StudentEnrollmentComponent {
   getEnrollmentData(academicYear?: string) {
     this.enrollmentTableData = [];
 
-  let request = {
-    instituteId: this.institute.value !== undefined? this.institute.value : '',
-    courseId: this.selectedCourse !== undefined? this.selectedCourse : '',
-    academicYear: this.selectedAcademicYear !== undefined? this.selectedAcademicYear: '',
-    verificationStatus: this.selectedTab.name === 'Approved'? 'VERIFIED' : this.selectedTab.name.toUpperCase()
-  }
- if(this.loggedInUserRole === 'exams_institute') {
-    request['instituteId']= this.instituteDetail?.id.toString();
- } 
-  this.isDataLoading = true;
-  this.baseService.getEnrollmentList(request).subscribe({
-    next: (res) => {
-      this.setEnrollmentTableColumns();
-      this.isDataLoading = false;
-      res.responseData.map((obj: any) => {
-        obj.courseName = obj.course.courseName;
-      })
-      this.enrollmentTableData = res.responseData;
-    },
-    error: (error: HttpErrorResponse) => {
-      this.isDataLoading = false;
-      error.error.error?  this.toastrService.showToastr(error.error.error.message, 'Error', 'error', ''):  this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
-    
-
+    let request = {
+      instituteId: this.institute.value !== undefined ? this.institute.value : '',
+      courseId: this.selectedCourse !== undefined ? this.selectedCourse : '',
+      academicYear: this.selectedAcademicYear !== undefined ? this.selectedAcademicYear : '',
+      verificationStatus: this.selectedTab.name === 'Approved' ? 'VERIFIED' : this.selectedTab.name.toUpperCase()
     }
-  })
+    if (this.loggedInUserRole === 'exams_institute') {
+      request['instituteId'] = this.instituteDetail?.id.toString();
+    }
+    this.isDataLoading = true;
+    this.baseService.getEnrollmentList(request).subscribe({
+      next: (res) => {
+        this.setEnrollmentTableColumns();
+        this.isDataLoading = false;
+        res.responseData.map((obj: any) => {
+          obj.courseName = obj.course.courseName;
+        })
+        this.enrollmentTableData = res.responseData;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isDataLoading = false;
+        error.error.error ? this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '') : this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+
+
+      }
+    })
     if (this.loggedInUserRole === 'exams_institute') {
       request['instituteId'] = this.instituteDetail?.id.toString();
     }
@@ -191,6 +223,7 @@ export class StudentEnrollmentComponent {
         })
         console.log(res.responseData)
         this.enrollmentTableData = res.responseData;
+       // localStorage.setItem("hhh",JSON.stringify(this.enrollmentTableData))
       },
       error: (error: any) => {
         this.isDataLoading = false;
@@ -213,8 +246,8 @@ export class StudentEnrollmentComponent {
     }
   }
 
-  applySearch(searchterms:any){ 
-     this.searchParams = searchterms;
+  applySearch(searchterms: any) {
+    this.searchParams = searchterms;
 
   }
 
@@ -359,6 +392,15 @@ export class StudentEnrollmentComponent {
             isLink: false,
             cell: (element: Record<string, any>) => `${element['createdDate']}`
           },
+          {
+            columnDef: 'viewStudentEnrollment',
+            header: '',
+            isSortable: false,
+            isLink: true,
+            isAction: true,
+            cell: (element: Record<string, any>) => `View Enrollment`,
+            classes: ['color-blue'],
+          },
         ]
         break;
     }
@@ -371,7 +413,8 @@ export class StudentEnrollmentComponent {
 
   getSelectedCourse(event: any) {
     this.selectedCourse = event.value
-    this.getEnrollmentData();
+    this.loggedInUserRole === 'exams_secretary' ? this.getLongPendingStudentEnrollmentList(event.value,this.selectedAcademicYear) : this.getEnrollmentData();
+    
   }
 
   getSelectedAcademicYear(event: any) {
@@ -441,31 +484,31 @@ export class StudentEnrollmentComponent {
 
 
     forkJoin([
-       this.baseService.getEnrollmentList(pendingRequest).pipe(catchError(error => of(error))), 
-       this.baseService.getEnrollmentList(approvedRequest).pipe(catchError(error => of(error))),
+      this.baseService.getEnrollmentList(pendingRequest).pipe(catchError(error => of(error))),
+      this.baseService.getEnrollmentList(approvedRequest).pipe(catchError(error => of(error))),
       this.baseService.getEnrollmentList(rejectedRequest).pipe(catchError(error => of(error))),
-       this.baseService.getEnrollmentList(closedRequest).pipe(catchError(error => of(error))),
-      ]) 
-    .subscribe({
-      next: (res: any) => {
-            //this will return list of array of the result
-          
-            for(let i in res){
-              if(res[i].responseData){
-                console.log(res[i].responseData)
-                completeData.unshift(res[i].responseData)
-              }
-             
+      this.baseService.getEnrollmentList(closedRequest).pipe(catchError(error => of(error))),
+    ])
+      .subscribe({
+        next: (res: any) => {
+          //this will return list of array of the result
+
+          for (let i in res) {
+            if (res[i].responseData) {
+              console.log(res[i].responseData)
+              completeData.unshift(res[i].responseData)
             }
-            this.generatePDf(completeData.flat())
-       
+
+          }
+          this.generatePDf(completeData.flat())
+
         },
         error: (err: HttpErrorResponse) => {
           console.log(err);
-      
+
         }
       }
-    )
+      )
     //this multiple calls approach needs to be relooked,.. doing it now for the sake of delivery
     /* this.baseService.getEnrollmentList(pendingRequest)
       .subscribe({

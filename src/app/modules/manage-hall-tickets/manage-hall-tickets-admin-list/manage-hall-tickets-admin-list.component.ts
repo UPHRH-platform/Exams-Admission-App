@@ -215,7 +215,6 @@ export class ManageHallTicketsAdminListComponent {
     this.generatedHallTicketsData = []
     this.baseService.getHallTickets$(courseId, examCycleId, instituteId)
       .pipe((mergeMap((response: any) => {
-        console.log(response)
         this.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData)
       })))
@@ -238,7 +237,6 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   formateHallTicketsData(response: any) {
-    console.log(response)
     const formatedHallTicketsDetails: {
       hallTicketsDetailsList: any[]
     } = {
@@ -304,7 +302,7 @@ export class ManageHallTicketsAdminListComponent {
      this.generatedHallTicketsData=[]
     this.baseService.getHallTicketsForDataCorrections$(courseId,examCycleId,instituteId)
       .pipe((mergeMap((response: any) => {
-        return this.formateHallTicketsData(response.responseData)
+        return this.formateHallTicketsData(response.responseData.reverse())
       })))
       .subscribe({
         next: (res: any) => {
@@ -448,8 +446,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onViewClick(event: any) {
-    console.log(event)
-    let hallTktDetails = this.unformattedHallTickets.filter((hallTicket: { id: string; }) => (hallTicket.id === event.row.id));
+    const hallTktDetails = this.unformattedHallTickets.filter((hallTicket: { id: string; }) => (hallTicket.id === event.row.id));
     this.router.navigate(['/hall-ticket-management/ticket-details'], { state: { data: hallTktDetails[0] } });
   }
 }

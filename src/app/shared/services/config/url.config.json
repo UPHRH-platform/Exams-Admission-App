@@ -21,7 +21,7 @@
             "GET_INSTITUTE_BY_ID": "/v1/admin/institutes",
             "GET_INTERMEDIATE_SUBJECT_LIST": "/v1/admin/subject/list", 
             "VERIFY_STUDENT":"/v1/students",
-            "GET_PENDING_ENROLLENT": "/https://exams.uphrh.in/api/v1/students/pendingFor21Days"
+            "GET_LONG_PENDING_ENROLLENTS": "/v1/students/pendingFor21Days"
         }, 
         "EXAM_MANAGEMENT": {
             "GET_EXAM_CYCLE_LIST": "/v1/admin/examCycle/list", 
@@ -105,7 +105,8 @@
             "EXAMS_OF_INSTITUTE_EXMACYCLE": "/v1/studentResults/resultUploadStatusForInstitute",
             "EXAM_MARKS_BY_INSTITUTE": "/v1/studentResults/examMarksByInstitute",
             "STUDENT_RESULTS": "/v1/studentResults/results",
-            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling"
+            "RETOTALLING_REQUEST": "/v1/studentResults/retotalling",
+            "DELETE_EXTERNAL_MARKS": "/v1/studentResults/deleteFinalMarks?"
         }
     }
 }

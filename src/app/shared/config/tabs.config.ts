@@ -43,6 +43,13 @@ export const Tabs = {
             id: 1,
             name: 'Pending for >21 days'
         }
+    ],
+    'student_Enrollment_dgme':[
+        {
+            id: 1,
+            name:'Pending for >21 days'
+        }
     ]
+
 
 }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -78,12 +79,15 @@ export class HallTicketComponent implements OnInit {
 
   intialisation() {
     if (this.stateData) {
+      //this state data is used for admin and student
+      // make sure to check both flows before making changes
       this.studentDetails = {
         hallticketId: this.stateData?.data.id,
-        examCyclename: this.stateData?.data.examCycle.examCyclename,
+        examCyclename: this.stateData?.data.examCycle.name,
+        examCycleId: this.stateData?.data.examCycleId,
         firstName: this.stateData?.data.firstName,
         lastName: this.stateData?.data.lastName,
-        studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
+        studentEnrollmentNumber: this.stateData?.data.studentEnrollmentNumber,
         dob: this.stateData?.data.dob,
         actualDOB: this.stateData?.data.actualDOB,
         courseName: this.stateData?.data.courseName,
@@ -91,7 +95,8 @@ export class HallTicketComponent implements OnInit {
       };
       this.examTableData  =  this.stateData?.data.examCycle.exams;
     } else {
-      this.router.navigateByUrl('candidate-portal')
+     // this.router.navigateByUrl('candidate-portal')
+     this.toasterService.showToastr("Something went wrong. Please try again later.", 'Error', 'error')
     }
   }
 
@@ -115,44 +120,45 @@ export class HallTicketComponent implements OnInit {
 
   downloadHallTicket(event: boolean) {
     const studentID = this.authService.getUserRepresentation().attributes.studentId;
-    this.baseService.downloadHallTicket$(this.stateData.examCycleId,studentID[0])
-    .subscribe((data: any) => {
+    this.baseService.downloadHallTicket$(this.studentDetails.examCycleId,studentID[0])
+    .subscribe({
+      next: (data: any) => {
 
-      console.log(data)
-      const link = this.renderer.createElement('a');
-      link.setAttribute('target', '_blank');
-      link.setAttribute('href', data.responseData);
-      link.click();
-      link.remove();
+        console.log(data)
+        const link = this.renderer.createElement('a');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('href', data.responseData);
+        link.click();
+        link.remove();
 
-      const dialogRef = this.dialog.open(ConformationDialogComponent, {
-        data: {
-          dialogType: 'success',
-          description: ['Hall ticket downloaded successfully'],
-          buttons: [
-            {
-              btnText: 'Ok',
-              positionClass: 'center',
-              btnClass: 'btn-full',
-              response: true
-            },
-          ],
-        },
-        width: '700px',
-        height: '400px',
-        maxWidth: '90vw',
-        maxHeight: '90vh'
-      })
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-         this.router.navigateByUrl('/candidate-portal')
-        }
-      })
-    },
-     error => {
-      this.toasterService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
-     console.log(error)
-    },)
+        const dialogRef = this.dialog.open(ConformationDialogComponent, {
+          data: {
+            dialogType: 'success',
+            description: ['Hall ticket downloaded successfully'],
+            buttons: [
+              {
+                btnText: 'Ok',
+                positionClass: 'center',
+                btnClass: 'btn-full',
+                response: true
+              },
+            ],
+          },
+          width: '700px',
+          height: '400px',
+          maxWidth: '90vw',
+          maxHeight: '90vh'
+        })
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+          this.router.navigateByUrl('/candidate-portal')
+          }
+        })
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toasterService.showToastr(error, 'Error', 'error')
+      }
+    })
   }
 
 }
