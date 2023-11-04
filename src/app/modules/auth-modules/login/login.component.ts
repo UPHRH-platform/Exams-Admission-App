@@ -76,18 +76,18 @@ export class LoginComponent {
     
     getOTP(){
       this.router.navigate(['/home']);
-      // if(this.loginForm.value.emailId){
-      //  this.isOtpForm = true
-      //  this.authService.generateOTP(this.loginForm.value.emailId).subscribe({
-      //   next: (res) => {
-      //     //console.log(res);
-      //   }
-      //  })
-      // }
-      // else{
-      //   alert('please enter emailId')
-      // }
-      //console.log('getOtp',this.loginForm)
+      if(this.loginForm.value.emailId){
+       this.isOtpForm = true
+       this.authService.generateOTP(this.loginForm.value.emailId).subscribe({
+        next: (res) => {
+          //console.log(res);
+        }
+       })
+      }
+      else{
+        alert('please enter emailId')
+      }
+      console.log('getOtp',this.loginForm)
     }
   
     signInWithOtp(){
@@ -104,20 +104,22 @@ export class LoginComponent {
     }
   
     SubmitOTP(){
-      this.router.navigate(['/home']);
-    //  this.authService.loginWithOTP(this.loginForm.value.emailId, this.otpForm.value.otp).subscribe({
-    //   next: (res) => {
-    //     this.authService.saveUserData(res.responseData);
-    //     this.getAllRoles();
-    //     this.getUserDetails();
-    //      this.router.navigate(['home']);
-    //   },
-    //   error: (err) => {
-    //     if(err.status !== 200) {
-    //       this.toastrService.showToastr('Something went wrong. Please try again', 'Error', 'error', '');
-    //     }
-    //   }
-    //  })
+     this.authService.loginWithOTP(this.loginForm.value.emailId, this.otpForm.value.otp).subscribe({
+      next: (res) => {
+        this.authService.saveUserData(res.responseData);
+        this.getAllRoles();
+        // this.getUserDetails();
+        if (this.authService.isStudent()) {
+          this.router.navigate(['/candidate-portal'])
+        } else {
+          this.router.navigate(['home']);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+          this.toastrService.showToastr(err.error.error, 'Error', 'error', '');
+      }
+     })
     }
   
     getUserDetails() {

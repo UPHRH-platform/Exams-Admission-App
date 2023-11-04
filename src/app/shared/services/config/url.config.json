@@ -2,6 +2,8 @@
     "URLS": {
         "LOGIN": "/v1/user/login",
         "KEYCLOAK_LOGIN": "/api/v1/user/keycloak/usrlogin",
+        "LOGIN_GENERATE_OTP": "/api/v1/user/keycloak/otp",
+        "OTP_LOGIN": "/api/v1/user/keycloak/login",
         "USER_PROFILE":"/v1/students/",
         "QUESTION_PAPER": {
             "GET_ALL": "/v1/questionPaper/list",
