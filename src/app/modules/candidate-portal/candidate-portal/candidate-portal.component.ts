@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, forkJoin, mergeMap, of } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { AuthServiceService } from 'src/app/core/services/auth-service/auth-service.service';
 
@@ -76,14 +75,16 @@ export class CandidatePortalComponent implements OnInit {
             })
             this.hallTicketDetails.examCycleId = examCycleId
           }
-          this.isDataLoading = false;
+          this.getStudetnResults(examCycleId);
         },
         error: (error: HttpErrorResponse) => {
-          this.isDataLoading = false;
+          this.getStudetnResults(examCycleId);
           this.toasterService.showToastr(error, 'Error', 'error');
         }
       });
+  }
 
+  getStudetnResults(examCycleId: string) {
     this.baseService.getStudentResults$(this.studentID,examCycleId)
     .subscribe({
       next: (res: any) => {
@@ -109,8 +110,6 @@ export class CandidatePortalComponent implements OnInit {
       }
     });
   }
-
-
 
   viewDetails(title: any) {
     if(title === 'Results') {

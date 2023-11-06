@@ -40,23 +40,29 @@
     </div>
     <div class="details-row">
         <div class="">
-            <div class="lable">
+            <div class="roolNumberLable hall-ticket-form-field">
                 <span>Course name</span>
             </div>
-            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+            <div class="roolNumber">
+                <span>{{studentDetails.value.courseName || "-" }}  </span>
+            </div>
+            <!-- <mat-form-field appearance="outline" class="hall-ticket-form-field">
                 <input matInput formControlName="courseName"  >
-            </mat-form-field>
+            </mat-form-field> -->
         </div>
         <div>
-            <div class="lable">
+            <div class="roolNumberLable hall-ticket-form-field">
                 <span>Course Year</span>
             </div>
-            <mat-form-field appearance="outline" class="hall-ticket-form-field">
+            <div class="roolNumber">
+                <span>{{studentDetails.value.courseYear || "-" }}  </span>
+            </div>
+            <!-- <mat-form-field appearance="outline" class="hall-ticket-form-field">
                 <input matInput formControlName="courseYear"
                 [matDatepicker]="courseYearPicker" >
                 <mat-datepicker-toggle matIconSuffix [for]="courseYearPicker"></mat-datepicker-toggle>
                 <mat-datepicker #courseYearPicker></mat-datepicker>
-            </mat-form-field>
+            </mat-form-field> -->
         </div>
     </div>
 </form>
