@@ -202,5 +202,35 @@ export class AuthServiceService extends HttpService {
     }
     return isSecretary;
   }
+
+  /* otp based login apis */
+  generateOTP(username: string): Observable<ServerResponse> {
+    const reqParam: RequestParam = {
+      url: this.userManagementURL + this.configService.urlConFig.URLS.LOGIN_GENERATE_OTP,
+      data: {username},
+      header: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSR3RkMkZzeG1EMnJER3I4dkJHZ0N6MVhyalhZUzBSSyJ9.kMLn6177rvY53i0RAN3SPD5m3ctwaLb32pMYQ65nBdA',
+      }
+    }
+    return this.post(reqParam);
+  }
+
+  loginWithOTP(email: string, otp: any): Observable<ServerResponse> {
+    const reqParam: RequestParam = {
+      url: this.userManagementURL + this.configService.urlConFig.URLS.OTP_LOGIN,
+      header: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSR3RkMkZzeG1EMnJER3I4dkJHZ0N6MVhyalhZUzBSSyJ9.kMLn6177rvY53i0RAN3SPD5m3ctwaLb32pMYQ65nBdA',
+      },
+      data: {
+        email: email,
+        otp: otp
+      }
+    }
+    return this.post(reqParam);
+  }
   
 }
