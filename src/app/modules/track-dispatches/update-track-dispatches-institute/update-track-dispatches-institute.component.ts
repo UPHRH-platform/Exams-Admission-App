@@ -74,7 +74,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
           this.instituteDetail = res.responseData;
         },
         error: (err: HttpErrorResponse) => {
-          this.toastrService.showToastr(err, 'Error', 'error', '')
+          this.toastrService.showToastr(err.error.error, 'Error', 'error', '')
         }
       })
   }

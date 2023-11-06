@@ -448,7 +448,7 @@ getLongPendingStudentEnrollmentList$(courseId?: number, session?: string) {
     //   data: {},
     // }
     const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.instituteId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.examCenterId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
       data: request,
     }
     return this.put(requestParam);

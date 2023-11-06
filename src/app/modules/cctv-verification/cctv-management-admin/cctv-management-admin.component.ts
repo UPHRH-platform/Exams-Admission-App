@@ -83,6 +83,7 @@ export class CctvManagementAdminComponent {
           'background-color': '#0000000a',
           'color': '#00000099'
         },
+        isAction: false,
       }, {
         header: 'Institute Code',
         columnDef: 'instituteCode',
@@ -90,6 +91,7 @@ export class CctvManagementAdminComponent {
         cellStyle: {
           'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
         },
+        isAction: false,
       }, {
         header: 'District name',
         columnDef: 'district',
@@ -97,6 +99,7 @@ export class CctvManagementAdminComponent {
         cellStyle: {
           'background-color': '#0000000a', 'width': '165px', 'color': '#00000099'
         },
+        isAction: false,
       },
     ]
 
@@ -106,6 +109,7 @@ export class CctvManagementAdminComponent {
           {
             header: '',
             columnDef: 'status',
+            isAction: true,
             cell: (element: Record<string, any>) => `${element['status']}`,
             cellStyle: {
               'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
@@ -122,6 +126,7 @@ export class CctvManagementAdminComponent {
             cellStyle: {
               'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
             },
+            isAction: false,
           }
         );
         TableColumns.push(
@@ -132,6 +137,7 @@ export class CctvManagementAdminComponent {
             cellStyle: {
               'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
             },
+            isAction: true,
           }
         )
         break;
@@ -145,26 +151,18 @@ export class CctvManagementAdminComponent {
             cellStyle: {
               'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
             },
+            isAction: false,
           }
         );
-        // TableColumns.push(
-        //   {
-        //     header: 'Alternate institute status',
-        //     columnDef: 'assignedStatus',
-        //     cell: (element: Record<string, any>) => `${element['assignedStatus']}`,
-        //     cellStyle: {
-        //       'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
-        //     },
-        //   }
-        // )
         TableColumns.push(
           {
             header: '',
             columnDef: 'status',
             cell: (element: Record<string, any>) => `${element['status']}`,
             cellStyle: {
-              'background-color': '#0000000a', 'width': '215px', 'color': '#00000099'
+              'background-color': '#0000000a', 'width': '250px', 'color': '#00000099'
             },
+            isAction: true,
           }
         );
         break;
@@ -301,14 +299,13 @@ export class CctvManagementAdminComponent {
               pendingInstitute['classes'] = {
                 status: ['disabled-btn']
               }
-              pendingInstitute['assignedStatus'] = 'Assigned'
+              pendingInstitute['status'] = 'Alternate Institute Assigned';
             } else {
               pendingInstitute['classes'] = {
                 status: ['cursor-pointer', 'color-blue']
               }
-              pendingInstitute['assignedStatus'] = 'Pending'
+              pendingInstitute['status'] = 'Enter Alternate Institute';
             }
-            pendingInstitute['status'] = 'Enter alternate Institute';
           } else {
             pendingInstitute = null
           }
@@ -330,7 +327,7 @@ export class CctvManagementAdminComponent {
   tabChange(event: any) {
     this.isDataLoading = true
     this.currentTabIndex = event.index;
-    this.initializeTableColumns()
+    this.initializeTableColumns();
     this.getInstitutesCCTVtableDataByExamCycle(this.examCycleControl.value)
   
   }
@@ -340,15 +337,15 @@ export class CctvManagementAdminComponent {
   updateInstituteCCTVStatus(event: any) {
     switch (this.currentTabIndex) {
       case 0: {
-        this.ApproveOrRejectInstituteCCTV(event)
+        this.ApproveOrRejectInstituteCCTV(event.row)
         break;
       }
       case 1: {
-        this.RejectInstituteCCTV(event)
+        this.RejectInstituteCCTV(event.row)
         break;
       }
       case 2: {
-        this.getNearestInstitutesList(event)
+        this.getNearestInstitutesList(event.row)
         break;
       }
     }
@@ -451,7 +448,7 @@ export class CctvManagementAdminComponent {
           ipAddress: response.form.IPaddress,
           remarks: response.form.remarks,
           approvalStatus: response.type,
-          instituteId: response.instituteId
+          examCenterId: response.instituteId
         }
         this.updateCCTVstatus(formBody)
       }

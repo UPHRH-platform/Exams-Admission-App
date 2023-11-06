@@ -288,8 +288,14 @@ export class ManageResultAdminComponent {
 
   publishResults(formBody: any) {
     this.baseService.publishResults$(formBody)
-    .subscribe((res: any) => {
-      this.showInstituteTable()
+    .subscribe({
+      next: (res: any) => {
+        this.toastrService.showToastr('Published successfully', 'Success', 'success')
+        this.showInstituteTable()
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toastrService.showToastr(err, 'Error', 'error');
+      }
     })
   }
   //#endregion

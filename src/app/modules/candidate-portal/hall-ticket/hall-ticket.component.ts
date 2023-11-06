@@ -68,6 +68,9 @@ export class HallTicketComponent implements OnInit {
   ) {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
+    if(!this.stateData) {
+      this.router.navigateByUrl('candidate-portal')
+    }
   }
   //#endregion
 
@@ -83,16 +86,17 @@ export class HallTicketComponent implements OnInit {
       // make sure to check both flows before making changes
       this.studentDetails = {
         hallticketId: this.stateData?.data.id,
-        examCyclename: this.stateData?.data.examCycle.name,
+        examCyclename: this.stateData?.data.examCycle.examCyclename,
         examCycleId: this.stateData?.data.examCycleId,
         firstName: this.stateData?.data.firstName,
         lastName: this.stateData?.data.lastName,
-        studentEnrollmentNumber: this.stateData?.data.studentEnrollmentNumber,
+        studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
         dob: this.stateData?.data.dob,
         actualDOB: this.stateData?.data.actualDOB,
         courseName: this.stateData?.data.courseName,
         courseYear: this.stateData?.data.courseYear,
       };
+      debugger
       this.examTableData  =  this.stateData?.data.examCycle.exams;
     } else {
      // this.router.navigateByUrl('candidate-portal')
