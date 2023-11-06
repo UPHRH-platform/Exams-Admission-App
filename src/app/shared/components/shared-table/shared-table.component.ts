@@ -238,17 +238,15 @@ export class SharedTableComponent implements AfterViewInit {
   
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle(isDropdown: boolean) {
-      if (isDropdown) {
       console.log("masterTogglemasterToggle")
       this.isAllSelected() ?
-          this.selection.clear() :
-          this.dataSource.data.forEach(row =>
-            {
-              this.selection.select(row);
-              this.logSelection(isDropdown)
-            } );
-          }
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => {
+          this.selection.select(row);
+          this.logSelection(isDropdown)
+        });
     }
+
     isSelected(optionValue: string) {
       // Return true for options that you want to select by default
       return "All Exams" ;
