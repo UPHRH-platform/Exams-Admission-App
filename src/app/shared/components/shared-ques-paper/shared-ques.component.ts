@@ -2,9 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Exam, QuestionPaper } from 'src/app/interfaces/interfaces';
 import { FormControl,  Validators } from '@angular/forms';
 import { AuthServiceService } from 'src/app/core/services';
-import { MatDialog } from '@angular/material/dialog';
-import { ConformationDialogComponent } from '../conformation-dialog/conformation-dialog.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BaseService } from 'src/app/service/base.service';
 
 @Component({

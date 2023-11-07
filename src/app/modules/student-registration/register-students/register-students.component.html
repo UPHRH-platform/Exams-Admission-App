@@ -4,15 +4,18 @@
         <div class="certificate-header">
             <h2>Register Student to exam cycle and exams</h2>
         </div>
-        <span>
+ <!--        <span>
             Exam cycle
 
-        </span>
-        <app-shared-ques-paper [examCycleList]="examCycleList" [examCycleControl]="examCycleControl"
-            [questionPapersList]="questionPapersList" (addNewStdnts)="regNewStdnts($event)"
+        </span> -->
+        <app-shared-ques-paper [examCycleList]="examCycleList" 
+        [examCycleControl]="examCycleControl"
+            [questionPapersList]="questionPapersList" 
+            (addNewStdnts)="regNewStdnts($event)"
             (viewRegdStdnts)="viewRegdStdnts($event)"
             (examCycleSelection)="examCycleSelected($event)"
-            [showCardDetails]=false></app-shared-ques-paper>
+            [showCardDetails]=false>
+        </app-shared-ques-paper>
 
 
     </div>

@@ -68,6 +68,7 @@ export class RegisterStudentsComponent {
 
 
   viewRegdStdnts(exam: QuestionPaper) {
+    console.log(exam)
     if (this.examCycleControl.valid) {
       this.router.navigate([`student-registration/view-regd-students/${this.examCycle}`]);
     }
