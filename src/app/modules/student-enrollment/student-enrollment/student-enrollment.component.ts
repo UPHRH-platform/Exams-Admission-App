@@ -203,6 +203,7 @@ export class StudentEnrollmentComponent {
           obj.courseName = obj.course.courseName;
         })
         this.enrollmentTableData = res.responseData;
+        console.log(this.enrollmentTableData )
       },
       error: (error: HttpErrorResponse) => {
         this.isDataLoading = false;
@@ -339,7 +340,7 @@ export class StudentEnrollmentComponent {
           },
           {
             columnDef: 'admissionYear',
-            header: 'Admission Year',
+            header: 'Admission Date',
             isSortable: false,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
