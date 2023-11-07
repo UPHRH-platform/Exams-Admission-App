@@ -45,7 +45,6 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   initialization() {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.getExamCycles();
-    this.getInstituteByuserId()
   }
 
   getExamCycles() {
@@ -57,6 +56,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       next: (examCucles: any) => {
         this.examCycleList = examCucles.examCyclesList;
         this.examCycle.setValue(this.examCycleList[this.examCycleList.length - 1].id)
+        this.getInstituteByuserId()
       },
       error: (err: HttpErrorResponse) => {
         this.toastrService.showToastr(err, 'Error', 'error', '')
@@ -67,7 +67,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   getInstituteByuserId() {
       this.baseService.getInstituteDetailsByUser(this.loggedInUserId)
       .pipe(mergeMap((res: any) => {
-        return this.baseService.getInstituteVerifiedDetails(res.responseData[0].instituteCode);
+        return this.baseService.getInstituteVerifiedDetails(res.responseData[0].instituteCode, this.examCycle.value);
       }))
       .subscribe({
         next: (res) => {

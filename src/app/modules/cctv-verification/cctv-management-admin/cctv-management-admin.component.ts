@@ -192,27 +192,6 @@ export class CctvManagementAdminComponent {
   }
 
   //#region (table data)
-/*   getInstitutesCCTVtableData(searchKey: string = '') {
-    this.isDataLoading = true
-    this.baseService.getAllExamCenterInstitutesList$()
-    .pipe(mergeMap((response: any) => {
-      return this.getformatInstitutesTablesData(response.responseData)
-    }))
-    .subscribe({
-      next: (InstituteesCCTVtableData: any) => {
-        this.getTablesData(InstituteesCCTVtableData)
-        this.isDataLoading = false
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isDataLoading = false
-        console.log(error);
-        this.toasterService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
-    
-      }
-    })
-
-  } */
-
   getInstitutesCCTVtableDataByExamCycle(examCycleId: number | string) {
     this.isDataLoading = true
     this.baseService.getInstitutesListByExamCycle$(examCycleId)
@@ -448,7 +427,8 @@ export class CctvManagementAdminComponent {
           ipAddress: response.form.IPaddress,
           remarks: response.form.remarks,
           approvalStatus: response.type,
-          examCenterId: response.instituteId
+          examCenterId: response.instituteId,
+          examCycleId: this.examCycleControl.value,
         }
         this.updateCCTVstatus(formBody)
       }
@@ -487,6 +467,7 @@ export class CctvManagementAdminComponent {
   getNearestInstitutesList(event: any) {
     const formBody = {
       district: event.district,
+      examCycleId: this.examCycleControl.value
     }
     this.isDataLoading = true
     this.baseService.getNearestInstitutesList(formBody)
@@ -544,7 +525,8 @@ export class CctvManagementAdminComponent {
               if (response) {
                 const formBody = {
                   instituteID: response.instituteId,
-                  alternateInstituteId: response.form.institute
+                  alternateInstituteId: response.form.institute,
+                  examCycleId: this.examCycleControl.value
                 }
                 this.assignAlternateExamCenter(formBody)
               }

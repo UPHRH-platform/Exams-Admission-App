@@ -76,7 +76,6 @@
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
             "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "GENERATE":"/v1/admin/hallticket/generateHallTickets",
-            "UPDATE_CCTV_STATUS": "/v1/admin/updateCctvStatus",
             "ASSIGN_ALTERNATE_EXAM_CENTER": "/v1/admin/assignAlternate",
             "VERIFIED_EXAM_CENTERS": "/v1/admin/verifiedExamCenters"
         },
