@@ -443,12 +443,8 @@ getLongPendingStudentEnrollmentList$(courseId?: number, session?: string) {
   }
 
   updateCCTVstatus$(request: any) {
-    // const requestParam: RequestParam = {
-    //   url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.instituteId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
-    //   data: {},
-    // }
     const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}/${request.examCenterId}?ipAddress=${request.ipAddress}&remarks=${request.remarks}&approvalStatus=${request.approvalStatus}`,
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.UPDATE_CCTV_STATUS}?examCenterId=${request.examCenterId}&examCycleId=${request.examCycleId}`,
       data: request,
     }
     return this.put(requestParam);
@@ -456,16 +452,16 @@ getLongPendingStudentEnrollmentList$(courseId?: number, session?: string) {
 
   assignAlternateExamCenter$(request: any) {
     const requestParam: RequestParam = {
-      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.ASSIGN_ALTERNATE_EXAM_CENTER}/${request.instituteID}?alternateInstituteId=${request.alternateInstituteId}`,
-      data: request,
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.EXAM_CENTER.ASSIGN_ALTERNATE_EXAM_CENTER}?originalExamCenterId=${request.instituteID}&alternateInstituteId=${request.alternateInstituteId}&examCycleId=${request.examCycleId}`,
+      data: {},
     }
     return this.put(requestParam);
   }
 
   getNearestInstitutesList(formBody: any) {
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.VERIFIED_EXAM_CENTERS + '?district=' + formBody.district,
-      data: formBody,
+      url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_CENTER.VERIFIED_EXAM_CENTERS + '?district=' + formBody.district + '&examCycleId=' + formBody.examCycleId,
+      data: {},
     }
     return this.get(requestParam);
   }
@@ -883,9 +879,9 @@ getInstituteDetailsByUser(id: string | number): Observable<ServerResponse> {
   return this.get(requestParam);
 }
 
-getInstituteVerifiedDetails(instituteCode: string): Observable<ServerResponse> {
+getInstituteVerifiedDetails(instituteCode: string, examCycleId: string): Observable<ServerResponse> {
   const requestParam: RequestParam = {
-    url: this.baseUrl + this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.EXAM_CENTER_VERIFIED+ `?instituteCode=${instituteCode}`,
+    url: `${this.baseUrl}${this.configService.urlConFig.URLS.USER_INSTITUTE_MAPPING.EXAM_CENTER_VERIFIED}?instituteCode=${instituteCode}&examCycleId=${examCycleId}`,
     data: {}
   }
   return this.get(requestParam);
