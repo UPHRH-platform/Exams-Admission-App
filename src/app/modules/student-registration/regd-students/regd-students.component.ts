@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-regd-students',
@@ -16,10 +17,15 @@ export class RegdStudentsComponent {
   breadcrumbItems = [
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
+  examName: string;
   constructor(
-    private baseService: BaseService, private route: ActivatedRoute, private authService: AuthServiceService){
+    private baseService: BaseService, private route: ActivatedRoute, 
+    private authService: AuthServiceService,
+    private location: Location
+    ){
       this.route.params.subscribe((param => {
         this.examCycleId = param['id'];
+        this.examName = param['examName']
       }))
   }
  
@@ -52,31 +58,24 @@ export class RegdStudentsComponent {
       next: (res) => {
         this.isDataLoading = false;
         this.regdStudents = res.responseData;
-        console.log(this.regdStudents)
-        let compareArray:any = [];
-        if(this.regdStudents.length > 0) {
-          this.regdStudents.map((obj: any) => {
-            const courseNames: any = [];
-           obj.exams.forEach((exam: any) => {
-            courseNames.push(exam.name);
-           })
-           obj.examName = courseNames.join();
-          })
+        if(res.responseData.length > 0) {
+          this.regdStudents = res.responseData.filter(
+            (obj: any) => 
+            {
+              if(obj.exams[0].name.toString() == this.examName.toString()){
+                const courseNames: any = [];
+                obj.exams.forEach((exam: any) => {
+                  console.log(exam)
+                 courseNames.push(exam.name);
+                })
+                obj.examName = courseNames.join();
+                return obj;
+              }
+          }
+            );
+        
+            console.log(this.regdStudents)
         }
-        // let modifiedArray:any = [];
-        // this.regdStudents.map((obj: any, index) => {
-        //   index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
-        //   console.log(this.regdStudents[index].exams, this.regdStudents[index].rollNo);
-        //   const Obj = Object.assign({}, obj, obj.exams);
-        //   modifiedArray.push(Obj); 
-        // })
-        // console.log(modifiedArray);
-        // const unique = this.regdStudents.filter((obj:any, index) => {
-        //     this.regdStudents[index].exams = modifiedArray;
-        //   return index == this.regdStudents.findIndex((o: any) => obj.enrollmentNumber === o.enrollmentNumber);
-        // })
-        // this.regdStudents = unique;
-        // console.log(this.regdStudents);
       },
       error: (err) => {
         console.log(err);
@@ -125,5 +124,9 @@ export class RegdStudentsComponent {
       }
 
     ];
+  }
+
+  cancel(){
+    this.location.back()
   }
 }

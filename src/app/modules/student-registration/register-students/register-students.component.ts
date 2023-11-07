@@ -6,6 +6,8 @@ import { FormControl,  Validators } from '@angular/forms';
 import { BaseService } from 'src/app/service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+
 @Component({
   selector: 'app-register-students',
   templateUrl: './register-students.component.html',
@@ -23,7 +25,9 @@ export class RegisterStudentsComponent {
 
   constructor(
     private router: Router,
-    private baseService: BaseService
+    private baseService: BaseService,
+    private toasterService: ToastrServiceService
+    
   ) { }
 
 
@@ -43,15 +47,15 @@ export class RegisterStudentsComponent {
     next: (res) => {
       // this.isDataLoading = false;
       this.examCycleList = res.responseData;
-      // this.examCycleData.map((obj, index) => {
-      //   obj.id = obj?.id;
-      //   obj.examCycleName = obj?.examCycleName
-      //   console.log("exam cycle data",this.examCycleData)
-      // })
+      this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
+      this.examCycle= this.examCycleList[this.examCycleList.length-1].id
+      this.getQuestionPapersByExamCycle()
+ 
     },
     error: (error: HttpErrorResponse) => {
       console.log(error);
       this.examCycleList = [];
+      this.toasterService.showToastr('Something went wrong. Please try later.', 'Error', 'error', '');
     }
   })
   }
@@ -70,7 +74,7 @@ export class RegisterStudentsComponent {
   viewRegdStdnts(exam: QuestionPaper) {
     console.log(exam)
     if (this.examCycleControl.valid) {
-      this.router.navigate([`student-registration/view-regd-students/${this.examCycle}`]);
+      this.router.navigate([`student-registration/view-regd-students/${this.examCycle}/${exam.examName}`]);
     }
   }
 
@@ -79,5 +83,7 @@ export class RegisterStudentsComponent {
     this.router.navigate([`student-registration/add-new-students-regn/${this.examCycle}/${exam.examName}`]);
     }
   }
+
+
 
 }
