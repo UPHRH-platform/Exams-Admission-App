@@ -69,7 +69,11 @@ export class HallTicketComponent implements OnInit {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.stateData = this.router?.getCurrentNavigation()?.extras.state;
     if(!this.stateData) {
-      this.router.navigateByUrl('candidate-portal')
+      if(this.router.url.includes('view-hallticket')) {
+        this.router.navigateByUrl('candidate-portal')
+      } else {
+        this.router.navigateByUrl('hall-ticket-management')
+      }
     }
   }
   //#endregion
@@ -84,20 +88,20 @@ export class HallTicketComponent implements OnInit {
     if (this.stateData) {
       //this state data is used for admin and student
       // make sure to check both flows before making changes
+      const studentData = this.stateData?.data
       this.studentDetails = {
-        hallticketId: this.stateData?.data.id,
-        examCyclename: this.stateData?.data.examCycle.examCyclename,
-        examCycleId: this.stateData?.data.examCycleId,
-        firstName: this.stateData?.data.firstName,
-        lastName: this.stateData?.data.lastName,
-        studentEnrollmentNumber: this.stateData?.data.enrollmentNumber,
-        dob: this.stateData?.data.dob,
-        actualDOB: this.stateData?.data.actualDOB,
-        courseName: this.stateData?.data.courseName,
-        courseYear: this.stateData?.data.courseYear,
+        hallticketId: studentData.id,
+        examCyclename: studentData.examCycle.examCyclename ? studentData.examCycle.examCyclename : studentData.examCycle.name,
+        examCycleId: studentData.examCycleId,
+        firstName: studentData.firstName,
+        lastName: studentData.lastName,
+        studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.enrollmentNumber,
+        dob: studentData.dob,
+        actualDOB: studentData.actualDOB,
+        courseName: studentData.courseName,
+        courseYear: studentData.courseYear,
       };
-      debugger
-      this.examTableData  =  this.stateData?.data.examCycle.exams;
+      this.examTableData  =  studentData.examCycle.exams;
     } else {
      // this.router.navigateByUrl('candidate-portal')
      this.toasterService.showToastr("Something went wrong. Please try again later.", 'Error', 'error')
