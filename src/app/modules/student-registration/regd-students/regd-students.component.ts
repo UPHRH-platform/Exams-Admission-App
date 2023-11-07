@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
@@ -17,7 +17,7 @@ export class RegdStudentsComponent {
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
   constructor(
-    private router: Router, private baseService: BaseService, private route: ActivatedRoute, private authService: AuthServiceService){
+    private baseService: BaseService, private route: ActivatedRoute, private authService: AuthServiceService){
       this.route.params.subscribe((param => {
         this.examCycleId = param['id'];
       }))
@@ -52,6 +52,7 @@ export class RegdStudentsComponent {
       next: (res) => {
         this.isDataLoading = false;
         this.regdStudents = res.responseData;
+        console.log(this.regdStudents)
         let compareArray:any = [];
         if(this.regdStudents.length > 0) {
           this.regdStudents.map((obj: any) => {

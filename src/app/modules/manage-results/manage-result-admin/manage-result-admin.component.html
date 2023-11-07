@@ -6,16 +6,10 @@
         style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
         >
           <div>
-            <div class="mb1">
-              <label class="examCycleLable">Exam cycle</label>
-            </div>
-            <mat-form-field class="exam-form" appearance="outline">
-              <mat-select [formControl]="examCycleControl" (ngModelChange)="getInstitutesData($event)">
-                <ng-container *ngFor="let examCycle of examCycleList">
-                  <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
-                </ng-container>
-              </mat-select>
-            </mat-form-field>
+            <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" 
+            [examCycleList]="examCycleList"
+            (selectedExamcycleId)="getInstitutesData($event)">
+        </app-shared-exam-cycle-select>
           </div>
         </div>
           <div class="flex"

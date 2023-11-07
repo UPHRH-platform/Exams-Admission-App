@@ -165,7 +165,10 @@ export class ManageResultAdminComponent {
     }))
     .subscribe({
       next: (examCycles: any) => {
-        this.examCycleList = examCycles.examCyclesList
+        this.examCycleList = examCycles.examCyclesList;
+        const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
+        this.examCycleControl.patchValue(lastIndexSelected.id);
+        this.getInstitutesData(lastIndexSelected.id)
     },
     error: (err: HttpErrorResponse) => {
       this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
@@ -184,7 +187,8 @@ export class ManageResultAdminComponent {
           this.instituteTableData = response;
       },
       error: (err: HttpErrorResponse) => {
-        this.toastrService.showToastr(err, 'Error', 'error', '')
+        console.log(err)
+        this.toastrService.showToastr(err.error.error.message, 'Error', 'error', '')
       }
     })
   }
@@ -510,7 +514,7 @@ export class ManageResultAdminComponent {
     if(result && result.length > 0) {
       result.forEach((element: any) => {
         const formatedStudentData = {
-          studentName: element.lastName + ' ' + element.firstName,
+          studentName:   element.firstName+ ' ' + element.lastName,
           courseName: element.courseValue,
           exams: element.examValue,
           internalMarks: element.internalMarksObtained,
