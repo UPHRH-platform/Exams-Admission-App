@@ -65,10 +65,11 @@ export class ManageResultInstituteComponent {
       this.isDataLoading = false;
       this.examCycleList = examCucles.examCyclesList
       this.examCycle.patchValue(this.examCycleList[this.examCycleList.length - 1].id)
+      this.getExamDetails(this.examCycle.value)
     })
   }
 
-  getExamDetails(examCycleId: string) {
+  getExamDetails(examCycleId: any) {
     if (this.instituteDetail) {
       this.isDataLoading = true;
       this.cardList = [];

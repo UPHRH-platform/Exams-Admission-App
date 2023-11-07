@@ -1,41 +1,45 @@
 <app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
-<div class="secondary-container">
-    <h2 class="title-header">Track Dispatches</h2>
-    <div>
+<app-shared-skeleton-loading [isLoading]="isDataLoading">
+</app-shared-skeleton-loading>
+<ng-container *ngIf="!isDataLoading">
+    <div class="secondary-container">
+        <h2 class="title-header">Track Dispatches</h2>
         <div>
-            <span class="exam-lable">Exam Cycle</span>
+            <div>
+                <span class="exam-lable">Exam Cycle</span>
+            </div>
+            <mat-form-field appearance="outline" class="exam-form">
+                <mat-select [formControl]="examCycle" (ngModelChange)="getDispatches($event)">
+                    <ng-container *ngFor="let examCycle of examCycleList">
+                        <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
+                    </ng-container>
+                    <mat-option style="display: none;" value="">Select here</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
-        <mat-form-field appearance="outline" class="exam-form">
-            <mat-select [formControl]="examCycle" (ngModelChange)="getDispatches($event)">
-                <ng-container *ngFor="let examCycle of examCycleList">
-                    <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
-                </ng-container>
-                <mat-option style="display: none;" value="">Select here</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="cards-boxes">
-        <ng-container *ngIf="instituteDetail && instituteDetail.approvalStatus === 'APPROVED'; else cctvVerificationStatus">
-            <mat-card class="card" *ngFor="let dispatch of dispatchesList">
-                <mat-card-content class="content-container">
-                    <span class="title-section">{{dispatch.examName}}</span>
-                    <span class="desc-section">Last date for Upload : {{dispatch.lastDateToUpload}}</span>
-                    <div class="status-card">
-                        <span class="status"
-                            [ngStyle]="{'color': dispatch.proofUploaded ? '#1D8923' : '#E99E38'}">Status:
-                            {{dispatch.proofUploaded ? "Dispatched" : "Pending"}}</span>
+        <div class="cards-boxes">
+            <ng-container *ngIf="instituteDetail && instituteDetail.approvalStatus === 'APPROVED'; else cctvVerificationStatus">
+                <mat-card class="card" *ngFor="let dispatch of dispatchesList">
+                    <mat-card-content class="content-container">
+                        <span class="title-section">{{dispatch.examName}}</span>
+                        <span class="desc-section">Last date for Upload : {{dispatch.lastDateToUpload}}</span>
+                        <div class="status-card">
+                            <span class="status"
+                                [ngStyle]="{'color': dispatch.proofUploaded ? '#1D8923' : '#E99E38'}">Status:
+                                {{dispatch.proofUploaded ? "Dispatched" : "Pending"}}</span>
+                        </div>
+                    </mat-card-content>
+                    <div style="display: flex; flex-direction: row; column-gap: 2px;">
+                        <button class="view-btn" (click)="uplodeOrViewProof(dispatch)" [disabled]="!instituteDetail.allowedForExamCentre">{{ (dispatch.proofUploaded ? "Download
+                            Proof" : "Upload Proof") }}</button>
+                        <!-- <button class="btn-2" (click)="navigateToView(item.navigateUrl)" *ngIf="item.status !== 'Pending'">View</button> -->
                     </div>
-                </mat-card-content>
-                <div style="display: flex; flex-direction: row; column-gap: 2px;">
-                    <button class="view-btn" (click)="uplodeOrViewProof(dispatch)" [disabled]="!instituteDetail.allowedForExamCentre">{{ (dispatch.proofUploaded ? "Download
-                        Proof" : "Upload Proof") }}</button>
-                    <!-- <button class="btn-2" (click)="navigateToView(item.navigateUrl)" *ngIf="item.status !== 'Pending'">View</button> -->
-                </div>
-            </mat-card>
-        </ng-container>
+                </mat-card>
+            </ng-container>
 
-        <ng-template #cctvVerificationStatus>
-            <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
-        </ng-template>
+            <ng-template #cctvVerificationStatus>
+                <app-shared-no-result-card [noResultMessage]="noResultMessage"></app-shared-no-result-card>
+            </ng-template>
+        </div>
     </div>
-</div>
+</ng-container>

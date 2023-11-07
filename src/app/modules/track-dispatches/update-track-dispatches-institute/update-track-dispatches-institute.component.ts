@@ -5,11 +5,9 @@ import { mergeMap, of } from 'rxjs';
 import { BaseService } from 'src/app/service/base.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
-import { ViewProofModalAdminComponent } from '../view-proof-modal-admin/view-proof-modal-admin.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthServiceService } from 'src/app/core/services';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-update-track-dispatches-institute',
@@ -30,6 +28,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   loggedInUserId: string | number;
   instituteDetail: any;
   noResultMessage: string = 'Your institution did not pass the CCCTV Verification for the selected exam cycle, and as a result, you do not have the authorization to serve as an examination center. Please reach out to the administration for additional details.';
+  isDataLoading = false
 
   constructor(
     private dialog: MatDialog,
@@ -48,6 +47,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   }
 
   getExamCycles() {
+    this.isDataLoading = true;
     this.baseService.getExamCycleList$()
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
@@ -59,6 +59,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
         this.getInstituteByuserId()
       },
       error: (err: HttpErrorResponse) => {
+        this.isDataLoading = false;
         this.toastrService.showToastr(err, 'Error', 'error', '')
       }
     })
@@ -72,8 +73,10 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.instituteDetail = res.responseData;
+          this.getDispatches(this.examCycle.value)
         },
         error: (err: HttpErrorResponse) => {
+          this.isDataLoading = false;
           this.toastrService.showToastr(err.error.error, 'Error', 'error', '')
         }
       })
@@ -82,15 +85,18 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   getDispatches(examCycleId: string | null) {
     this.dispatchesList = []
     if (examCycleId && this.instituteDetail) {
+      this.isDataLoading = true;
       this.baseService.getDispatchesListByInstitutes$(this.instituteDetail.id, examCycleId)
         .subscribe({
           next:(res: any) => {
             if (res.responseData && res.responseData.length > 0) {
               this.dispatchesList = res.responseData
             }
+            this.isDataLoading = false;
           },
           error: (err) => {
             this.toastrService.showToastr(err, 'Error', 'error', '')
+            this.isDataLoading = false;
           }
         })
     }
