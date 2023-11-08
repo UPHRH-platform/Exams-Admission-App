@@ -643,6 +643,18 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
     return this.multipartPost(requestParam)
   }
 
+  uploadRevisedMarks$(request: any) {
+    const requestParam: RequestParam = {
+      url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.UPLOAD_REVISED_MARKS}`,
+      data: request,
+      header: {
+        Accept: "*/*",
+        'x-authenticated-user-token': this.token
+      }
+    }
+    return this.multipartPost(requestParam)
+  }
+
   getExamsByInstitute$(examCycleId: string, instituteId: number) {
     const requestParam: RequestParam = {
       url: `${this.baseUrl}${this.configService.urlConFig.URLS.MANAGE_RESULTS.EXAMS_OF_INSTITUTE_EXMACYCLE}?examCycleId=${examCycleId}&instituteId=${instituteId}`,
@@ -771,7 +783,7 @@ getIntermediateSubjectList() {
         "response": ['Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'],
         "message": "OK"
     }
-})
+  })
   //   return of([
   //   'Physics', 'Chemistry', 'Biology', 'Mathematics','Biotechnology','Economics','Political Science', 'History', 'Geography', 'Civics', 'Business studies', 'Accountancy', 'Home science', 'Sociology', 'Psychology', 'Philosophy', 'Health Care Science - Vocational Stream', 'Science', 'Literature', 'Education', 'English Core', 'Englist Elective', 'Without English'
   // ])

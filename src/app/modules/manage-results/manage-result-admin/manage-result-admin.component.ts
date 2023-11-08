@@ -565,8 +565,12 @@ export class ManageResultAdminComponent {
             },
     })
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {   
-        this.uploadResults(result.files); 
+      if (result) {
+        if (cellDetails.columnDef === "finalMarksProvided") {   
+          this.uploadResults(result.files); 
+        } else {
+          this.uploadRevisedMarks(result.files); 
+        }
       }
     });
   }
@@ -576,6 +580,21 @@ export class ManageResultAdminComponent {
     formData.append(`fileType`, `excel`)
     formData.append("file", files[0], files[0].name);
     this.baseService.uplodeExternalMarks$(formData)
+      .subscribe({
+        next: (res: any) => {
+          this.openConformationDialog()
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+        }
+      })
+  }
+
+  uploadRevisedMarks(files: any) {
+    const formData = new FormData();
+    formData.append(`fileType`, `excel`)
+    formData.append("file", files[0], files[0].name);
+    this.baseService.uploadRevisedMarks$(formData)
       .subscribe({
         next: (res: any) => {
           this.openConformationDialog()
