@@ -12,7 +12,7 @@ import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.serv
   templateUrl: './manage-result-institute.component.html',
   styleUrls: ['./manage-result-institute.component.scss']
 })
-export class ManageResultInstituteComponent {
+export class ManageResultInstituteComponent implements OnInit {
   @Input() hallTicketDetails: any;
   @Input() examTableHeader: any;
   @Input() examTableData: any;

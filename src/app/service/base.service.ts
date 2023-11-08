@@ -216,9 +216,8 @@ export class BaseService extends HttpService {
   }
 
   requestHallTicketModification$(reqbody: any) {
-    console.log(reqbody)
     const requestParam: RequestParam = {
-      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.MODIFICATION,
+      url: this.baseUrl + this.configService.urlConFig.URLS.HALL_TICKET.REQUEST_HALLTICKET_MODIFICATION,
       data: reqbody,
       header: {
         'Accept': '*/*',
