@@ -73,6 +73,7 @@
             "DOWNLOAD":"/v1/admin/hallticket/examCycle",
             "DETAILS":"/v1/admin/hallticket/hallTicketDetail",
             "MODIFICATION": "/v1/admin/hallticket/dataCorrection/requests",
+            "REQUEST_HALLTICKET_MODIFICATION": "/v1/admin/hallticket/dataCorrection/request",
             "REJECT": "/v1/admin/hallticket/dataCorrection/1/reject?rejectionReason=date can't be changed",
             "APPROVE": "/v1/admin/hallticket/dataCorrection/",
             "GENERATE":"/v1/admin/hallticket/generateHallTickets",
