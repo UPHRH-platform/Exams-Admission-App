@@ -29,7 +29,6 @@ export class StudentEnrollmentFormComponent {
   genderList = ['Male', 'Female', 'Others'];
   casteList = ['General', 'SC', 'ST', 'OBC', 'None'];
   categoryList = ['Freedom Fighter Dependant', 'Handicapped'];
-  centersList = [{id: 434, name: 'Lucknow Centre'}];
   courseList:any = [];
   examBatchList: any[] = [];
   intermediateStreamList: any[] = [];
