@@ -95,7 +95,7 @@ export class HallTicketComponent implements OnInit {
         examCycleId: studentData.examCycleId,
         firstName: studentData.firstName,
         lastName: studentData.lastName,
-        studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.enrollmentNumber,
+        studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.studentEnrollmentNumber,
         dob: studentData.dob,
         actualDOB: studentData.actualDOB,
         courseName: studentData.courseName,

@@ -816,24 +816,6 @@ updateEnrollmentDetails(request: object, id: string | number) {
 //   ])
 // }
 
-getIntermediateStreamList(): Observable<any> {
-  return of([
-    {
-      id: 1, 
-      name: 'U.P. BOARD'
-    }
-  ])
-}
-
-getIntermediatePassedBoard(): Observable<any> {
-  return of([
-    {
-      name: 'U.P. BOARD OF HIGH SCHOOL, ALLAHABAD',
-      id: 1
-    }
-  ])
-}
-
 getExamCycleDetails(id: string): Observable<ServerResponse> {
   const requestParam: RequestParam = {
     url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_BY_ID + `/${id}`,
