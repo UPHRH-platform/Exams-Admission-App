@@ -652,7 +652,7 @@ getQuestionPapersByExamCycle(examCycleId: string | number):Observable<ServerResp
         'x-authenticated-user-token': this.token
       }
     }
-    return this.multipartPost(requestParam)
+    return this.multipartPut(requestParam)
   }
 
   getExamsByInstitute$(examCycleId: string, instituteId: number) {
