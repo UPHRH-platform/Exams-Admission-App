@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as urlConfig from "./url.config.json";
 import * as rolesConfig from './roles.config.json';
 import * as tabsConfig from './tabs.config.json';
+import * as dropDownsConfig from './dropdowns.config.json'
 /**
  * Service to fetch config details.
  *
@@ -23,5 +24,7 @@ export class ConfigService {
    *
    */
    tabsConfig = (<any>tabsConfig);
+
+   dropDownsConfig = (<any>dropDownsConfig)
 }
 

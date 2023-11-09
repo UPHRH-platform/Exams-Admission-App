@@ -26,13 +26,13 @@ interface InstituteDetail {
 })
 export class StudentEnrollmentFormComponent {
   links = ['Basic Details', 'Educational Details'];
-  genderList = ['Male', 'Female', 'Others'];
-  casteList = ['General', 'SC', 'ST', 'OBC', 'None'];
-  categoryList = ['Freedom Fighter Dependant', 'Handicapped'];
+  genderList: any = [];
+  casteList: any = [];
+  categoryList: any = [];
   courseList:any = [];
   examBatchList: any[] = [];
-  intermediateStreamList: any[] = [];
-  intermediatePassedBoardList: [] = [];
+  intermediateStreamList: any = [];
+  intermediatePassedBoardList: any = [];
   intermediateSubjectsList:any = [];
   selectedLink: string = 'Basic Details';
   basicDetailsForm: FormGroup;
@@ -63,7 +63,8 @@ export class StudentEnrollmentFormComponent {
     private route: ActivatedRoute, 
     private router: Router, 
     private dialog: MatDialog,
-    private toasterService: ToastrServiceService) {
+    private toasterService: ToastrServiceService,
+    private configService: ConfigService) {
     this.route.params.subscribe((param) => {
       if(param['id']) {
         this.enrollmentId = param['id'];
@@ -77,11 +78,10 @@ export class StudentEnrollmentFormComponent {
     //console.log(this.loggedInUserId);
     this.getAdmissionSessionList();
     this.getIntermediateSubjects();
-    this.getIntermediateStreams();
-    this.getIntermediatePassedBoard();
     this.initBasicDetailsForm();
     this.initEducationalDetailsForm();
     this.getInstituteByuserId();
+    this.initializeConfigDropdowns();
     if(this.enrollmentId !== undefined) {
       this.isCreateView = false;
         this.getEnrollmentDetails();
@@ -91,6 +91,16 @@ export class StudentEnrollmentFormComponent {
       this.getAllCourses();
     }
     
+  }
+
+  initializeConfigDropdowns() {
+    const dropdowns = this.configService.dropDownsConfig.dropDownList;
+    this.genderList = dropdowns.genderList;
+    this.categoryList = dropdowns.categoryList;
+    this.casteList = dropdowns.casteList;
+    this.intermediatePassedBoardList = dropdowns.intermediatePassedBoardList;
+    this.intermediateStreamList = dropdowns.intermediateStreamList;
+    debugger
   }
 
   getInstituteByuserId() {
@@ -639,23 +649,6 @@ export class StudentEnrollmentFormComponent {
           
           this.examBatchList = res.responseData;
           console.log(this.examBatchList)
-        }
-      })
-    }
-
-    getIntermediateStreams() {
-      this.baseService.getIntermediateStreamList().subscribe({
-        next: (res) => {
-          this.intermediateStreamList = res;
-        }
-      })
-    }
-
-    getIntermediatePassedBoard() {
-      this.baseService.getIntermediatePassedBoard().subscribe({
-        next: (res) => {
-        //  console.log(res);
-          this.intermediatePassedBoardList = res;
         }
       })
     }

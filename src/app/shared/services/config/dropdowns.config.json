@@ -1,0 +1,19 @@
+{
+    "dropDownList": {
+        "intermediateStreamList": [
+            {
+                "id": 1, 
+                "name": "U.P. BOARD"
+            }
+        ],
+        "intermediatePassedBoardList": [
+            {
+                "name": "U.P. BOARD OF HIGH SCHOOL, ALLAHABAD",
+                "id": 1
+            }
+        ],
+        "casteList": ["General", "SC", "ST", "OBC", "None"],
+        "categoryList": ["Freedom Fighter Dependant", "Handicapped"],
+        "genderList": ["Male", "Female", "Others"]
+    }
+}
