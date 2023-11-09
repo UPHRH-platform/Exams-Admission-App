@@ -100,7 +100,6 @@ export class StudentEnrollmentFormComponent {
     this.casteList = dropdowns.casteList;
     this.intermediatePassedBoardList = dropdowns.intermediatePassedBoardList;
     this.intermediateStreamList = dropdowns.intermediateStreamList;
-    debugger
   }
 
   getInstituteByuserId() {
