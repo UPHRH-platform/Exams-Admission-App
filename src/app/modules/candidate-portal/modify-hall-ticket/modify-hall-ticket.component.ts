@@ -93,7 +93,7 @@ export class ModifyHallTicketComponent implements OnInit {
         firstName: studentDetails.firstName,
         lastName: studentDetails.lastName,
         roolNumber: studentDetails.studentEnrollmentNumber,
-        DOB: new Date(studentDetails.dob),
+        DOB: new Date(studentDetails.actualDOB),
         courseName: studentDetails.courseName,
         courseYear: studentDetails.courseYear
       })
@@ -167,7 +167,7 @@ export class ModifyHallTicketComponent implements OnInit {
     formData.append("updatedLastName", this.studentDetails.value.lastName);
     let month: string | number = Dob.getMonth() + 1;
     month = month < 10 ? '0' + month : month;
-    let day: string | number = Dob.getDate() + 1;
+    let day: string | number = Dob.getDate();
     day = day < 10 ? '0' + day : day;
     formData.append("updatedDOB",  `${Dob.getFullYear()}-${month}-${day}`);
     
