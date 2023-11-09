@@ -28,7 +28,8 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
   loggedInUserId: string | number;
   instituteDetail: any;
   noResultMessage: string = 'Your institution did not pass the CCCTV Verification for the selected exam cycle, and as a result, you do not have the authorization to serve as an examination center. Please reach out to the administration for additional details.';
-  isDataLoading = false
+  isDataLoading = false;
+  instituteVerifiedStatus = false;
 
   constructor(
     private dialog: MatDialog,
@@ -67,22 +68,40 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
 
   getInstituteByuserId() {
       this.baseService.getInstituteDetailsByUser(this.loggedInUserId)
-      .pipe(mergeMap((res: any) => {
-        return this.baseService.getInstituteVerifiedDetails(res.responseData[0].instituteCode, this.examCycle.value);
-      }))
       .subscribe({
         next: (res) => {
-          this.instituteDetail = res.responseData;
-          this.getDispatches(this.examCycle.value)
+          this.instituteDetail = res.responseData[0];
+          this.getInstituteVerifiedDetails(this.examCycle.value)
         },
         error: (err: HttpErrorResponse) => {
           this.isDataLoading = false;
-          this.toastrService.showToastr(err.error.error, 'Error', 'error', '')
+          this.toastrService.showToastr(err, 'Error', 'error', '')
         }
       })
   }
 
-  getDispatches(examCycleId: string | null) {
+  getInstituteVerifiedDetails(examCycleId: string) {
+    if (this.instituteDetail) {
+      this.isDataLoading = true
+      this.instituteVerifiedStatus = false;
+      this.dispatchesList = [];
+      this.baseService.getInstituteVerifiedDetails(this.instituteDetail.instituteCode, examCycleId)
+      .subscribe({
+        next: (res) => {
+          if (res.responseData) {
+            this.instituteVerifiedStatus = res.responseData.approvalStatus;
+            this.getDispatches(examCycleId)
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isDataLoading = false;
+          this.toastrService.showToastr(err, 'Error', 'error');
+        }
+      })
+    }
+  }
+
+  getDispatches(examCycleId: string) {
     this.dispatchesList = []
     if (examCycleId && this.instituteDetail) {
       this.isDataLoading = true;
