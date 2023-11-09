@@ -9,7 +9,7 @@
                 <span class="exam-lable">Exam Cycle</span>
             </div>
             <mat-form-field appearance="outline" class="exam-form">
-                <mat-select [formControl]="examCycle" (ngModelChange)="getDispatches($event)">
+                <mat-select [formControl]="examCycle" (ngModelChange)="getInstituteVerifiedDetails($event)">
                     <ng-container *ngFor="let examCycle of examCycleList">
                         <mat-option [value]="examCycle.id">{{examCycle.examCycleName}}</mat-option>
                     </ng-container>
@@ -18,7 +18,7 @@
             </mat-form-field>
         </div>
         <div class="cards-boxes">
-            <ng-container *ngIf="instituteDetail && instituteDetail.approvalStatus === 'APPROVED'; else cctvVerificationStatus">
+            <ng-container *ngIf="instituteVerifiedStatus && dispatchesList.length > 0; else cctvVerificationStatus">
                 <mat-card class="card" *ngFor="let dispatch of dispatchesList">
                     <mat-card-content class="content-container">
                         <span class="title-section">{{dispatch.examName}}</span>
