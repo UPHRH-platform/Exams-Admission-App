@@ -94,6 +94,17 @@ export class ManageResultAdminComponent {
       },
       isAction: true,
       hasStyle: true,
+    },
+    {
+      header: 'Status',
+      columnDef: 'status',
+      isSortable: false,
+      cell: (element: Record<string, any>) => `${element['status']}`,
+      cellStyle: {
+        'background-color': '#0000000a',
+        'color': '#00000099'
+      },
+      hasStyle: true,
     }
   ]
   instituteTableData = [];
@@ -203,6 +214,7 @@ export class ManageResultAdminComponent {
         internalMarksProvided: string,
         finalMarksProvided: string,
         revisedFinalMarksProvided: string,
+        status: string,
         classes: any,
       } = {
         instituteName: institute.instituteName,
@@ -211,6 +223,7 @@ export class ManageResultAdminComponent {
         internalMarksProvided: '-',
         finalMarksProvided: '-',
         revisedFinalMarksProvided: '-',
+        status: '-',
         classes: {}
       }
       if (institute.hasInternalMarks) {
@@ -241,6 +254,14 @@ export class ManageResultAdminComponent {
       } else {
         formatedInstituteData.revisedFinalMarksProvided = "-";
         formatedInstituteData['classes']['revisedFinalMarksProvided'] = ['color-blue'];
+      }
+
+      if (institute.hasPublished) {
+        formatedInstituteData.status = 'Published'
+        formatedInstituteData['classes']['status'] = ['color-blue', 'text-bold']
+      } else {
+        formatedInstituteData.status = 'Pending'
+        formatedInstituteData['classes']['status'] = ['color-orange', 'text-bold']
       }
 
       foramtedData.push(formatedInstituteData)
