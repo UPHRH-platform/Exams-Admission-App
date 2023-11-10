@@ -94,10 +94,11 @@ export class CandidatePortalComponent implements OnInit {
           const examCycle: any = this.examCycleList.find(((element: any) => element.id === examCycleId))
           this.studentResultsDetails['examCyclename'] = examCycle ? examCycle.examCycleName : '';
           this.studentResultsDetails['examCycleId'] = examCycleId;
+          const publishedDate = new Date(this.studentResultsDetails.publishedDate);
           this.cardList.push({
             title: 'Results',
             lable: 'Published on',
-            date: this.studentResultsDetails.publishedDate,
+            date: `${publishedDate.getFullYear()} - ${publishedDate.getMonth() + 1} - ${publishedDate.getDate()}`,
             status: 'PUBLISHED'
             // status: this.studentResultsDetails.publishStatus,
           })

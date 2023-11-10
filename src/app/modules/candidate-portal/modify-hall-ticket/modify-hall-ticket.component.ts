@@ -157,10 +157,10 @@ export class ModifyHallTicketComponent implements OnInit {
     })
   }
 
-
   makeDataCorrectionRequest() {
     const Dob = new Date(this.studentDetails.value.DOB);
     const formData = new FormData();
+    formData.append("examCycleId", this.stateData.studentDetails.examCycleId);
     formData.append("studentId", this.authService.getUserRepresentation().attributes.studentId[0]);
     formData.append("proof", this.uplodedDocuments[0],this.uplodedDocuments[0].name);
     formData.append("updatedFirstName",this.studentDetails.value.firstName);
@@ -190,8 +190,6 @@ export class ModifyHallTicketComponent implements OnInit {
 
 
   }
-
-  viewDocument() {}
 
   removeAttacment(index: number) {
     if (this.uplodedDocuments.length > 0) {
