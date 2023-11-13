@@ -215,7 +215,7 @@ let r = response.examFees
       columnDef: 'exams',
       cell: (element: Record<string, any>) => `${element['exams']}`,
       cellStyle: {
-        'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
+        'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
       },
     },{
       header: 'No. of Exams',
@@ -274,12 +274,13 @@ let r = response.examFees
     if (response) {
       response.forEach((examDetails: any) => {
         console.log(examDetails.student)
+        const examNames = examDetails.exam.map((exam: any) => exam.examName).join(', ')
         const studentExamDetial = {
           studentName: examDetails.student.firstName +" "+ examDetails.student.surname,
           enrolementNumber: examDetails.student.enrollmentNumber || "-",
           courseName: examDetails.student.course.courseName,
-          exams: examDetails.student.intermediateSubjects,
-          numberOfExams: examDetails.student.intermediateSubjects,
+          exams: examNames,
+          numberOfExams: examDetails.exam.length,
           fee: examDetails.amount,
           status: examDetails.status,
           classes: {
