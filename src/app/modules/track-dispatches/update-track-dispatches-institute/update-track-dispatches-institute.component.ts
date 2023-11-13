@@ -170,13 +170,13 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let month = '' + (result.dispatchDate.getMonth() + 1);
-        let day = '' + result.dispatchDate.getDate();
-        let year = result.dispatchDate.getFullYear();
+        // let month = '' + (result.dispatchDate.getMonth() + 1);
+        // let day = '' + result.dispatchDate.getDate();
+        // let year = result.dispatchDate.getFullYear();
 
-        month = month.length < 2 ? '0' + month : month
-        day = day.length < 2 ? '0' + day : day
-        const dispatchDate = year + '-' + month + '-' + day
+        // month = month.length < 2 ? '0' + month : month
+        // day = day.length < 2 ? '0' + day : day
+        // const dispatchDate = year + '-' + month + '-' + day
         const request = {
           examCycleId: this.examCycle.value,
           examId: dispatch.examId,
