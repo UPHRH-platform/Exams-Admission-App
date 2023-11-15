@@ -20,7 +20,7 @@ export class ManageHallTicketsAdminListComponent {
   halltickets: any;
   institutes: Institute[];
   courses: Course[];
-  years: Year[];
+  examCyclesList = [];
   generatedHallTicketsData: HallTicket[] = [];
   pendingHallTicketsData: HallTicket[] = [];
   selectedCandidatesForHallTicketsGenerate: HallTicket[] = [];
@@ -82,16 +82,8 @@ export class ManageHallTicketsAdminListComponent {
         isSortable: true,
         cell: (element: Record<string, any>) => `${element['courseName']}`,
         cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
         },
-        /*   cell: (element: Record<string, any>) => {
-            const timestamp = element['createdAt'];
-            const date = new Date(timestamp);
-            const month = this.monthNames[date.getMonth()];
-            const day = date.getDate();
-            const year = date.getFullYear();
-            return `${month} ${day}, ${year}`;
-          } */
       },
       {
         columnDef: 'studentEnrollmentNumber',
@@ -112,24 +104,30 @@ export class ManageHallTicketsAdminListComponent {
         cellStyle: {
           'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
         },
-      },
-      {
-        columnDef: 'feesPaid',
-        header: '',
-        isSortable: false,
-        isLink: true,
-        classes: ['color-green'],
-        cell: (element: Record<string, any>) => {
-          if (element['feesPaid']) {
-            return 'PAID'
-          } else {
-            return 'NOT PAID'
+      }
+    ];
+    if (this.hallTktType  !== 'modification_hall_ticket') {
+      this.pendingHallTicketsTableColumns.push(
+        {
+          columnDef: 'feesPaid',
+          header: '',
+          isSortable: false,
+          isLink: true,
+          classes: ['color-green'],
+          cell: (element: Record<string, any>) => {
+            if (element['feesPaid']) {
+              return 'PAID'
+            } else {
+              return 'NOT PAID'
+            }
+          },
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
           }
-        },
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
-        },
-      },
+        }
+      )
+    }
+    this.pendingHallTicketsTableColumns.push(
       {
         columnDef: 'viewHallTicket',
         header: '',
@@ -139,12 +137,9 @@ export class ManageHallTicketsAdminListComponent {
         cell: (element: Record<string, any>) => `View`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
-        },
-
-
+        }
       }
-
-    ];
+    )
 
     this.generatedHallTicketsTableColumns = [
       {
@@ -245,20 +240,22 @@ export class ManageHallTicketsAdminListComponent {
 
     if (response) {
       response.forEach((hallTicketsDetails: any) => {
-        const formatedHallTicketDetails = {
-          id: hallTicketsDetails.id,
-          firstName: hallTicketsDetails.firstName + hallTicketsDetails.lastName,
-          courseName: hallTicketsDetails.courseName,
-          studentEnrollmentNumber: hallTicketsDetails.studentEnrollmentNumber,
-          feesPaid: hallTicketsDetails.feesPaid,
-          attendancePercentage: hallTicketsDetails.attendancePercentage,
-          hallTicketStatus: hallTicketsDetails.hallTicketStatus,
-          classes: {
-            viewHallTicket: ['color-blue']
+        if (hallTicketsDetails.feesPaid !== false) {
+          const formatedHallTicketDetails = {
+            id: hallTicketsDetails.id,
+            firstName: hallTicketsDetails.firstName + hallTicketsDetails.lastName,
+            courseName: hallTicketsDetails.courseName,
+            studentEnrollmentNumber: hallTicketsDetails.studentEnrollmentNumber ? hallTicketsDetails.studentEnrollmentNumber : hallTicketsDetails.enrollmentNumber,
+            feesPaid: hallTicketsDetails.feesPaid,
+            attendancePercentage: hallTicketsDetails.attendancePercentage,
+            hallTicketStatus: hallTicketsDetails.hallTicketStatus,
+            classes: {
+              viewHallTicket: ['color-blue']
+            }
           }
-        }
 
-        formatedHallTicketsDetails.hallTicketsDetailsList.push(formatedHallTicketDetails)
+          formatedHallTicketsDetails.hallTicketsDetailsList.push(formatedHallTicketDetails)
+        }
       })
     }
     return of(formatedHallTicketsDetails);
@@ -293,6 +290,7 @@ export class ManageHallTicketsAdminListComponent {
     }
     this.hallTktType = e.value
     this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(courseId, examCycleId, instituteId) : this.getHallTickets(courseId, examCycleId, instituteId);
+    this.initializeTableColumns()
 
   }
   getHallTicketsForDataCorrections(courseId?: number,examCycleId?: number, instituteId?: number) {
@@ -335,7 +333,6 @@ export class ManageHallTicketsAdminListComponent {
     this.getAllInstitutes();
     this.getCoursesList();
     this.getExamCycleList();
-    this.getHallTickets();
   }
 
   getOtherSelectedFilters() {
@@ -370,7 +367,9 @@ export class ManageHallTicketsAdminListComponent {
     this.baseService.getExamCycleList$().subscribe({
       next: (res: any) => {
         this.isDataLoading = false;
-        this.years = res.responseData
+        this.examCyclesList = res.responseData;
+        this.examCycleControl.patchValue(this.examCyclesList[this.examCyclesList.length - 1]['id'])
+        this.getHallTickets(undefined, this.examCyclesList[this.examCyclesList.length - 1]['id'])
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message)
