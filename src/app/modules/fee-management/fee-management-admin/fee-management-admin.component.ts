@@ -347,5 +347,10 @@ let r = response.examFees
 
   }
 
+  showInstitutesTables() {
+    this.instituteTableData(Number(this.examCycleControl.value));
+    this.showInstitutesTable = true
+  }
+
 
 }

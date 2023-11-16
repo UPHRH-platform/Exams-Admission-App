@@ -89,18 +89,39 @@ export class HallTicketComponent implements OnInit {
       //this state data is used for admin and student
       // make sure to check both flows before making changes
       const studentData = this.stateData?.data
-      this.studentDetails = {
-        hallticketId: studentData.id,
-        examCyclename: studentData.examCycle.examCyclename ? studentData.examCycle.examCyclename : studentData.examCycle.name,
-        examCycleId: studentData.examCycleId,
-        firstName: studentData.firstName,
-        lastName: studentData.lastName,
-        studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.studentEnrollmentNumber,
-        dob: studentData.dob,
-        actualDOB: studentData.actualDOB,
-        courseName: studentData.courseName,
-        courseYear: studentData.courseYear,
-      };
+      if (this.stateData?.requestModification) {
+        this.studentDetails = {
+          requestModification: this.stateData?.requestModification,
+          hallticketId: studentData.id,
+          examCyclename: studentData.examCycle.examCyclename ? studentData.examCycle.examCyclename : studentData.examCycle.name,
+          examCycleId: studentData.examCycleId,
+          firstName: studentData.firstName,
+          firstNameFlag: studentData.firstNameFlag,
+          lastName: studentData.lastName,
+          lastNameFlag: studentData.lastNameFlag,
+          studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.studentEnrollmentNumber,
+          dob: this.baseService.reverseDate(studentData.dob),
+          dobFlag: studentData.dobFlag,
+          actualDOB: studentData.actualDOB,
+          courseName: studentData.courseName,
+          courseYear: studentData.courseYear,
+          courseYearFlag: studentData.courseYearFlag,
+          proofAttachmentPath: studentData.proofAttachmentPath
+        };
+      } else {
+        this.studentDetails = {
+          hallticketId: studentData.id,
+          examCyclename: studentData.examCycle.examCyclename ? studentData.examCycle.examCyclename : studentData.examCycle.name,
+          examCycleId: studentData.examCycleId,
+          firstName: studentData.firstName,
+          lastName: studentData.lastName,
+          studentEnrollmentNumber: studentData.enrollmentNumber ? studentData.enrollmentNumber : studentData.studentEnrollmentNumber,
+          dob: studentData.dob,
+          actualDOB: studentData.actualDOB,
+          courseName: studentData.courseName,
+          courseYear: studentData.courseYear,
+        };
+      }
       this.examTableData  =  studentData.examCycle.exams;
     } else {
      // this.router.navigateByUrl('candidate-portal')

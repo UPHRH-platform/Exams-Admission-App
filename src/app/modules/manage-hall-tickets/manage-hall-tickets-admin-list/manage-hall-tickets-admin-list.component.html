@@ -29,7 +29,7 @@
           <input matInput placeholder="Search" />
         </mat-form-field> -->
       <div class="buttons">
-        <div>
+        <!-- <div>
           <button
             class="btn-1"
             style="
@@ -41,13 +41,14 @@
           >
            Cancel
           </button>
-        </div>
+        </div> -->
         <div>
           <button class="btn-2" (click)="generateHallTkt()">Generate Hall Ticket</button>
         </div>
       </div>
     </div>
     <div class="selector">
+      <ng-container *ngIf="hallTktType  !== 'modification_hall_ticket'">
       <div style="display: flex;flex-direction: column;">
       <div class="mb1">
         <label class="examCycleLable">Course</label>
@@ -64,6 +65,7 @@
         </mat-select>
       </mat-form-field>
       </div>
+      </ng-container>
       <div style="display: flex;flex-direction: column;">
        <app-shared-exam-cycle-select 
       [examCycleFormControl]="examCycleControl"
@@ -73,22 +75,26 @@
      
       </div>
       
+    <ng-container *ngIf="hallTktType  !== 'modification_hall_ticket'">
       <div style="display: flex;flex-direction: column;">
         <div class="mb1">
           <label class="examCycleLable">Institute</label>
         </div>
-      <mat-form-field class="exam-form" appearance="outline">
-        <mat-select [formControl]="instituteControl"
-        (selectionChange)="onInstituteSelected($event)">
-          <mat-option
-            *ngFor="let institute of institutes"
-            [value]="institute.id"
-          >
-            {{ institute.instituteCode }} - {{institute.instituteName}}
-          </mat-option>
-          <mat-option style="display: none;" value="">Select here</mat-option>
-        </mat-select>
-      </mat-form-field></div> <span style="display: flex; align-items: center;"  class="filter" [matMenuTriggerFor]="AttendanceFilterMenu">
+        <mat-form-field class="exam-form" appearance="outline">
+          <mat-select [formControl]="instituteControl"
+          (selectionChange)="onInstituteSelected($event)">
+            <mat-option
+              *ngFor="let institute of institutes"
+              [value]="institute.id"
+            >
+              {{ institute.instituteCode }} - {{institute.instituteName}}
+            </mat-option>
+            <mat-option style="display: none;" value="">Select here</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> 
+    </ng-container>
+    <span style="display: flex; align-items: center; visibility: hidden;"  class="filter" [matMenuTriggerFor]="AttendanceFilterMenu">
         <mat-icon  fontIcon=filter_list></mat-icon>
         <mat-label class=" ">Filter</mat-label>
         <mat-menu #AttendanceFilterMenu="matMenu">
@@ -102,7 +108,7 @@
 </mat-menu>
         
     </span>
-    <div style="display: flex;flex-direction: column;">
+    <div style="display: flex;flex-direction: column; visibility: hidden;">
       <button class="mt-4 btn-clear-filter" (click)="onFilterClear()">Clear All Filters</button>
     </div>
     </div>

@@ -165,6 +165,7 @@ export class ModifyHallTicketComponent implements OnInit {
     formData.append("proof", this.uplodedDocuments[0],this.uplodedDocuments[0].name);
     formData.append("updatedFirstName",this.studentDetails.value.firstName);
     formData.append("updatedLastName", this.studentDetails.value.lastName);
+    formData.append("updatedCourseYear", this.studentDetails.value.courseYear)
     let month: string | number = Dob.getMonth() + 1;
     month = month < 10 ? '0' + month : month;
     let day: string | number = Dob.getDate();

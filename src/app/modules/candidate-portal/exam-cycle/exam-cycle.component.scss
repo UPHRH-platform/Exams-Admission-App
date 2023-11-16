@@ -38,3 +38,28 @@
     font-size: 15px;
     cursor: pointer;
 }
+
+.attachments {
+    margin-top: 40px;
+
+    .attachment-header {
+        font-size: 15px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.87);
+        margin-bottom: 15px;
+        justify-content: space-between;
+    }
+
+    .file-container{
+        background-color: rgb(245, 245, 245) ;
+        width: calc(100% - 1rem);
+        min-height: fit-content;
+        display: flex;
+        justify-content: space-between;
+    }
+    .view-download-btn {
+        color: #045dad;
+        cursor: pointer;
+    }
+
+}

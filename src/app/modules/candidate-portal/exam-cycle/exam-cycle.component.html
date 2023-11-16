@@ -1,22 +1,45 @@
 <mat-card class="container">
     <div class="secondary-container">
-    <mat-card-content>
-        <div>
-            <app-exam-hall-ticket-student-details
-            [studentDetails]="studentDetails"></app-exam-hall-ticket-student-details>
-        </div>
-        <div>
-            <app-shared-table [tableColumns]="examTableHeader" 
-            [tableData]="examTableData" [isHallTicket]="isHallTicket" ></app-shared-table>
-        </div>
-    </mat-card-content>
-    <mat-card-actions>
-        <div class="footer">
-            <button *ngIf="loggedInUserRole === 'exams_student'" class="cancel-btn" (click)="cancel()">Cancel</button>
-            <button *ngIf="loggedInUserRole === 'exams_student'" class="download-btn" (click)="downloadHallTicket()">Download</button>
-         <!--    <button *ngIf="loggedInUserRole === 'exams_admin'" class="cancel-btn" (click)="onReject()">Reject</button> -->
-            <button *ngIf="loggedInUserRole === 'exams_admin'" class="download-btn" (click)="onApprove()">Approve</button>
-        </div>
-    </mat-card-actions>
-</div>
+        <mat-card-content>
+            <div>
+                <app-exam-hall-ticket-student-details
+                    [studentDetails]="studentDetails"></app-exam-hall-ticket-student-details>
+            </div>
+            <div>
+                <app-shared-table [tableColumns]="examTableHeader" [tableData]="examTableData"
+                    [isHallTicket]="isHallTicket"></app-shared-table>
+            </div>
+            <ng-container *ngIf="studentDetails.requestModification">
+                <div class="attachments">
+                    <div class="attachment-header flex">
+                        <span>Attachment</span>
+                    </div>
+                    <div>
+                        <div class="file-container mt1 p1">
+                            <span>Attachment proof</span>
+                            <div>
+                                <a class="view-download-btn mr1" (click)="downlaodProof()">View</a>
+                                <a class="view-download-btn" (click)="downlaodProof()">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="footer">
+                <button *ngIf="loggedInUserRole === 'exams_student'" class="cancel-btn"
+                    (click)="cancel()">Cancel</button>
+                <button *ngIf="loggedInUserRole === 'exams_student'" class="download-btn"
+                    (click)="downloadHallTicket()">Download</button>
+                <!--    <button *ngIf="loggedInUserRole === 'exams_admin'" class="cancel-btn" (click)="onReject()">Reject</button> -->
+                <ng-container *ngIf="loggedInUserRole === 'exams_admin' && studentDetails.requestModification">
+                    <button class="cancel-btn"
+                    (click)="onReject()">Reject</button>
+                    <button class="download-btn"
+                        (click)="onApprove()">Approve</button>
+                </ng-container>
+            </div>
+        </mat-card-actions>
+    </div>
 </mat-card>

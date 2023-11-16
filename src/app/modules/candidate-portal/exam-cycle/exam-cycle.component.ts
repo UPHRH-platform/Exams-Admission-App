@@ -6,6 +6,7 @@ import { BaseService } from '../../../service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { CctvApprovalPopupComponent } from 'src/app/shared/components/cctv-approval-popup/cctv-approval-popup.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 
 @Component({
   selector: 'app-exam-cycle',
@@ -53,10 +54,10 @@ export class ExamCycleComponent {
   approveHallticket(id: number){
     let ticketId: any =[]
     ticketId.push(id)
-    this.baseService.generateHallTkt$(ticketId).subscribe({
+    this.baseService.approveHallTicket$(ticketId).subscribe({
       next: (res: any) => {
         console.log(res)
-        if(res.responseData.responseCodeNumeric === 200){
+        if(res.responseData.status === 'APPROVED'){
           this.toasterService.showToastr('Hall ticket approved successfully !!', 'Success', 'success', '');
           this.router.navigate(['/hall-ticket-management']);
         } else {
@@ -90,37 +91,62 @@ export class ExamCycleComponent {
   }
 
   onReject() {
-      const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
-        data: {
-          controls: [
+      // const dialogRef = this.dialog.open(CctvApprovalPopupComponent, {
+      //   data: {
+      //     controls: [
+      //     {
+      //         controlLable: 'Add remarks',
+      //         controlName: 'remarks',
+      //         controlType: 'textArea',
+      //         placeholder: 'Type here',
+      //         value: '',
+      //         validators: ['required']
+      //       },
+      //     ],
+      //     buttons: [
+      //       {
+      //         btnText: 'Cancel',
+      //         positionClass: 'left',
+      //         btnClass: 'btn-outline',
+      //         type: 'close'
+      //       },
+      //       {
+      //         btnText: 'Submit',
+      //         positionClass: 'right',
+      //         btnClass: 'btn-full',
+      //         type: 'submit'
+      //       },
+      //     ],
+      //   },
+      //   width: '700px',
+      //   maxWidth: '90vw',
+      //   maxHeight: '90vh'
+      // })
+
+    const dialogRef = this.dialog.open(ConformationDialogComponent, {
+      data: {
+        dialogType: 'fail',
+        description: ['Are you sure you want to reject the request?'],
+        buttons: [
           {
-              controlLable: 'Add remarks',
-              controlName: 'remarks',
-              controlType: 'textArea',
-              placeholder: 'Type here',
-              value: '',
-              validators: ['required']
-            },
-          ],
-          buttons: [
-            {
-              btnText: 'Cancel',
-              positionClass: 'left',
-              btnClass: 'btn-outline',
-              type: 'close'
-            },
-            {
-              btnText: 'Submit',
-              positionClass: 'right',
-              btnClass: 'btn-full',
-              type: 'submit'
-            },
-          ],
-        },
-        width: '700px',
-        maxWidth: '90vw',
-        maxHeight: '90vh'
-      })
+            btnText: 'Submit',
+            positionClass: 'right',
+            btnClass: 'btn-full',
+            response: true
+          },
+          {
+            btnText: 'Cancel',
+            positionClass: 'right mr2',
+            btnClass: 'btn-outline',
+            response: false
+          },
+        ],
+      },
+      width: '700px',
+      height: '400px',
+      maxWidth: '90vw',
+      maxHeight: '90vh'
+    })
 
     dialogRef.afterClosed().subscribe((response: any) => {
       if (response) {
@@ -130,5 +156,18 @@ export class ExamCycleComponent {
 
   }
 
+  downlaodProof() {
+    const fileLocation = this.studentDetails.proofAttachmentPath;
+    this.baseService.downloadPdf$(fileLocation)
+    .subscribe(blob => {
+      const downloadLink = document.createElement('a');
+      const url = window.URL.createObjectURL(blob);
+      downloadLink.href = url;
+      downloadLink.download = `${this.studentDetails.lastName} ${this.studentDetails.firstName}.pdf`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
 
 }

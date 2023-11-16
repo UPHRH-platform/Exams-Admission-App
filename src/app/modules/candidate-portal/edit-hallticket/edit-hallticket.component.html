@@ -57,11 +57,15 @@
             <div class="roolNumber">
                 <span>{{studentDetails.value.courseYear || "-" }}  </span>
             </div>
-            <!-- <mat-form-field appearance="outline" class="hall-ticket-form-field">
-                <input matInput formControlName="courseYear"
-                [matDatepicker]="courseYearPicker" >
-                <mat-datepicker-toggle matIconSuffix [for]="courseYearPicker"></mat-datepicker-toggle>
-                <mat-datepicker #courseYearPicker></mat-datepicker>
+            <!-- <mat-form-field  appearance="outline" class="w-full">
+                <mat-select formControlName="courseYear" placeholder="Select here">
+                    <span *ngFor="let session of admissionSessionList; let i = index">
+                        <mat-option [value]="session">{{
+                            session
+                            }}</mat-option>
+                    </span>
+                </mat-select>
+            
             </mat-form-field> -->
         </div>
     </div>
