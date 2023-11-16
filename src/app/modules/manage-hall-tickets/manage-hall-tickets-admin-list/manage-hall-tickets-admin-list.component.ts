@@ -56,58 +56,56 @@ export class ManageHallTicketsAdminListComponent {
 
   initializeTableColumns(): void {
 
-    this.pendingHallTicketsTableColumns = [
-      {
-        columnDef: 'select',
-        header: '',
-        isSortable: false,
-        isCheckBox: true,
-        cell: (element: Record<string, any>) => ``,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
-        },
-      },
-      {
-        columnDef: 'firstName',
-        header: 'Student Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['firstName']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
-        },
-      },
-      {
-        columnDef: 'courseName',
-        header: 'Course Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['courseName']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
-        },
-      },
-      {
-        columnDef: 'studentEnrollmentNumber',
-        header: 'Roll Number',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
-        },
-
-      },
-      {
-        columnDef: 'attendancePercentage',
-        header: 'Attendance (%)',
-        isSortable: false,
-        isLink: true,
-        cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
-        },
-      }
-    ];
     if (this.hallTktType  !== 'modification_hall_ticket') {
-      this.pendingHallTicketsTableColumns.push(
+      this.pendingHallTicketsTableColumns = [
+        {
+          columnDef: 'select',
+          header: '',
+          isSortable: false,
+          isCheckBox: true,
+          cell: (element: Record<string, any>) => ``,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'firstName',
+          header: 'Student Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['firstName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'courseName',
+          header: 'Course Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['courseName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'studentEnrollmentNumber',
+          header: 'Roll Number',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          },
+
+        },
+        {
+          columnDef: 'attendancePercentage',
+          header: 'Attendance (%)',
+          isSortable: false,
+          isLink: true,
+          cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          },
+        },
         {
           columnDef: 'feesPaid',
           header: '',
@@ -124,83 +122,150 @@ export class ManageHallTicketsAdminListComponent {
           cellStyle: {
             'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
           }
+        },
+        {
+          columnDef: 'viewHallTicket',
+          header: '',
+          isSortable: false,
+          isLink: true,
+          isAction: true,
+          cell: (element: Record<string, any>) => `View`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
+          }
         }
-      )
+      ];
+
+      this.generatedHallTicketsTableColumns = [
+        {
+          columnDef: 'firstName',
+          header: 'Student Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['firstName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'courseName',
+          header: 'Course Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['courseName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'studentEnrollmentNumber',
+          header: 'Roll Number',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
+          },
+  
+        },
+        {
+          columnDef: 'attendancePercentage',
+          header: 'Attendance(%)',
+          isSortable: false,
+          isLink: true,
+          cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'viewHallTicket',
+          header: '',
+          isSortable: false,
+          isLink: true,
+          isAction: true,
+          cell: (element: Record<string, any>) => `View`,
+          cellStyle: {
+            'background-color': '#0000000a', 'width': '180px', 'color': '#00000099'
+          },
+        }
+  
+      ];
+    } else {
+      this.pendingHallTicketsTableColumns = [
+        {
+          columnDef: 'select',
+          header: '',
+          isSortable: false,
+          isCheckBox: true,
+          cell: (element: Record<string, any>) => ``,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'firstName',
+          header: 'Student Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['firstName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'studentEnrollmentNumber',
+          header: 'Roll Number',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+
+        },
+        {
+          columnDef: 'viewHallTicket',
+          header: '',
+          isSortable: false,
+          isLink: true,
+          isAction: true,
+          cell: (element: Record<string, any>) => `View`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#0074B6'
+          }
+        }
+      ];
+
+      this.generatedHallTicketsTableColumns = [
+        {
+          columnDef: 'firstName',
+          header: 'Student Name',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['firstName']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+        },
+        {
+          columnDef: 'studentEnrollmentNumber',
+          header: 'Roll Number',
+          isSortable: true,
+          cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+  
+        },
+        {
+          columnDef: 'viewHallTicket',
+          header: '',
+          isSortable: false,
+          isLink: true,
+          isAction: true,
+          cell: (element: Record<string, any>) => `View`,
+          cellStyle: {
+            'background-color': '#0000000a', 'color': '#00000099'
+          },
+        }
+  
+      ];
     }
-    this.pendingHallTicketsTableColumns.push(
-      {
-        columnDef: 'viewHallTicket',
-        header: '',
-        isSortable: false,
-        isLink: true,
-        isAction: true,
-        cell: (element: Record<string, any>) => `View`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
-        }
-      }
-    )
-
-    this.generatedHallTicketsTableColumns = [
-      {
-        columnDef: 'firstName',
-        header: 'Student Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['firstName']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '180px', 'color': '#00000099'
-        },
-      },
-      {
-        columnDef: 'courseName',
-        header: 'Course Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['courseName']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
-        },
-        /*   cell: (element: Record<string, any>) => {
-            const timestamp = element['createdAt'];
-            const date = new Date(timestamp);
-            const month = this.monthNames[date.getMonth()];
-            const day = date.getDate();
-            const year = date.getFullYear();
-            return `${month} ${day}, ${year}`;
-          } */
-      },
-      {
-        columnDef: 'studentEnrollmentNumber',
-        header: 'Roll Number',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '200px', 'color': '#00000099'
-        },
-
-      },
-      {
-        columnDef: 'attendancePercentage',
-        header: 'Attendance(%)',
-        isSortable: false,
-        isLink: true,
-        cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
-        },
-      },
-      {
-        columnDef: 'viewHallTicket',
-        header: '',
-        isSortable: false,
-        isLink: true,
-        isAction: true,
-        cell: (element: Record<string, any>) => `View`,
-        cellStyle: {
-          'background-color': '#0000000a', 'width': '180px', 'color': '#00000099'
-        },
-      }
-
-    ];
 
   }
 
@@ -208,9 +273,10 @@ export class ManageHallTicketsAdminListComponent {
     this.isDataLoading = true;
     this.pendingHallTicketsData = []
     this.generatedHallTicketsData = []
+    const that = this
     this.baseService.getHallTickets$(courseId, examCycleId, instituteId)
       .pipe((mergeMap((response: any) => {
-        this.unformattedHallTickets = response.responseData;
+        that.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData)
       })))
       .subscribe({
@@ -298,8 +364,10 @@ export class ManageHallTicketsAdminListComponent {
      //console.log(res)
      this.pendingHallTicketsData=[]
      this.generatedHallTicketsData=[]
+     const that = this
     this.baseService.getHallTicketsForDataCorrections$(courseId,examCycleId,instituteId)
       .pipe((mergeMap((response: any) => {
+        that.unformattedHallTickets = response.responseData;
         return this.formateHallTicketsData(response.responseData.reverse())
       })))
       .subscribe({
@@ -446,6 +514,11 @@ export class ManageHallTicketsAdminListComponent {
 
   onViewClick(event: any) {
     const hallTktDetails = this.unformattedHallTickets.filter((hallTicket: { id: string; }) => (hallTicket.id === event.row.id));
-    this.router.navigate(['/hall-ticket-management/ticket-details'], { state: { data: hallTktDetails[0] } });
+    this.router.navigate(['/hall-ticket-management/ticket-details'], { 
+      state: { 
+        data: hallTktDetails[0],
+        requestModification:  this.hallTktType === 'modification_hall_ticket',
+      } 
+    });
   }
 }

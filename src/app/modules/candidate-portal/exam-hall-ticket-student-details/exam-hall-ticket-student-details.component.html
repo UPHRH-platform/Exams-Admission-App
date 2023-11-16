@@ -6,7 +6,7 @@
                 <div class="lable">
                     <span>First name</span>
                 </div>
-                <div class="value">
+                <div class="value" [ngClass]="{'textBlue': studentDetails?.firstNameFlag}">
                     <span>{{studentDetails?.firstName|| "-" }}</span>
                 </div>
             </div>
@@ -14,7 +14,7 @@
                 <div class="lable">
                     <span>Last name</span>
                 </div>
-                <div class="value value-right">
+                <div class="value value-right" [ngClass]="{'textBlue': studentDetails?.lastNameFlag}">
                     <span>{{studentDetails?.lastName|| "-" }}</span>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <div class="lable">
                     <span>DOB</span>
                 </div>
-                <div class="value value-right">
+                <div class="value value-right" [ngClass]="{'textBlue': studentDetails?.dobFlag}">
                     <span>{{studentDetails?.dob|| "-" }}</span>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <div class="lable">
                     <span>Course Year</span>
                 </div>
-                <div class="value value-right">
+                <div class="value value-right" [ngClass]="{'textBlue': studentDetails?.courseYearFlag}">
                     <span>{{studentDetails?.courseYear|| "-" }}</span>
                 </div>
             </div>
