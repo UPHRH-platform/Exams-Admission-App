@@ -50,9 +50,9 @@ export class ManageHallTicketsAdminListComponent {
 
 
   hallTicketControl = new FormControl('');
-  courseControl = new FormControl('');
-  examCycleControl = new FormControl('');
-  instituteControl = new FormControl('');
+  courseControl = new FormControl();
+  examCycleControl = new FormControl();
+  instituteControl = new FormControl();
 
   initializeTableColumns(): void {
 
@@ -359,6 +359,7 @@ export class ManageHallTicketsAdminListComponent {
     this.initializeTableColumns()
 
   }
+  
   getHallTicketsForDataCorrections(courseId?: number,examCycleId?: number, instituteId?: number) {
     this.isDataLoading = true;
      //console.log(res)
@@ -462,8 +463,6 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   generateHallTkt() {
-    let a = this.courseControl?.value;
-    let b = this.examCycleControl?.value;
     let idsArray: any = []
 
     if (this.selectedCandidatesForHallTicketsGenerate && this.selectedCandidatesForHallTicketsGenerate.length != 0) {
@@ -475,6 +474,7 @@ export class ManageHallTicketsAdminListComponent {
         next: (res: any) => {
           this.toasterService.showToastr('Hall tickets generated successfully for selected candidates !!', 'Success', 'success', '');
           this.tabGroup.selectedIndex = 1;
+          this.getHallTickets(this.courseControl.value, this.examCycleControl.value, this.instituteControl.value)
         },
         error: (error: HttpErrorResponse) => {
           console.log(error.message)
