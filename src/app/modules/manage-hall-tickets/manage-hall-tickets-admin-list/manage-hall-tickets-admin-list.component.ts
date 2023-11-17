@@ -373,8 +373,8 @@ export class ManageHallTicketsAdminListComponent {
       .subscribe({
         next: (res: any) => {
           //console.log(res)
-          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status != 'NEW'));
-          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
+          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
+          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status !== 'NEW'));
 
           this.isDataLoading = false;
         },
