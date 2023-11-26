@@ -219,14 +219,15 @@
                     </mat-error>
                     <mat-error
                       *ngIf="
-                        basicDetailsForm.controls['mobileNumber'].hasError(
-                          'pattern'
+                        (
+                          basicDetailsForm.controls['mobileNumber'].hasError('pattern') ||
+                          basicDetailsForm.controls['mobileNumber'].hasError('minlength')
                         ) &&
                         (basicDetailsForm.controls['mobileNumber'].dirty ||
                           basicDetailsForm.controls['mobileNumber'].touched)
                       "
                     >
-                      Mobile Number should contain digits only
+                      Mobile Number should contain 10 digits only
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -268,14 +269,16 @@
                     />
                     <mat-error
                       *ngIf="
-                        basicDetailsForm.controls['aadharNo'].hasError(
-                          'pattern'
+                        (
+                          basicDetailsForm.controls['aadharNo'].hasError('pattern') ||
+                          basicDetailsForm.controls['aadharNo'].hasError('minlength') ||
+                          basicDetailsForm.controls['aadharNo'].hasError('maxlength')
                         ) &&
                         (basicDetailsForm.controls['aadharNo'].dirty ||
                           basicDetailsForm.controls['aadharNo'].touched)
                       "
                     >
-                      Aadhar Number should contain digits only
+                      Aadhar Number should contain 12 digits only
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -386,9 +389,8 @@
                       </mat-error>
                       <mat-error
                         *ngIf="
-                          basicDetailsForm.controls['address'].controls[
-                            'pincode'
-                          ].hasError('pattern')
+                          basicDetailsForm.controls['address'].controls['pincode'].hasError('pattern') ||
+                          basicDetailsForm.controls['address'].controls['pincode'].hasError('minlength')
                         "
                       >
                         Enter a valid pinCode
@@ -651,41 +653,47 @@
                           *ngIf="
                             educationalDetailsForm.controls[
                               'highSchoolDocuments'
-                            ].controls['rollNo'].invalid
+                            ].controls['rollNo'].hasError('required')
                           "
                         >
                           Please enter Roll Number
+                        </mat-error>
+                        <mat-error
+                          *ngIf="
+                              educationalDetailsForm.controls[
+                              'highSchoolDocuments'
+                            ].controls['rollNo'].hasError('pattern')
+                          "
+                        >
+                          Roll Number should contain digits only
                         </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="sm-col sm-col-12 md-col-12 lg-col-6 pl2">
                       <h4 class="w-full mat-label">Year of Passing*</h4>
                       <mat-form-field appearance="outline" class="w-full">
-                        <input
-                          matInput
-                          maxlength="4"
-                          placeholder="Type here"
-                          formControlName="yearOfPassing"
-                          [readonly]="!iseditable"
-                        />
-                        <mat-error
-                          *ngIf="
-                            educationalDetailsForm.controls[
-                              'highSchoolDocuments'
-                            ].controls['yearOfPassing'].hasError('required')
-                          "
-                        >
+                        <mat-select formControlName="yearOfPassing" placeholder="Select here" [readonly]="!iseditable">
+                          <span *ngFor="let session of yearsList; let i = index">
+                            <mat-option [value]="session">{{
+                              session
+                              }}</mat-option>
+                          </span>
+                        </mat-select>
+                        <mat-error *ngIf="
+                                                educationalDetailsForm.controls[
+                                                  'highSchoolDocuments'
+                                                ].controls['yearOfPassing'].hasError('required')
+                                              ">
                           Please enter year of passing
                         </mat-error>
-                        <mat-error
-                          *ngIf="
-                            educationalDetailsForm.controls[
-                              'highSchoolDocuments'
-                            ].controls['yearOfPassing'].hasError('pattern')
-                          "
-                        >
+                        <mat-error *ngIf="
+                                                educationalDetailsForm.controls[
+                                                  'highSchoolDocuments'
+                                                ].controls['yearOfPassing'].hasError('pattern')
+                                              ">
                           Please Enter a valid year
                         </mat-error>
+                      
                       </mat-form-field>
                     </div>
                   </div>
@@ -856,23 +864,31 @@
                           *ngIf="
                             educationalDetailsForm.controls[
                               'intermediateDocuments'
-                            ].controls['rollNo'].invalid
+                            ].controls['rollNo'].hasError('required')
                           "
                         >
                           Please enter Roll Number
+                        </mat-error>
+                        <mat-error
+                          *ngIf="
+                              educationalDetailsForm.controls[
+                              'intermediateDocuments'
+                            ].controls['rollNo'].hasError('pattern')"
+                        >
+                          Roll Number should contain digits only
                         </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="sm-col sm-col-12 md-col-12 lg-col-6 pl2">
                       <h4 class="w-full mat-label">Year of Passing*</h4>
                       <mat-form-field appearance="outline" class="w-full">
-                        <input
-                          matInput
-                          maxlength="4"
-                          placeholder="Type here"
-                          formControlName="yearOfPassing"
-                          [readonly]="!iseditable"
-                        />
+                        <mat-select formControlName="yearOfPassing" placeholder="Select here" [readonly]="!iseditable">
+                          <span *ngFor="let session of yearsList; let i = index">
+                            <mat-option [value]="session">{{
+                              session
+                              }}</mat-option>
+                          </span>
+                        </mat-select>
                         <mat-error
                           *ngIf="
                             educationalDetailsForm.controls[
@@ -891,6 +907,7 @@
                         >
                           Please enter a valid Year
                         </mat-error>
+                      
                       </mat-form-field>
                     </div>
                   </div>
@@ -1137,7 +1154,7 @@
                 [disabled]="!educationalDetailsForm.valid"
                 (click)="updateEnrollment()"
               >
-                Edit and re-apply
+              Re-Submit
               </button>
             </div>
           </div>

@@ -49,6 +49,7 @@ export class StudentEnrollmentFormComponent {
   enrollmentDetails: any = [];
   showRejectDialog = false;
   admissionSessionList: string[] = [];
+  yearsList: string[] = [];
   currentFY:string;
   isCreateView: boolean = true;
   loggedInUserId: string;
@@ -77,6 +78,7 @@ export class StudentEnrollmentFormComponent {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     //console.log(this.loggedInUserId);
     this.getAdmissionSessionList();
+    this.getYearsList();
     this.getIntermediateSubjects();
     this.initBasicDetailsForm();
     this.initEducationalDetailsForm();
@@ -191,15 +193,15 @@ export class StudentEnrollmentFormComponent {
       gender: new FormControl('', Validators.required),
       caste: new FormControl('', Validators.required),
       category: new FormControl(''),
-      mobileNumber: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)]),
+      mobileNumber: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`), Validators.minLength(10)]),
       emailId: new FormControl('', Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")),
-      aadharNo: new FormControl('', Validators.pattern(`^[0-9]*$`)),
+      aadharNo: new FormControl('', [Validators.pattern(`^[0-9]*$`), Validators.minLength(12), Validators.maxLength(12)]),
       address: this.formBuilder.group({
         addressLine1: new FormControl(''),
         district: new FormControl('', Validators.required),
         state: new FormControl('', Validators.required),
         country: new FormControl('', Validators.required),
-        pincode: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)])
+        pincode: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`), Validators.minLength(6)])
       })
     })
   }
@@ -230,13 +232,13 @@ export class StudentEnrollmentFormComponent {
       intermediateSubjects: new FormControl(''),
       intermediatePercentage: new FormControl('', Validators.required),
       highSchoolDocuments: this.formBuilder.group({
-        rollNo: new FormControl('', Validators.required),
+        rollNo: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)]),
         yearOfPassing: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)]),
         marksSheet: new FormControl('', Validators.required),
         certificate: new FormControl('', Validators.required) 
       }),
       intermediateDocuments:  this.formBuilder.group({
-        rollNo: new FormControl('', Validators.required),
+        rollNo: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)]),
         yearOfPassing: new FormControl('', [Validators.required, Validators.pattern(`^[0-9]*$`)]),
         marksSheet: new FormControl('', Validators.required),
         certificate: new FormControl('', Validators.required) 
@@ -555,10 +557,11 @@ export class StudentEnrollmentFormComponent {
       }
       this.baseService.updateStudentEnrollmentStatus(request).subscribe({
         next: (res) => {
+          this.toasterService.showToastr('Updated successfully', 'Success', 'success')
           this.router.navigate(['/student-enrollment/admin']);
         },
         error: (err: HttpErrorResponse) => {
-          console.log(err);
+          this.toasterService.showToastr(err, 'Error', 'error')
         }
       })
     }
@@ -630,6 +633,21 @@ export class StudentEnrollmentFormComponent {
         })
         //console.log(this.admissionSessionList);
     }
+
+    getYearsList() {
+      const thisYear = (new Date()).getFullYear();
+      const yesterYears = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((count) => `${thisYear - count - 1}`);
+      this.yearsList.push(...yesterYears);
+      this.yearsList.push(String(thisYear))
+      this.yearsList.sort((a, b) => {
+        if(a > b) {
+          return 1
+        }
+        else {
+          return - 1;
+        }
+      })
+  }
      
     getExamCycleList() {
       // as of now get all is integrated , we need exam cycle list based on exam batch and course
