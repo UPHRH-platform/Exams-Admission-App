@@ -13,7 +13,7 @@
             }
         ],
         "casteList": ["General", "SC", "ST", "OBC", "None"],
-        "categoryList": ["Freedom Fighter Dependant", "Handicapped"],
+        "categoryList": ["Freedom Fighter Dependant", "Handicapped", "None"],
         "genderList": ["Male", "Female", "Others"]
     }
 }
