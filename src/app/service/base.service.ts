@@ -24,6 +24,7 @@ export class BaseService extends HttpService {
   
   private userData = new BehaviorSubject({})
   currentUserData = this.userData.asObservable();
+  private FILERT_KEY = 'filter';
 
 
   constructor(private httpClient: HttpClient, cookieService: CookieService, private configService: ConfigService
@@ -1066,5 +1067,18 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     return this.get(requestParam);
   }
   //#endregion
+
+  setFilter(value: any) {
+    localStorage.setItem(this.FILERT_KEY, JSON.stringify(value));
+  }
+
+  get getFilter() {
+    const filterValue = localStorage.getItem(this.FILERT_KEY);
+    return JSON.parse(filterValue ? filterValue : '{}');
+  }
+
+  clearFilter() {
+    localStorage.removeItem(this.FILERT_KEY)
+  }
 
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../core/services';
+import { BaseService } from '../service/base.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,11 @@ import { AuthServiceService } from '../core/services';
 })
 export class HomeComponent {
   loggedInUserRole: string;
-  constructor(private router: Router, private authService: AuthServiceService){}
+  constructor(
+    private router: Router, 
+    private authService: AuthServiceService,
+    private baseService: BaseService,
+    ){}
   cardList: any[] = [
     {
       title: 'User Management',
@@ -145,6 +150,7 @@ export class HomeComponent {
 
   ngOnInit() {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
+    this.baseService.clearFilter();
   }
 
   navigateTo(item: any) {

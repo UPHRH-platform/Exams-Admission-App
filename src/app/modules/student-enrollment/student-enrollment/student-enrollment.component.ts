@@ -54,6 +54,7 @@ export class StudentEnrollmentComponent {
   selectedCourse: any;
   selectedAcademicYear: any;
   institute = new FormControl();
+  filtersNotSet = true;
   constructor(private router: Router, private authService: AuthServiceService,
     private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
@@ -61,6 +62,7 @@ export class StudentEnrollmentComponent {
     this.loggedInUserRole = this.authService.getUserRoles()[0];
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.isDataLoading = false;
+    this.getFilters()
     this.getAdmissionSessionList();
     this.initializeTabs();
     this.initializeSearchForm();
@@ -80,6 +82,16 @@ export class StudentEnrollmentComponent {
       this.getAllCourses();
       this.getAllInstitutes();
       // this.getEnrollmentData();
+    }
+  }
+
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.studentEnrollment) {
+      this.institute.setValue(filters.studentEnrollment.institute);
+      this.selectedCourse = filters.studentEnrollment.selectedCourse;
+      this.selectedAcademicYear = filters.studentEnrollment.selectedAcademicYear;
+      this.filtersNotSet = false;
     }
   }
 
@@ -105,7 +117,9 @@ export class StudentEnrollmentComponent {
 
   getAdmissionSessionList() {
     this.years = this.baseService.getAdmissionSessionList()
-    this.selectedAcademicYear = this.years[4]
+    if (this.filtersNotSet) {
+      this.selectedAcademicYear = this.years[4];
+    }
   }
 
   initializeSearchForm() {
@@ -135,7 +149,9 @@ export class StudentEnrollmentComponent {
          // console.log("courses =>", res);
           this.courses = res;
           console.log("courses =>", this.courses[0]);
-          this.selectedCourse = this.courses[0].course_id
+          if (this.filtersNotSet) {
+            this.selectedCourse = this.courses[0].course_id
+          }
         },
         error: (err: HttpErrorResponse) => {
           console.log(err);
@@ -149,7 +165,9 @@ export class StudentEnrollmentComponent {
         this.instituteList = res.responseData;
         if (this.instituteList.length > 0) {
           console.log(this.instituteList.length-1)
-          this.institute.patchValue(this.instituteList[this.instituteList.length - 2].id)
+          if (this.filtersNotSet) {
+            this.institute.patchValue(this.instituteList[this.instituteList.length - 2].id)
+          }
           
           this.getCoursesByInstitute(this.institute.value)
         }
@@ -184,6 +202,7 @@ export class StudentEnrollmentComponent {
 
   getEnrollmentData(academicYear?: string) {
     this.enrollmentTableData = [];
+    this.setFilters()
 
     let request = {
       instituteId: this.institute.value !== undefined ? this.institute.value : '',
@@ -207,7 +226,7 @@ export class StudentEnrollmentComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.isDataLoading = false;
-        error.error.error ? this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '') : this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+        error && error.error && error.error.error ? this.toastrService.showToastr(error.error.error.message, 'Error', 'error', '') : this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
 
 
       }
@@ -231,6 +250,18 @@ export class StudentEnrollmentComponent {
         this.toastrService.showToastr(error.message, 'Error', 'error', '');
       }
     })
+  }
+
+  setFilters() {
+    const filter = {
+      studentEnrollment: {
+        institute: this.institute.value,
+        selectedCourse: this.selectedCourse,
+        selectedAcademicYear: this.selectedAcademicYear
+      }
+    }
+    this.baseService.setFilter(filter);
+    this.filtersNotSet = false;
   }
 
   setEnrollmentTableColumns() {
@@ -260,43 +291,33 @@ export class StudentEnrollmentComponent {
           {
             columnDef: 'firstName',
             header: 'Applicant Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
           },
           {
             columnDef: 'provisionalEnrollmentNumber',
             header: 'Provisional Enrollment Number',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
           },
           {
             columnDef: 'course',
             header: 'Course Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['courseName']}`
           },
           {
             columnDef: 'enrollmentDate',
             header: 'Admission Date',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => {
               return this.baseService.reverseDate(element['enrollmentDate'])
             }
           },
-          // {
-          //   columnDef: 'viewStudentEnrollment',
-          //   header: '',
-          //   isSortable: false,
-          //   isLink: true,
-          //   isAction: false,
-          //   cell: (element: Record<string, any>) => `View Enrollment`,
-          //   cellStyle: {
-          //     'background-color': '#0000000a', 'width': '145px', 'color': '#0074B6'
-          //   },
           {
             columnDef: 'viewStudentEnrollment',
             header: '',
@@ -313,45 +334,38 @@ export class StudentEnrollmentComponent {
           {
             columnDef: 'firstName',
             header: 'Applicant Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
           },
           {
             columnDef: 'provisionalEnrollmentNumber',
             header: 'Provisional Enrollment Number',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
           },
-          {
-            columnDef: 'marks',
-            header: 'Marks',
-            isSortable: false,
-            isLink: false,
-            cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
-          },
+          // {
+          //   columnDef: 'marks',
+          //   header: 'Marks',
+          //   isSortable: true,
+          //   isLink: false,
+          //   cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
+          // },
           {
             columnDef: 'courseName',
             header: 'Course Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['courseName']}`
           },
           {
             columnDef: 'admissionYear',
             header: 'Admission Date',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
           },
-          // {
-          //   columnDef: 'isLink',
-          //   header: '',
-          //   isSortable: false,
-          //   isLink: true,
-          //   cell: (element: Record<string, any>) => `View Enrollment`,
-          // },
           {
             columnDef: 'viewStudentEnrollment',
             header: '',
@@ -368,28 +382,28 @@ export class StudentEnrollmentComponent {
           {
             columnDef: 'firstName',
             header: 'Applicant Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
           },
           {
             columnDef: 'provisionalEnrollmentNumber',
             header: 'Provisional Enrollment Number',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['provisionalEnrollmentNumber']}`
           },
           {
             columnDef: 'course',
             header: 'Course Name',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['courseName']}`
           },
           {
             columnDef: 'createdDate',
             header: 'Created Date',
-            isSortable: false,
+            isSortable: true,
             isLink: false,
             cell: (element: Record<string, any>) => `${element['createdDate']}`
           },
@@ -446,11 +460,13 @@ export class StudentEnrollmentComponent {
   getCoursesByInstitute(id: string | number) {
     const instituteId = id;
     this.courses = [];
-    this.selectedCourse = undefined
+    this.selectedCourse = this.filtersNotSet ? undefined : this.selectedCourse
     this.baseService.getCoursesBasedOnInstitute(instituteId).subscribe({
       next: (res) => {
         this.courses = res.responseData[0].institute.courses;
-        this.selectedCourse = this.courses[this.courses.length - 1].course_id
+        if (this.filtersNotSet) {
+          this.selectedCourse = this.courses[this.courses.length - 1].course_id;
+        }
         this.getEnrollmentData()
       }
     })
