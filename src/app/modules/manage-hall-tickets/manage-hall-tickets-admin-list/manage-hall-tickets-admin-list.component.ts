@@ -282,8 +282,8 @@ export class ManageHallTicketsAdminListComponent {
       .subscribe({
         next: (res: any) => {
           //console.log(res)
-          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus != 'GENERATED'));
-          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
+          this.pendingHallTicketsData = res.hallTicketsDetailsList.reverse().filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus != 'GENERATED'));
+          this.generatedHallTicketsData = res.hallTicketsDetailsList.reverse().filter((hallTicket: { hallTicketStatus: string; }) => (hallTicket.hallTicketStatus === 'GENERATED'));
 
           this.isDataLoading = false;
         },
@@ -374,8 +374,8 @@ export class ManageHallTicketsAdminListComponent {
       .subscribe({
         next: (res: any) => {
           //console.log(res)
-          this.pendingHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
-          this.generatedHallTicketsData = res.hallTicketsDetailsList.filter((hallTicket: { status: string; }) => (hallTicket.status !== 'NEW'));
+          this.pendingHallTicketsData = res.hallTicketsDetailsList.reverse().filter((hallTicket: { status: string; }) => (hallTicket.status === 'NEW'));
+          this.generatedHallTicketsData = res.hallTicketsDetailsList.reverse().filter((hallTicket: { status: string; }) => (hallTicket.status !== 'NEW'));
 
           this.isDataLoading = false;
         },
@@ -490,16 +490,16 @@ export class ManageHallTicketsAdminListComponent {
     console.log(event)
     if (this.tabGroup.selectedIndex === 0) {
       if (event.includes(">")) {
-        this.pendingHallTicketsData = this.pendingHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage >= 75);
+        this.pendingHallTicketsData = this.pendingHallTicketsData.reverse().filter((halltkt: any) => halltkt.attendancePercentage >= 75);
       } else {
-        this.pendingHallTicketsData = this.pendingHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage < 75);
+        this.pendingHallTicketsData = this.pendingHallTicketsData.reverse().filter((halltkt: any) => halltkt.attendancePercentage < 75);
       }
     } else {
       if (event.includes(">")) {
-        this.generatedHallTicketsData = this.generatedHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage >= 75);
+        this.generatedHallTicketsData = this.generatedHallTicketsData.reverse().filter((halltkt: any) => halltkt.attendancePercentage >= 75);
 
       } else {
-        this.generatedHallTicketsData = this.generatedHallTicketsData.filter((halltkt: any) => halltkt.attendancePercentage < 75);
+        this.generatedHallTicketsData = this.generatedHallTicketsData.reverse().filter((halltkt: any) => halltkt.attendancePercentage < 75);
       }
     }
 

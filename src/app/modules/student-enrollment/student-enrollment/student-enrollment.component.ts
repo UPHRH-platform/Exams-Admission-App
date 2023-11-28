@@ -98,7 +98,7 @@ export class StudentEnrollmentComponent {
   getLongPendingStudentEnrollmentList(courseId?: number, session?: string) {
     this.baseService.getLongPendingStudentEnrollmentList$(courseId,session).subscribe({
       next: (res) => {
-        this.enrollmentTableData = res.responseData;
+        this.enrollmentTableData = res.responseData.reverse();
        },
       error: (err) => {
         console.log(err)
@@ -221,7 +221,7 @@ export class StudentEnrollmentComponent {
         res.responseData.map((obj: any) => {
           obj.courseName = obj.course.courseName;
         })
-        this.enrollmentTableData = res.responseData;
+        this.enrollmentTableData = res.responseData.reverse();
         console.log(this.enrollmentTableData )
       },
       error: (error: HttpErrorResponse) => {
@@ -242,7 +242,7 @@ export class StudentEnrollmentComponent {
           obj.courseName = obj.course.courseName;
         })
         console.log(res.responseData)
-        this.enrollmentTableData = res.responseData;
+        this.enrollmentTableData = res.responseData.reverse();
        // localStorage.setItem("hhh",JSON.stringify(this.enrollmentTableData))
       },
       error: (error: any) => {

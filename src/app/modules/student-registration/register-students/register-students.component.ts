@@ -64,7 +64,7 @@ export class RegisterStudentsComponent {
     this.questionPapersList = [];
     this.baseService.getQuestionPapersByExamCycle(this.examCycle).subscribe({
       next: (res) => {
-        this.questionPapersList = res.responseData.exams;
+        this.questionPapersList = res.responseData.exams.reverse();
         console.log(this.questionPapersList);
       }
     })

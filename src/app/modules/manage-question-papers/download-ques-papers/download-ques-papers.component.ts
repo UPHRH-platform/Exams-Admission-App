@@ -72,7 +72,7 @@ export class DownloadQuesPapersComponent {
     this.questionPapersList = [];
     this.baseService.getQuestionPapersByExamCycle(this.examCycleValue).subscribe({
       next: (res) => {
-        this.questionPapersList = res.responseData.exams;
+        this.questionPapersList = res.responseData.exams.reverse();
         console.log("questionPaperList =>", this.questionPapersList);
       }
     })

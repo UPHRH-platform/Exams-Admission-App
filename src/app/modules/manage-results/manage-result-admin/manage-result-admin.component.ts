@@ -195,7 +195,7 @@ export class ManageResultAdminComponent {
     })))
      .subscribe({
         next: (response: any) => {
-          this.instituteTableData = response;
+          this.instituteTableData = response.reverse();
       },
       error: (err: HttpErrorResponse) => {
         console.log(err)
@@ -545,7 +545,7 @@ export class ManageResultAdminComponent {
         formatedStudentsData.push(formatedStudentData)
       })
     }
-    return formatedStudentsData;
+    return formatedStudentsData.reverse();
   }
   //#endregion
 

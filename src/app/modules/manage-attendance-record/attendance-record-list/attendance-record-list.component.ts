@@ -140,7 +140,7 @@ export class AttendanceRecordListComponent {
         next: (res: any) => {
           console.log(res)
           console.log('attendance', res.responseData[0])
-          this.examTableData = res.responseData;
+          this.examTableData = res.responseData.reverse();
 
         },
         error: (error: HttpErrorResponse) => {

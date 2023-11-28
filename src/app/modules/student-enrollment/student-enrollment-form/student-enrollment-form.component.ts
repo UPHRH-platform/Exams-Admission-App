@@ -256,7 +256,7 @@ export class StudentEnrollmentFormComponent {
       dateOfBirth: this.enrollmentDetails?.dateOfBirth.trim(),
       gender: this.enrollmentDetails?.gender.trim(),
       caste: this.enrollmentDetails?.caste.trim(),
-      category: this.categoryList[0],
+      category: this.enrollmentDetails?.category.trim(),
       mobileNumber: this.enrollmentDetails?.mobileNo.trim(),
       emailId: this.enrollmentDetails?.emailId.trim(),
       aadharNo: this.enrollmentDetails?.aadhaarNo.trim(),
