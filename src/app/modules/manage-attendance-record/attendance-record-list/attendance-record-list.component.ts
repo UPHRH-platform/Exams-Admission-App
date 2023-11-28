@@ -29,6 +29,7 @@ export class AttendanceRecordListComponent {
     {
       header: 'Student name',
       columnDef: 'studentName',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['firstName']} ${element['lastName']}`,
       cellStyle: {
         'background-color': '#0000000a',
@@ -37,6 +38,7 @@ export class AttendanceRecordListComponent {
     }, {
       header: 'Roll number',
       columnDef: 'studentEnrollmentNumber',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['studentEnrollmentNumber']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -44,6 +46,7 @@ export class AttendanceRecordListComponent {
     }, {
       header: 'Course name',
       columnDef: 'courseName',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['courseName']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -60,6 +63,7 @@ export class AttendanceRecordListComponent {
     {
       header: 'Total Days',
       columnDef: 'numberOfWorkingDays',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['numberOfWorkingDays']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -68,6 +72,7 @@ export class AttendanceRecordListComponent {
     {
       header: 'Present',
       columnDef: 'presentDays',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['presentDays']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -76,6 +81,7 @@ export class AttendanceRecordListComponent {
     {
       header: 'Absent',
       columnDef: 'absentDays',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['absentDays']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -84,6 +90,7 @@ export class AttendanceRecordListComponent {
     {
       header: 'Attendance(%)',
       columnDef: 'attendancePercentage',
+      isSortable: true,
       cell: (element: Record<string, any>) => `${element['attendancePercentage']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '135px', 'color': '#00000099'
@@ -127,6 +134,7 @@ export class AttendanceRecordListComponent {
       })
   }
   getAttendenceByExamCycle(id: any) {
+    this.examTableData = []
     this.baseService.getAttendenceByExamCycle$(id)
       .subscribe({
         next: (res: any) => {
