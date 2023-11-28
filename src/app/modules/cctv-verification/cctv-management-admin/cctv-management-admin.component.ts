@@ -293,7 +293,7 @@ export class CctvManagementAdminComponent {
         }
       }
       if (pendingInstitute !== null) {
-        return pendingInstitute
+        return pendingInstitute.reverse();
       }
     })
     setTimeout(() => {

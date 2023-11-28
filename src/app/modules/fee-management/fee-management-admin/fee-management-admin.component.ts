@@ -136,7 +136,7 @@ export class FeeManagementAdminComponent implements OnInit {
     .subscribe({
       next:(res:any)=>{
        console.log(res.formatedInstituteTableDataList)
-       this.instituteData = res.formatedInstituteTableDataList
+       this.instituteData = res.formatedInstituteTableDataList.reverse()
        this.isDataLoading = false;
       },
       error: (error: HttpErrorResponse) => {
@@ -252,7 +252,7 @@ let r = response.examFees
     .subscribe({
       next:(res:any)=>{
         console.log(res)
-        this.studentData = res.studentsExamDetailsList;
+        this.studentData = res.studentsExamDetailsList.reverse();
      
 
       },

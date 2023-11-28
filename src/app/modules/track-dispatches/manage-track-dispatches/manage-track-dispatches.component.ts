@@ -175,7 +175,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
         .subscribe({
           next: (res: any) => {
             if (res.dispatchesLsit && res.dispatchesLsit.length > 0) { // remove if when api working
-              this.instituteTableData = res.dispatchesLsit
+              this.instituteTableData = res.dispatchesLsit.response()
             }
           },
           error: (err) => {

@@ -53,7 +53,7 @@ export class FeeManagementInstituteComponent {
   getExamCycles() {
     this.baseService.getExamCycleList$().subscribe({
     next: (res) => {
-      this.examCycleData = res.responseData;
+      this.examCycleData = res.responseData.reverse();
     },
     error: (error: HttpErrorResponse) => {
       console.log(error);
