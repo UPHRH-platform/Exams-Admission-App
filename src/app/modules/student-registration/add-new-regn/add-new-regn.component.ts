@@ -93,7 +93,7 @@ export class AddNewRegnComponent {
       {
         columnDef: 'firstName',
         header: 'Applicant Name',
-        isSortable: false,
+        isSortable: true,
         isLink: false,
         cell: (element: Record<string, any>) => `${element['firstName']} ${element['surname']}`
       },
@@ -114,7 +114,7 @@ export class AddNewRegnComponent {
       {
         columnDef: 'courseName',
         header: 'Course Name',
-        isSortable: false,
+        isSortable: true,
         isLink: false,
         cell: (element: Record<string, any>) => `${element['courseName']}`
       },
@@ -127,7 +127,7 @@ export class AddNewRegnComponent {
       {
         columnDef: 'session',
         header: 'Admission Year',
-        isSortable: false,
+        isSortable: true,
         isLink: false,
         cell: (element: Record<string, any>) => `${element['session']}`
       },

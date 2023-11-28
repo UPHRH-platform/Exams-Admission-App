@@ -95,6 +95,7 @@ export class CctvManagementAdminComponent {
       }, {
         header: 'District name',
         columnDef: 'district',
+        isSortable: true,
         cell: (element: Record<string, any>) => `${element['district']}`,
         cellStyle: {
           'background-color': '#0000000a', 'width': '165px', 'color': '#00000099'
