@@ -225,7 +225,7 @@ export class StudentEnrollmentFormComponent {
       centerCode: new FormControl(''),
       courseCode: new FormControl(''),
       sessionOfAdmission: new FormControl(this.currentFY, Validators.required), //yearpicker
-      examBatch: new FormControl(''),// month and year picker
+      examBatch: new FormControl('', Validators.required),// month and year picker
       admissionDate: new FormControl('', Validators.required),
       intermediateStream: new FormControl('', Validators.required),
       intermediatePassedBoard: new FormControl(''),
