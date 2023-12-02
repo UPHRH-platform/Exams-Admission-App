@@ -185,7 +185,7 @@ export class StudentEnrollmentFormComponent {
   initBasicDetailsForm() {
     this.basicDetailsForm = this.formBuilder.group({
       firstName: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
+      lastName: new FormControl(''),
       mothersName: new FormControl('', Validators.required),
       fathersName: new FormControl('', Validators.required),
       dateOfBirth: new FormControl('', [

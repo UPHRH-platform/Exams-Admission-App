@@ -1,6 +1,7 @@
 <app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 <div class="secondary-container" id="enrollment">
-  <div class="selector">
+  <div class="flex" style = "justify-content: space-between;">
+    <div class="flex selector">
     <mat-form-field
       class="exam-form-enrollment"
       appearance="outline"
@@ -29,15 +30,20 @@
         </mat-option>
       </mat-select>
       </mat-form-field>
+    </div>
+      <div class="mt1"  *ngIf="loggedInUserRole === 'exams_institute'">
+        <button class="btn-1 mr2" (click)="downLoadStudentList()">Download List</button>
+        <button class="btn-2" (click)="addNewEnrollment()">New Student Enrolment</button>
+      </div>
   </div>
-<div class="buttons flex" style="justify-content: end;" *ngIf="loggedInUserRole === 'exams_institute'">
+<!-- <div class="buttons flex" style="justify-content: end;" *ngIf="loggedInUserRole === 'exams_institute'">
     <div >
       <button class="btn-1" (click)="downLoadStudentList()">Download List</button>
     </div>
     <div>
       <button class="btn-2" (click)="addNewEnrollment()">New Student Enrolment</button>
     </div>
-  </div>
+  </div> -->
   <div class="tab">
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
       <mat-tab *ngFor="let tab of tabs">
