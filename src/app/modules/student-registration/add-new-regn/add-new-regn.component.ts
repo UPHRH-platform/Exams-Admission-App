@@ -143,7 +143,6 @@ export class AddNewRegnComponent {
   }
 
   openRegistrationPopup() {
-    alert("1");
     const registrationPopupData = {
       examDetails: this.stateData,
       tableColumns: this.initializeRegistrationTableColumns(),

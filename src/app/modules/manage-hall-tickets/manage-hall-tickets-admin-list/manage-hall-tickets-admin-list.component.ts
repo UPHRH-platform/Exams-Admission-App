@@ -33,6 +33,8 @@ export class ManageHallTicketsAdminListComponent {
   ]
   unformattedHallTickets: any;
   hallTktType: any;
+  filtersNotSet = true;
+
   constructor(
     private baseService: BaseService,
     private router: Router,
@@ -44,8 +46,33 @@ export class ManageHallTicketsAdminListComponent {
 
     this.initializeTableColumns();
     this.initializePageData();
+    this.getFilters()
 
     //this.getGeneratedHallTickets();
+  }
+
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.manageHallTickets) {
+      this.hallTicketControl.setValue(filters.manageHallTickets.hallTicket);
+      this.courseControl.setValue(filters.manageHallTickets.course);
+      this.examCycleControl.setValue(filters.manageHallTickets.examCycle);
+      this.instituteControl.setValue(filters.manageHallTickets.institute);
+      this.filtersNotSet = false;
+    }
+  }
+
+  setFilters() {
+    const filter = {
+      manageHallTickets: {
+        hallTicket: this.hallTicketControl.value,
+        course: this.courseControl.value,
+        examCycle: this.examCycleControl.value,
+        institute: this.instituteControl.value
+      }
+    }
+    this.baseService.setFilter(filter);
+    this.filtersNotSet = false;
   }
 
 
@@ -340,6 +367,7 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onSelectionChangeHallTicketType(e: any) {
+    this.setFilters();
     console.log(e)
     let courseId: any
     let examCycleId:any
@@ -397,7 +425,9 @@ export class ManageHallTicketsAdminListComponent {
 
       }
     ]
-    this.hallTicketControl.patchValue('new_hall_ticket')
+    if (this.filtersNotSet && !this.hallTicketControl.value) {
+      this.hallTicketControl.patchValue('new_hall_ticket');
+    }
 
     this.getAllInstitutes();
     this.getCoursesList();
@@ -416,17 +446,20 @@ export class ManageHallTicketsAdminListComponent {
   }
 
   onCourseChangeSelected(e: any) {
+    this.setFilters();
     const selectedFilters: any = this.getOtherSelectedFilters();
     this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(e.value, selectedFilters[0].examCycleId, selectedFilters[0].instituteId) :   this.getHallTickets(e.value, selectedFilters[0].examCycleId, selectedFilters[0].instituteId)
   }
 
   onExamcycleSelected(e: any) {
+    this.setFilters();
     const selectedFilters: any = this.getOtherSelectedFilters();
     this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(selectedFilters[0].courseId, e, selectedFilters[0].instituteId) :  this.getHallTickets(selectedFilters[0].courseId, e, selectedFilters[0].instituteId)
    
   }
 
   onInstituteSelected(e: any) {
+    this.setFilters();
     const selectedFilters: any = this.getOtherSelectedFilters();
     this.hallTktType  === 'modification_hall_ticket' ? this.getHallTicketsForDataCorrections(selectedFilters[0].courseId, selectedFilters[0].examCycleId, e.value) :  this.getHallTickets(selectedFilters[0].courseId, selectedFilters[0].examCycleId, e.value)
    
@@ -437,7 +470,9 @@ export class ManageHallTicketsAdminListComponent {
       next: (res: any) => {
         this.isDataLoading = false;
         this.examCyclesList = res.responseData;
-        this.examCycleControl.patchValue(this.examCyclesList[this.examCyclesList.length - 1]['id'])
+        if (this.filtersNotSet && ! this.examCycleControl.value) {
+          this.examCycleControl.patchValue(this.examCyclesList[this.examCyclesList.length - 1]['id']);
+        }
         this.getHallTickets(undefined, this.examCyclesList[this.examCyclesList.length - 1]['id'])
       },
       error: (error: HttpErrorResponse) => {
@@ -510,6 +545,7 @@ export class ManageHallTicketsAdminListComponent {
     this.instituteControl.patchValue('')
     this.courseControl.patchValue('')
     this.examCycleControl.patchValue('')
+    this.setFilters()
   }
 
   onViewClick(event: any) {

@@ -45,6 +45,14 @@ export class ManageResultInstituteComponent implements OnInit {
   intialisation() {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.getInstituteByuserId()
+    this.getFilters();
+  }
+
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.manageResults) {
+      this.examCycle.setValue(filters.manageResults.examCycle);
+    }
   }
 
   getInstituteByuserId() {
@@ -64,12 +72,15 @@ export class ManageResultInstituteComponent implements OnInit {
     .subscribe((examCucles: any) => {
       this.isDataLoading = false;
       this.examCycleList = examCucles.examCyclesList
-      this.examCycle.patchValue(this.examCycleList[this.examCycleList.length - 1].id)
+      if (!this.examCycle.value) {
+        this.examCycle.patchValue(this.examCycleList[this.examCycleList.length - 1].id)
+      }
       this.getExamDetails(this.examCycle.value)
     })
   }
 
   getExamDetails(examCycleId: any) {
+    this.setFilters();
     if (this.instituteDetail) {
       this.isDataLoading = true;
       this.cardList = [];
@@ -88,6 +99,15 @@ export class ManageResultInstituteComponent implements OnInit {
         }
       })
     }
+  }
+
+  setFilters() {
+    const filter = {
+      manageResults: {
+        examCycle: this.examCycle.value
+      }
+    }
+    this.baseService.setFilter(filter);
   }
 
   formateExamDetails(res: any) {

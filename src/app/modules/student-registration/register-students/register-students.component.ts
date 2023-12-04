@@ -35,9 +35,28 @@ export class RegisterStudentsComponent {
   ngOnInit(): void {
     this.examCycleControl = new FormControl('', [Validators.required]);
     this.getExamCycleData();
+    this.getFilters()
   }
+
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.registerSudent) {
+      this.examCycleControl.setValue(filters.registerSudent.examCycle);
+    }
+  }
+
+  setFilters() {
+    const filter = {
+      registerSudent: {
+        examCycle: this.examCycleControl.value
+      }
+    }
+    this.baseService.setFilter(filter);
+  }
+
   examCycleSelected(e: any) {
     this.examCycle = e;
+    this.setFilters();
     this.getQuestionPapersByExamCycle();
   }
 
@@ -47,8 +66,10 @@ export class RegisterStudentsComponent {
     next: (res) => {
       // this.isDataLoading = false;
       this.examCycleList = res.responseData;
-      this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
-      this.examCycle= this.examCycleList[this.examCycleList.length-1].id
+      if (!this.examCycleControl.value) {
+        this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
+      }
+      this.examCycle= this.examCycleControl.value;
       this.getQuestionPapersByExamCycle()
  
     },
