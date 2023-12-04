@@ -388,6 +388,7 @@ export class ManageResultAdminComponent {
     })
 
   }
+
   //#endregion
 
   showInstituteTable() {

@@ -64,60 +64,6 @@
           </ng-container>
         </mat-tab>
       </ng-container>
-        <!-- <mat-tab label="Pending">
-          <div>
-            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
-              <mat-icon matPrefix class="search-icon">search</mat-icon>
-              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
-            </mat-form-field>
-          </div>
-          <div>
-            <app-shared-table 
-              [tableColumns]="instituteesCCTVpendingTableHeaders" 
-              [tableData]="instituteesCCTVpendingTableData" 
-              [isHallTicket]="true" 
-              [removeTbodyColor]="true" 
-              [isPageable]="true" 
-              (rowAction)="ApproveOrRejectInstituteCCTV($event)"
-            ></app-shared-table>
-          </div>
-        </mat-tab>
-        <mat-tab label="Verified">
-          <div>
-            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
-              <mat-icon matPrefix class="search-icon">search</mat-icon>
-              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
-            </mat-form-field>
-          </div>
-          <div>
-            <app-shared-table 
-              [tableColumns]="instituteesCCTVverifiedTableHeaders" 
-              [tableData]="instituteesCCTVverifiedTableData" 
-              [isHallTicket]="true" 
-              [removeTbodyColor]="true" 
-              [isPageable]="true" 
-              (rowAction)="RejectInstituteCCTV($event)"
-            ></app-shared-table>
-          </div>
-        </mat-tab>
-        <mat-tab label="Rejected">
-          <div>
-            <mat-form-field appearance="outline" class="feeManagementForms searchField mt2">
-              <mat-icon matPrefix class="search-icon">search</mat-icon>
-              <input matInput [(ngModel)]="searcControl" placeholder="Search" >
-            </mat-form-field>
-          </div>
-          <div>
-            <app-shared-table 
-              [tableColumns]="instituteesCCTVrejectedTableHeaders" 
-              [tableData]="instituteesCCTVrejectedTableData" 
-              [isHallTicket]="true" 
-              [removeTbodyColor]="true" 
-              [isPageable]="true" 
-              (rowAction)="assignAlternateInstitute($event)"
-            ></app-shared-table>
-          </div>
-        </mat-tab> -->
     </mat-tab-group>
 
   </div>

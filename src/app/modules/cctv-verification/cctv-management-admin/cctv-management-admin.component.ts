@@ -292,10 +292,11 @@ export class CctvManagementAdminComponent {
           break
         }
       }
-      if (pendingInstitute !== null) {
-        return pendingInstitute.reverse();
-      }
+      return pendingInstitute
     })
+    if (this.instituteesTableData) {
+      this.instituteesTableData = this.instituteesTableData.reverse();
+    }
     setTimeout(() => {
       this.isDataLoading = false;
     }, 0)

@@ -117,16 +117,26 @@ export class AttendanceRecordListComponent {
 
   examCycleFormControl = new FormControl();
   ngOnInit() {
+    this.getFilters()
     this.getExamCycles();
   }
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.attendanceRecord) {
+      this.examCycleFormControl.setValue(filters.attendanceRecord.examCycle);
+    }
+  }
+
   getExamCycles() {
     this.baseService.getExamCycleList$()
       .subscribe({
         next: (res: any) => {
           this.examCycleList = res.responseData;
           const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
-          this.examCycleFormControl.setValue(lastIndexSelected.id)
-          this.getAttendenceByExamCycle(lastIndexSelected.id)
+          if(!this.examCycleFormControl.value) {
+            this.examCycleFormControl.setValue(lastIndexSelected.id)
+          }
+          this.getAttendenceByExamCycle(this.examCycleFormControl.value)
         },
         error: (error: HttpErrorResponse) => {
           console.log(error);
@@ -151,6 +161,16 @@ export class AttendanceRecordListComponent {
 
   getSelectedExamcycleId(e: any) {
     this.getAttendenceByExamCycle(e)
+    this.setFilters()
+  }
+
+  setFilters() {
+    const filter = {
+      attendanceRecord: {
+        examCycle: this.examCycleFormControl.value
+      }
+    }
+    this.baseService.setFilter(filter);
   }
 
   goToUpload() {
