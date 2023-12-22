@@ -175,11 +175,11 @@ export class ManageTrackDispatchesComponent implements OnInit  {
         .subscribe({
           next: (res: any) => {
             if (res.dispatchesLsit && res.dispatchesLsit.length > 0) { // remove if when api working
-              this.instituteTableData = res.dispatchesLsit.response()
+              this.instituteTableData = res.dispatchesLsit.reverse()
             }
           },
           error: (err) => {
-            this.toastrService.showToastr(err, 'Error', 'error', '')
+            this.toastrService.showToastr(err.error.error.message, 'Error', 'error', '')
           }
         })
     }
