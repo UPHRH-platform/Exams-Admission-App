@@ -156,7 +156,7 @@ export class HallTicketComponent implements OnInit {
         console.log(data)
         const link = this.renderer.createElement('a');
         link.setAttribute('target', '_blank');
-        link.setAttribute('href', data.responseData);
+        link.setAttribute('href', data.responseData[0]);
         link.click();
         link.remove();
 
