@@ -243,16 +243,16 @@ export class AddNewRegnComponent {
       //     'color': '#00000099'
       //   },
       // },
-      {
-        columnDef: 'examNames',
-        header: 'Exam Name',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['examNames']}`,
-        cellStyle: {
-          'background-color': '#0000000a',
-          'color': '#00000099'
-        },
-      },
+      // {
+      //   columnDef: 'examNames',
+      //   header: 'Exam Name',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['examNames']}`,
+      //   cellStyle: {
+      //     'background-color': '#0000000a',
+      //     'color': '#00000099'
+      //   },
+      // },
     ]
     return tableColumns;
   }
