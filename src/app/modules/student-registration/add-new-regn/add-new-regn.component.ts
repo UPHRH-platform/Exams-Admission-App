@@ -106,13 +106,13 @@ export class AddNewRegnComponent {
         isLink: false,
         cell: (element: Record<string, any>) => `${element['enrollmentNumber']}`
       },
-      {
-        columnDef: 'marks',
-        header: 'Marks',
-        isSortable: false,
-        isLink: false,
-        cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
-      },
+      // {
+      //   columnDef: 'marks',
+      //   header: 'Marks',
+      //   isSortable: false,
+      //   isLink: false,
+      //   cell: (element: Record<string, any>) => `${element['marks']}` !== 'undefined' ? `${element['marks']}` : '-'
+      // },
       {
         columnDef: 'courseName',
         header: 'Course Name',
