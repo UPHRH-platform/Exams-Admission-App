@@ -26,6 +26,7 @@ export class AddNewRegnComponent {
   enrollmentData: any[] = [];
   examName: string;
   finalRegistrationRequest: any[] = [];
+  examId: string;
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -37,6 +38,7 @@ export class AddNewRegnComponent {
         this.route.params.subscribe((params => {
           this.examCycleId = params['id'];
           this.examName = params['examName'];
+          this.examId = params['examID'];
         }))
   }
  
@@ -118,12 +120,12 @@ export class AddNewRegnComponent {
         isLink: false,
         cell: (element: Record<string, any>) => `${element['courseName']}`
       },
-      {
-        columnDef: 'numberOfExams',
-        header: 'No of Exams',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['numberOfExams']}`
-      },
+      // {
+      //   columnDef: 'numberOfExams',
+      //   header: 'No of Exams',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['numberOfExams']}`
+      // },
       {
         columnDef: 'session',
         header: 'Admission Year',
@@ -131,13 +133,13 @@ export class AddNewRegnComponent {
         isLink: false,
         cell: (element: Record<string, any>) => `${element['session']}`
       },
-       {
-        columnDef: 'exams',
-        header: 'Exam Name',
-        isCheckBox: false,
-        isDropdown: true,
-        cell: (element: Record<string, any>) => ``
-      }, 
+      //  {
+      //   columnDef: 'exams',
+      //   header: 'Exam Name',
+      //   isCheckBox: false,
+      //   isDropdown: true,
+      //   cell: (element: Record<string, any>) => ``
+      // }, 
 
     ];
   }
@@ -231,16 +233,16 @@ export class AddNewRegnComponent {
           'color': '#00000099'
         },
       },
-      {
-        columnDef: 'noOfExam',
-        header: 'No of Exam',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['noOfExam']}`,
-        cellStyle: {
-          'background-color': '#0000000a',
-          'color': '#00000099'
-        },
-      },
+      // {
+      //   columnDef: 'noOfExam',
+      //   header: 'No of Exam',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['noOfExam']}`,
+      //   cellStyle: {
+      //     'background-color': '#0000000a',
+      //     'color': '#00000099'
+      //   },
+      // },
       {
         columnDef: 'examNames',
         header: 'Exam Name',
@@ -260,23 +262,23 @@ export class AddNewRegnComponent {
     const StudentsToRegisterList: any[] = []
     let details: any = {};
     this.studentsToRegister.forEach((studentDetails: any) => {
-      const examNames: any = [];
-    const examIds: any = [];
+    //   const examNames: any = [];
+    // const examIds: any = [];
       details = {
         id: studentDetails.id,
         name: studentDetails.firstName + ' ' + studentDetails.surname,
         course: studentDetails.courseName,
         admissionYr: studentDetails.session,
         enrollmentNumber: studentDetails.enrollmentNumber,
-        noOfExam: studentDetails.examName.length,
+        // noOfExam: studentDetails.examName.length,
       }
       // to map exam names
-      studentDetails.examName.map((obj: any) => {
-       examNames.push(obj.name);
-       examIds.push(obj.id);
-      })
-      details['examNames'] = examNames.join();
-      details['examIds'] = examIds;
+      // studentDetails.examName.map((obj: any) => {
+      //  examNames.push(obj.name);
+      //  examIds.push(obj.id);
+      // })
+      details['examNames'] = this.examName;
+      details['examIds'] = [this.examId];
       StudentsToRegisterList.push(details);
       this.finalRegistrationRequest.push(details);
     })

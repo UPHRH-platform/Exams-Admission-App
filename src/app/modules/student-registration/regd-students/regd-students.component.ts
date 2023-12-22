@@ -110,12 +110,12 @@ export class RegdStudentsComponent {
         isSortable: true,
         cell: (element: Record<string, any>) => `${element['session']}`
       },
-      {
-        columnDef: 'numberOfExams',
-        header: 'No of Exam',
-        isSortable: true,
-        cell: (element: Record<string, any>) => `${element['numberOfExams']}`
-      },
+      // {
+      //   columnDef: 'numberOfExams',
+      //   header: 'No of Exam',
+      //   isSortable: true,
+      //   cell: (element: Record<string, any>) => `${element['numberOfExams']}`
+      // },
       {
         columnDef: 'examName',
         header: 'Exam Name',

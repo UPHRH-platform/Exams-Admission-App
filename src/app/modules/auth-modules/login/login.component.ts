@@ -57,8 +57,8 @@ export class LoginComponent {
           }
         },
         error: (err) => {
-          console.log(err);
-            this.toastrService.showToastr(err.error.error, 'Error', 'error', '');
+          const error_message = err && err.error && err.error.error ? err.error.error : err;
+          this.toastrService.showToastr(error_message, 'Error', 'error', '');
         }
       });
     }
@@ -80,7 +80,6 @@ export class LoginComponent {
        this.isOtpForm = true
        this.authService.generateOTP(this.loginForm.value.emailId).subscribe({
         next: (res) => {
-          //console.log(res);
         }
        })
       }
@@ -116,8 +115,8 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        console.log(err);
-          this.toastrService.showToastr(err.error.error, 'Error', 'error', '');
+        const error_message = err && err.error && err.error.error ? err.error.error : err;
+        this.toastrService.showToastr(error_message, 'Error', 'error', '');
       }
      })
     }
