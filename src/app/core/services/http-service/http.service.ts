@@ -91,8 +91,8 @@ multipartPut(requestParam: RequestParam): Observable<any> {
     };
     return this.http.post<Response>(requestParam.url, requestParam.data, httpOptions).pipe(
       mergeMap((data: Response) => {
-        if (data.error && data.error) {
-          return throwError(() => new Error(data.error.message));
+        if (data && data.error) {
+          return throwError(() => new Error(data.error.message ? data.error.message : data.error));
         }
         const serverRes: ServerResponse ={
           statusInfo: {statusCode: 200, statusMessage: data.result?.message ? data.result?.message : "success"},

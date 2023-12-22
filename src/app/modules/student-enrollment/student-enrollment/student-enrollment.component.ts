@@ -499,13 +499,24 @@ export class StudentEnrollmentComponent {
     const closedRequest = { ...toAppendclosed, ...request };
     let completeData: any = [];
 
+    const EnrollmentList: any = [];
+    
+    switch(this.selectedTab.name) {
+      case 'Pending':
+        EnrollmentList.push(this.baseService.getEnrollmentList(pendingRequest).pipe(catchError(error => of(error))))
+        break;
+      case 'Approved':
+        EnrollmentList.push(this.baseService.getEnrollmentList(approvedRequest).pipe(catchError(error => of(error))))
+        break;
+      case 'Rejected':
+        EnrollmentList.push(this.baseService.getEnrollmentList(rejectedRequest).pipe(catchError(error => of(error))))
+        break;
+      case 'Closed':
+        EnrollmentList.push(this.baseService.getEnrollmentList(closedRequest).pipe(catchError(error => of(error))))
+        break;
+    }
 
-    forkJoin([
-      this.baseService.getEnrollmentList(pendingRequest).pipe(catchError(error => of(error))),
-      this.baseService.getEnrollmentList(approvedRequest).pipe(catchError(error => of(error))),
-      this.baseService.getEnrollmentList(rejectedRequest).pipe(catchError(error => of(error))),
-      this.baseService.getEnrollmentList(closedRequest).pipe(catchError(error => of(error))),
-    ])
+    forkJoin(EnrollmentList)
       .subscribe({
         next: (res: any) => {
           //this will return list of array of the result

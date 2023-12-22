@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'institute', component: RegisterStudentsComponent, pathMatch: 'full'
   },
   { path: 'view-regd-students/:id/:examName', component: RegdStudentsComponent, pathMatch: 'full' },
-  { path: 'add-new-students-regn/:id/:examName', component: AddNewRegnComponent, pathMatch: 'full' },
+  { path: 'add-new-students-regn/:id/:examName/:examID', component: AddNewRegnComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
