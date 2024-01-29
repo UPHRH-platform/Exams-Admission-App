@@ -343,7 +343,8 @@ export class ManageHallTicketsAdminListComponent {
             attendancePercentage: hallTicketsDetails.attendancePercentage,
             hallTicketStatus: hallTicketsDetails.hallTicketStatus,
             classes: {
-              viewHallTicket: ['color-blue']
+              viewHallTicket: ['color-blue'],
+              attendancePercentage: hallTicketsDetails.attendancePercentage >= 75 ? ['color-green'] : ['color-red'],
             }
           }
 
