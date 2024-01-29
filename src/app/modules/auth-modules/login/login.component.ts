@@ -77,16 +77,24 @@ export class LoginComponent {
     getOTP(){
       this.router.navigate(['/home']);
       if(this.loginForm.value.emailId){
-       this.isOtpForm = true
        this.authService.generateOTP(this.loginForm.value.emailId).subscribe({
         next: (res) => {
+          this.isOtpForm = true
+          console.log(res)
+         
+        }
+        ,
+        error: (err) => {
+          // Handle the error here in case of login failure
+          console.log(err)
+          this.toastrService.showToastr(err, 'Error', 'error');
         }
        })
       }
-      else{
+   /*    else{
         alert('please enter emailId')
       }
-      console.log('getOtp',this.loginForm)
+      console.log('getOtp',this.loginForm) */
     }
   
     signInWithOtp(){
