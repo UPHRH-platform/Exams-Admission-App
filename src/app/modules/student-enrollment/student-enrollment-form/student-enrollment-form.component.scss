@@ -154,6 +154,11 @@
     cursor: pointer; 
     color: rgb(0, 116, 182);
   }
+
+  .action-btns {
+    display: flex;
+    justify-content: end;
+}
   
   
     .status{

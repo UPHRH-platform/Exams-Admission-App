@@ -1082,7 +1082,7 @@
             <div>
               <div *ngIf="selectedLink === 'Basic Details'">
               <button
-                class="text-class action-btns mr2"
+                class="text-class mr2"
                 type="cancel"
                 mat-raised-button
                 color="primary"
@@ -1091,7 +1091,7 @@
                 Cancel
               </button>
               <button
-                class="text-class action-btns"
+                class="text-class "
                 type="button"
                 mat-raised-button
                 color="primary"
@@ -1112,9 +1112,10 @@
               >
                 Submit
               </button>
-              <div *ngIf="enrollmentDetails?.verificationStatus == 'PENDING'">
+              <div>
+              <span *ngIf="enrollmentDetails?.verificationStatus == 'PENDING'">
               <button *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_admin'"
-              class="text-class action-btns mr2"
+              class="text-class mr2"
                 type="submit"
                 mat-raised-button
                 color="primary"
@@ -1123,7 +1124,7 @@
               Approve
               </button>
               <button *ngIf="selectedLink === 'Educational Details' && loggedInUserRole === 'exams_admin'"
-              class="text-class action-btns"
+              class="text-class mr2"
                 type="button"
                 mat-raised-button
                 color="primary"
@@ -1131,10 +1132,10 @@
               >
               Reject
               </button>
-              </div>
-              <div *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus === 'REJECTED')">
+            </span>
+              <span *ngIf="(isAdmin && (enrollmentDetails?.verificationStatus !== 'REJECTED' && enrollmentDetails?.verificationStatus !== 'PENDING')) || !(isAdmin && enrollmentDetails?.verificationStatus === 'REJECTED')">
                 <button *ngIf="selectedLink === 'Educational Details' && !isCreateView && !isEditable"
-                class="text-class action-btns"
+                class="text-class"
                   type="button"
                   mat-raised-button
                   color="primary"
@@ -1142,7 +1143,10 @@
                 >
                 Back to List
                 </button>
-              </div>
+              </span>
+
+            </div>
+             
               <button
                 class="text-class action-btns"
                 type="submit"
