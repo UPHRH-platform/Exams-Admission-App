@@ -76,7 +76,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
     }, {
       header: 'Fee',
       columnDef: 'fee',
-      cell: (element: Record<string, any>) => `${element['fee']}`,
+      cell: (element: Record<string, any>) => `₹ ${element['fee']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
       },
@@ -118,7 +118,7 @@ export class FeeManagementListInstituteComponent implements OnInit {
     }, {
       header: 'Fee',
       columnDef: 'fee',
-      cell: (element: Record<string, any>) => `${element['fee']}`,
+      cell: (element: Record<string, any>) => ` ₹ ${element['fee']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '100px', 'color': '#00000099'
       }
