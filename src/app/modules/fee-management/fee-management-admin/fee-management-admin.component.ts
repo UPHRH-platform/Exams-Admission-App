@@ -111,7 +111,7 @@ export class FeeManagementAdminComponent implements OnInit {
       header: 'Total fee paid',
       columnDef: 'totalFeePaid',
       isSortable: true,
-      cell: (element: Record<string, any>) => `${element['totalFeePaid']}`,
+      cell: (element: Record<string, any>) => ` ₹ ${  element['totalFeePaid']}`,
       cellStyle: {
         'background-color': '#0000000a', 'width': '145px', 'color': '#00000099'
       },
@@ -120,7 +120,7 @@ export class FeeManagementAdminComponent implements OnInit {
       columnDef: 'viewList',
       cell: (element: Record<string, any>) => `View List`,
       cellStyle: {
-        'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
+       'background-color': '#0000000a', 'width': '160px', 'color': '#00000099'
       },
       isAction: true,
       showDeleteIcon: false,
