@@ -55,6 +55,7 @@ export class StudentEnrollmentComponent {
   selectedAcademicYear: any;
   institute = new FormControl();
   filtersNotSet = true;
+  instituteName: any;
   constructor(private router: Router, private authService: AuthServiceService,
     private baseService: BaseService, private toastrService: ToastrServiceService) { }
   ngOnInit() {
@@ -319,6 +320,13 @@ export class StudentEnrollmentComponent {
             }
           },
           {
+            columnDef: 'session',
+            header: 'Session',
+            isSortable: true,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['session']}`
+          },
+          {
             columnDef: 'viewStudentEnrollment',
             header: '',
             isSortable: false,
@@ -360,11 +368,27 @@ export class StudentEnrollmentComponent {
             cell: (element: Record<string, any>) => `${element['courseName']}`
           },
           {
+            columnDef: 'aaaa',
+            header: 'Institute Name',
+            isSortable: true,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${this.instituteName}`
+          },
+          {
             columnDef: 'admissionYear',
             header: 'Admission Date',
             isSortable: true,
             isLink: false,
-            cell: (element: Record<string, any>) => `${element['enrollmentDate']}`
+            cell: (element: Record<string, any>) => {
+              return this.baseService.reverseDate(element['enrollmentDate'])
+            }
+          },
+          {
+            columnDef: 'session',
+            header: 'Session',
+            isSortable: true,
+            isLink: false,
+            cell: (element: Record<string, any>) => `${element['session']}`
           },
           {
             columnDef: 'viewStudentEnrollment',
@@ -467,8 +491,11 @@ export class StudentEnrollmentComponent {
         if (this.filtersNotSet) {
           this.selectedCourse = this.courses[this.courses.length - 1].course_id;
         }
+        this.instituteName =  res.responseData[0].institute.instituteName
         this.getEnrollmentData()
-      }
+      },error(err) {
+        console.log("getCoursesBasedOnInstitute failed !!",err)
+      },
     })
   }
 

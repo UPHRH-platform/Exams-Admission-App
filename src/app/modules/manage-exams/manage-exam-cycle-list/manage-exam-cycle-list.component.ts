@@ -99,14 +99,18 @@ export class ManageExamCycleListComponent {
           header: 'Start Date',
           isSortable: true,
           isLink: false,
-          cell: (element: Record<string, any>) => `${element['startDate']}`
+          cell: (element: Record<string, any>) => {
+            return this.baseService.reverseDate(element['startDate'])
+          }
         },
         {
           columnDef: 'endDate',
           header: 'End Date',
           isSortable: true,
           isLink: true,
-          cell: (element: Record<string, any>) => `${element['endDate']}`
+          cell: (element: Record<string, any>) => {
+            return this.baseService.reverseDate(element['endDate'])
+          }
         },
         {
           columnDef: 'viewExamCycle',
@@ -146,11 +150,11 @@ export class ManageExamCycleListComponent {
     const dialogRef = this.dialog.open(ConformationDialogComponent, {
       data: {
         dialogType: 'confirmation',
-        header: 'Want to delete?',
-        description: ["Are you sure you want to delete the exam cycle? Once deleted you can't revert back the action"],
+        header: 'Disable exam cycle?',
+        description: ["Are you sure you want to disable the exam cycle ?  "],
         buttons: [
           {
-            btnText: 'Delete',
+            btnText: 'Disable',
             positionClass: 'right',
             btnClass: 'btn-full',
             response: true

@@ -118,7 +118,7 @@ export class SharedTableComponent implements AfterViewInit {
     this.examControl = new FormControl('', [Validators.required]);
   }
 
-  applyFilter(filterValue: string) {
+/*   applyFilter(filterValue: string) {
     if (this.isClient) {
       this.dataSource.filter = filterValue.trim().toLowerCase();
       if (this.dataSource.paginator) {
@@ -135,6 +135,12 @@ export class SharedTableComponent implements AfterViewInit {
       )
     }
 
+  } */
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
   toggleFilter() {
