@@ -1,5 +1,5 @@
-<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
-    <div class="secondary-container">
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
     <div class="header-container">
         <div class="head-details">
             <h2 class="m0">{{examName | uppercase}}</h2>
@@ -19,12 +19,45 @@
             </div>
         </div>
     </div>
-    <app-shared-skeleton-loading [isLoading]="isDataLoading">
-    </app-shared-skeleton-loading>
-    <app-shared-table *ngIf="!isDataLoading" 
-    [tableColumns]="viewStudentsTableColumns" 
-    [tableData]="enrollmentData"
-    [isPageable]="true" 
-    (checkBoxAction)="onSelectedRows($event)">
-    </app-shared-table>
+    <div class="flex" style="justify-content: space-between;">
+        <div class="flex selector">
+            <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
+                (selectedExamcycleId)="getSelectedExamcycleId($event)">
+            </app-shared-exam-cycle-select>
+            <div class="ml3">
+                <div class="mb1">
+                    <span class="exam-lable"> Course </span>
+                </div>
+                <mat-form-field appearance="outline">
+                    <mat-select [formControl]="courseFormControl" (selectionChange)="getSelectedCourse($event)">
+                        <mat-option *ngFor="let course of courses" [value]="course.id">
+                            {{ course.courseCode }} - {{course.courseName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="ml3">
+                <div class="mb1">
+                    <span class="exam-lable">Academic Year</span>
+                </div>
+                <mat-form-field appearance="outline">
+                    <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
+                        <mat-option *ngFor="let year of years" [value]="year" >
+                            {{ year }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+    </div>
+    <div>
+        <app-shared-skeleton-loading [isLoading]="isDataLoading">
+        </app-shared-skeleton-loading>
+        <app-shared-table *ngIf="!isDataLoading" [tableColumns]="viewStudentsTableColumns" [tableData]="enrollmentData"
+            [isPageable]="true" (checkBoxAction)="onSelectedRows($event)">
+        </app-shared-table>
+    </div>
+
 </div>

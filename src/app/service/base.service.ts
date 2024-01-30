@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, mergeMap } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { ConfigService, RequestParam, ServerResponse } from '../shared';
 
@@ -15,7 +16,11 @@ import { ConfigService, RequestParam, ServerResponse } from '../shared';
 })
 export class BaseService extends HttpService {
 
+  private cachedExamCycleList: Observable<any>;
+  private cachedCourseList: Observable<any>;
+  
   token: string;
+
   override baseUrl: string;
   headers = {
     'Accept': 'application/json',
@@ -25,6 +30,7 @@ export class BaseService extends HttpService {
   private userData = new BehaviorSubject({})
   currentUserData = this.userData.asObservable();
   private FILERT_KEY = 'filter';
+ 
 
 
   constructor(private httpClient: HttpClient, cookieService: CookieService, private configService: ConfigService
@@ -37,12 +43,29 @@ export class BaseService extends HttpService {
   //#region (common apis)
 
 
-  getExamCycleList$() {
+/*   getExamCycleList$() {
     const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
       data: {},
     }
-    return this.get(requestParam);
+     
+    const examcycleData = this.get(requestParam);
+    console.log(examcycleData)
+    this.cookieService.set('exam_cycles_cached_data',JSON.stringify(examcycleData));
+    return examcycleData;
+  } */
+
+  getExamCycleList$(): Observable<any> {
+    if (!this.cachedExamCycleList) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.GET_EXAM_CYCLE_LIST,
+        data: {},
+      }
+      this.cachedExamCycleList =this.get(requestParam).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.cachedExamCycleList;
   }
 
   getAllExamCenterInstitutesList$() {
@@ -112,11 +135,21 @@ export class BaseService extends HttpService {
 
 
   getAllCourses$(): Observable<any> {
-    const requestParam: RequestParam = {
+   /*  const requestParam: RequestParam = {
       url: this.baseUrl + this.configService.urlConFig.URLS.COURSE.GET_ALL,
       data: {}
     }
-    return this.get(requestParam);
+    return this.get(requestParam); */
+    if (!this.cachedCourseList) {
+      const requestParam: RequestParam = {
+        url: this.baseUrl + this.configService.urlConFig.URLS.COURSE.GET_ALL,
+        data: {}
+      }
+      this.cachedCourseList =this.get(requestParam).pipe(
+        shareReplay(1)
+      );
+    }
+    return this.cachedCourseList;
   }
 
   getExamsAndQuestionPapersList$(): Observable<any> {
@@ -827,7 +860,9 @@ getExamCycleDetails(id: string): Observable<ServerResponse> {
 
 deleteExamCycle(id: string): Observable<ServerResponse> {
   const requestParam: RequestParam = {
-    url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.DELETE_EXAM_CYCLE + `/${id}`,
+    //url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT.DELETE_EXAM_CYCLE + `/${id}`,
+    //api should disable the exam cycle and not delete
+    url: this.baseUrl + this.configService.urlConFig.URLS.EXAM_MANAGEMENT + `/${id}`,
     data: {}
   }
   return this.delete(requestParam);
