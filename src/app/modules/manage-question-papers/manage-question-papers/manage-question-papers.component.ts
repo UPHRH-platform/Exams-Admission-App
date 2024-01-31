@@ -3,7 +3,7 @@ import { Component, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthServiceService } from 'src/app/core/services';
-import { QuestionPaper } from 'src/app/interfaces/interfaces';
+import { Course, QuestionPaper } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
@@ -18,6 +18,8 @@ export class ManageQuestionPapersComponent {
 
   examCycleList: string[] = ['examCycle1', 'examCycle2', 'examCycle3'];
   examCycleControl = new FormControl();
+  courseFormControl = new FormControl();
+
   examCycleData: any[] = [];
   examCycleDetails: any[] = [];
   loggedInUserRole = "";
@@ -27,6 +29,7 @@ export class ManageQuestionPapersComponent {
   fileUploadError: string;
   listOfFiles: any[] = [];
   files: any[] = [];
+  courses: Course[];
   
 
   isDataLoading: boolean = false;
@@ -46,7 +49,25 @@ export class ManageQuestionPapersComponent {
 
   ngOnInit(): void {
     this.getExamCycleData();
+this.getCoursesList();
+  }
 
+  getCoursesList() {
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        this.isDataLoading = false;
+        this.courses = res.responseData;
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e: any) {
+    console.log("onCourseChange--",e)
   }
 
   breadcrumbItems = [
@@ -59,6 +80,8 @@ export class ManageQuestionPapersComponent {
     next: (res) => {
       this.isDataLoading = false;
       this.examCycleData = res.responseData;
+      this.examCycleControl.patchValue(this.examCycleData[this.examCycleData.length - 1]['id']);
+      this.getExamCycleSelection(this.examCycleData[this.examCycleData.length - 1]['id'])
     },
     error: (error: HttpErrorResponse) => {
       console.log(error);

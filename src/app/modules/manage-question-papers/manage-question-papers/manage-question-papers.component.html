@@ -4,14 +4,31 @@
   <h2 class="title-header">Manage Question Papers</h2>
 
 
-  <app-shared-ques-paper [examCycleList]="examCycleData" [examCycleControl]="examCycleControl"
+
+      <div style="display: flex; flex-direction: row;">
+        <span>
+          <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+          (selectedCourse)="onCourseChange($event)">
+        </app-shared-course-select>
+        </span>
+      
+        <span class="ml2">
+          <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleData"
+                (selectedExamcycleId)="getExamCycleSelection($event)">
+              </app-shared-exam-cycle-select>
+        </span>
+    
+    
+      </div>
+
+  <app-shared-ques-paper 
   [questionPapersList]="questionPapersList" [showCardDetails]=true
   (viewQuestionPaper)="viewQuestionPapers($event)"
   (downloadQuestionPaper)="downloadQuestionPaper($event)"
   (deleteQuestionPaper)="deleteQuestionPaper($event)"
   [showCardDetails]=true
   (uploadQuesPaper)="onUploadQuesPaper($event)"
-   (examCycleSelection)="getExamCycleSelection($event)">
+   >
   
 </app-shared-ques-paper>
 
