@@ -16,6 +16,8 @@ import { ConfigService, RequestParam, ServerResponse } from '../shared';
 })
 export class BaseService extends HttpService {
 
+ 
+
   private cachedExamCycleList: Observable<any>;
   private cachedCourseList: Observable<any>;
   
@@ -1074,6 +1076,38 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
   reverseDate(date: string) {
     let Dob = new Date(date);
     return Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
+  }
+
+  getResultsStatusList$() {
+    const response = [
+      {
+        id: "12",
+        status: 'Published', 
+      },{
+        id: "12",
+        status: 'Not-Published',
+      },{
+        id: "12",
+        status: 'With-held',
+      },
+    ]
+    return of(response)
+  }
+
+  getDispatchesStatusList$() {
+    const response = [
+      {
+        id: "12",
+        status: 'Dispatched', 
+      },{
+        id: "12",
+        status: 'Not-Dispatched',
+      },{
+        id: "12",
+        status: 'In-transit',
+      },
+    ]
+    return of(response)
   }
 
   getAdmissionSessionList() {

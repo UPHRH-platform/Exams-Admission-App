@@ -8,11 +8,9 @@ import { mergeMap, of } from 'rxjs';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Course } from 'src/app/interfaces/interfaces';
 
-interface Course {
-  value: string;
-  viewValue: string;
-}
+
 
 @Component({
   selector: 'app-manage-track-dispatches',
@@ -105,7 +103,9 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   instituteTableData = []
   
   examCycleControl = new FormControl();
-  examControl = new FormControl();
+  courseFormControl = new FormControl();
+  statusList= []
+  filtersNotSet = true;
 
   // searcControl = '';
   // searchKey = ''
@@ -126,15 +126,61 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   ) {}
 
   ngOnInit(): void {
-    this.intialisation()
+    this.intialisation();
+
   }
 
   intialisation() {
     this.getExamCycles()
+   // this.getCourseList()
+    this.getDispatchesStatusList()
+  }
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+
+  getDispatchesStatusList() {
+    this.baseService.getDispatchesStatusList$().subscribe({
+      next: (res: any) => {
+        console.log(res)
+        this.statusList = res;
+         console.log(this.statusList)
+      /*   const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id) */
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
   }
 
   getExamCycles() {
-    this.baseService.getExamCycleList$()
+      this.baseService.getExamCycleList$().subscribe({
+        next: (res: any) => {
+          this.examCycleList = res.responseData;
+          if (this.filtersNotSet && ! this.examCycleControl.value) {
+            this.examCycleControl.patchValue(this.examCycleList[this.examCycleList.length - 1]['id']);
+            this.getExams(this.examCycleList[this.examCycleList.length - 1]['id'])
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message)
+        }
+      })
+   /*  this.baseService.getExamCycleList$()
     .pipe(mergeMap((res: any) => {
       return this.baseService.formatExamCyclesForDropdown(res.responseData)
     }))
@@ -146,19 +192,28 @@ export class ManageTrackDispatchesComponent implements OnInit  {
           this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
       console.log(err)
         }
-      })
+      }) */
   }
 
   getExams(examCycleId: number) {
     this.courses = []
-    this.examControl.reset()
+    this.courseFormControl.reset()
     this.baseService.getExamsByExamCycleId(examCycleId)
-    .pipe(mergeMap((res: any) => {
-      return this.baseService.formateExams(res.responseData)
-    }))
+      /*   .pipe(mergeMap((res: any) => {
+          return this.baseService.formateExams(res.responseData)
+        })) */
       .subscribe({
         next: (result: any) => {
-          this.courses = result.examsList
+          if (result) {
+            for (const elem of result.responseData) {
+              console.log(elem.course)
+              this.courses.push(elem.course)
+            }
+            const lastIndexSelected: any = this.courses[this.courses.length - 1];
+            this.courseFormControl.setValue(lastIndexSelected.id)
+            this.getDispatches(lastIndexSelected.id)
+          }
+
         },
         error: (err) => {
           this.toastrService.showToastr(err, 'Error', 'error', '')
@@ -166,7 +221,10 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       })
   }
 
-  getDispatches(examId: number) {
+  getDispatches(e: any) {
+    let examId = 0;
+    isNaN(e) ? examId = e.value  : examId = e;
+    console.log(this.examCycleControl.value , examId)
     if (this.examCycleControl.value && examId) {
       this.baseService.getDispatchesAllInstitutesList$(this.examCycleControl.value, examId)
         .pipe(mergeMap((response: any) => {
@@ -213,6 +271,10 @@ export class ManageTrackDispatchesComponent implements OnInit  {
       })
     }
     return of(result);
+  }
+
+  onDispatchStatusChange(e: any){
+console.log(e)
   }
 
   downloadProof(event: any) {

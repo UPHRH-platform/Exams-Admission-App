@@ -144,8 +144,11 @@ export class ManageResultAdminComponent {
   ]
 
   examCycleControl = new FormControl('');
+  courseFormControl= new FormControl();
 
   showInstitutesTable = true
+  courses: Course[] =[];
+  statusList: any[]=[];
 
   breadcrumbItems = [
     { label: 'Manage Results', url: '' },
@@ -161,12 +164,52 @@ export class ManageResultAdminComponent {
   }
 
   ngOnInit(): void {
-    this.intialisation()
+    this.intialisation();
+    this.getCoursesList();
+    this.getStatusList();
   }
 
   //#region (Intialisation)
   intialisation() {
     this.getExamCycles()
+  }
+
+  getStatusList() {
+    this.baseService.getResultsStatusList$().subscribe({
+      next: (res: any) => {
+        console.log(res)
+        this.isDataLoading = false;
+        this.statusList = res;
+         console.log(this.statusList)
+      /*   const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id) */
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onStatusChange(e: any){
+
+  }
+
+  getCoursesList() {
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        this.isDataLoading = false;
+        this.courses = res.responseData;
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e: any){
+    console.log("onCourseChange--",e)
   }
 
   getExamCycles() {

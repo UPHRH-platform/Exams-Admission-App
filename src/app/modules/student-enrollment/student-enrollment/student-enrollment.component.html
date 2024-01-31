@@ -3,7 +3,7 @@
   <div class="flex" style = "justify-content: space-between;">
     <div class="flex selector">
     <mat-form-field
-      class="exam-form-enrollment"
+      class="exam-form"
       appearance="outline"
       *ngIf="this.loggedInUserRole === 'exams_admin'"
     >
@@ -14,7 +14,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="exam-form-enrollment" appearance="outline">
+    <mat-form-field class="exam-form" appearance="outline">
       <mat-label class="label">Select Course</mat-label>
       <mat-select (selectionChange)="getSelectedCourse($event)" [(ngModel)]="selectedCourse">
         <mat-option *ngFor="let course of courses" [value]="course.course_id">
@@ -26,7 +26,7 @@
   [courseList]="courses"
     (selectedCourse)="getSelectedCourse($event)"> 
   </app-shared-course-select> -->
-    <mat-form-field class="exam-form-enrollment" appearance="outline">
+    <mat-form-field class="exam-form" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
       <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
         <mat-option *ngFor="let year of years" [value]="year">
