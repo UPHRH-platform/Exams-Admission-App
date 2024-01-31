@@ -25,7 +25,7 @@ export class SharedQuestionPaperComponent {
   formattedDate: any;
   currentRoute: any;
   @Input() examCycleList : string[] ;
-  @Input() examCycleControl: FormControl;
+  //@Input() examCycleControl: FormControl;
   @Input() questionPapersList : QuestionPaper[];
   @Input() showCardDetails : boolean;
   @Input() examsList: Exam[];
@@ -63,18 +63,18 @@ export class SharedQuestionPaperComponent {
 
 
   emitViewRegdStdnts(questionPaper: QuestionPaper) {
-    if (this.examCycleControl.valid) {
+    //if (this.examCycleControl.valid) {
       this.viewRegdStdnts.emit(questionPaper);
      // this.router.navigate(['student-registration/view-regd-students'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
-    }
+   // }
 
   }
 
   emitRegNewStdnts(questionPaper: QuestionPaper) {
-    if (this.examCycleControl.valid) {
+   // if (this.examCycleControl.valid) {
       this.addNewStdnts.emit(questionPaper);
    // this.router.navigate(['student-registration/add-new-students-regn'], { state: { examId: exam.examId, examCycle: this.examCycle, examName: exam.examName } });
-    }
+   // }
   }
 
   emitUploadQuesPaper(event: any, examId: string) {

@@ -9,12 +9,27 @@
             Exam cycle
 
         </span> -->
-        <app-shared-ques-paper [examCycleList]="examCycleList" 
-        [examCycleControl]="examCycleControl"
+        
+        <div style="display: flex; flex-direction: row;">
+          <!--   <span>
+              <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+              (selectedCourse)="onCourseChange($event)">
+            </app-shared-course-select>
+            </span> -->
+          
+            <span class="ml2">
+              <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+                    (selectedExamcycleId)="examCycleSelected($event)">
+                  </app-shared-exam-cycle-select>
+            </span>
+        
+        
+          </div>
+
+        <app-shared-ques-paper 
             [questionPapersList]="questionPapersList" 
             (addNewStdnts)="regNewStdnts($event)"
             (viewRegdStdnts)="viewRegdStdnts($event)"
-            (examCycleSelection)="examCycleSelected($event)"
             [showCardDetails]=false>
         </app-shared-ques-paper>
 
