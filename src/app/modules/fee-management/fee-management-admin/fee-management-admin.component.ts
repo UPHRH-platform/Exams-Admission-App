@@ -43,16 +43,33 @@ export class FeeManagementAdminComponent implements OnInit {
 
   examCycleControl = new FormControl('',[Validators.required]);
 
+
   constructor(
     private baseService : BaseService,
     private toastrService: ToastrServiceService
   ) {}
 
   examCycleFormControl = new FormControl();
+  courseFormControl = new FormControl();
 
   ngOnInit(): void {
     this.intialisation()
     this.getExamCycles();
+    this.getCoursesList();
+  }
+
+  getCoursesList() {
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        this.isDataLoading = false;
+        this.courses = res.responseData;
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
   }
 
   intialisation() {
