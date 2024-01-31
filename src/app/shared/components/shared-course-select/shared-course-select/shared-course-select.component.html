@@ -4,7 +4,7 @@
     </div> -->
 
     <mat-form-field class="exam-form" appearance="outline">
-        <mat-label class="label">Select Course</mat-label>
+        <mat-label class="label">Course</mat-label>
         <mat-select [formControl]="courseFormControl" (selectionChange)="onCourseChangeSelected($event)"
         >
 
@@ -19,7 +19,7 @@
 </div>
 
 <!-- 
-<mat-form-field class="exam-form-enrollment" appearance="outline">
+<mat-form-field class="exam-form" appearance="outline">
     <mat-label class="label">Select Course</mat-label>
     <mat-select (selectionChange)="getSelectedCourse($event)" [(ngModel)]="selectedCourse">
       <mat-option *ngFor="let course of courses" [value]="course.course_id">

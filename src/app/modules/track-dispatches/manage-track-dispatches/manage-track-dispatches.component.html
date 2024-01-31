@@ -1,10 +1,10 @@
-<app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
-  <div class="secondary-container">
-    <mat-label class="title-header"> Manage Track Dispatches </mat-label>
-    <div
-      style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px"
-    >
-      <div>
+<app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
+<div class="secondary-container">
+  <mat-label class="title-header"> Manage Track Dispatches </mat-label>
+  <div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
+
+
+    <!--  <div>
         <div class="mb1">
           <label class="examCycleLable">Exam cycle</label>
         </div>
@@ -15,8 +15,8 @@
             </ng-container>
           </mat-select>
         </mat-form-field>
-      </div>
-      <div>
+      </div> -->
+    <!--   <div>
         <div class="mb1">
           <label class="examCycleLable">Exam </label>
         </div>
@@ -27,29 +27,42 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
-    </div>
-    <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
-      <div>
-        <app-shared-table 
-          [tableColumns]="instituteTableHeader" 
-          [tableData]="instituteTableData" 
-          [isHallTicket]="true" 
-          [removeTbodyColor]="true" 
-          [isPageable]="true" 
-          (cellClickAction)="downloadProof($event)"
-        ></app-shared-table>
-      </div>
-    </ng-container>
-    <ng-template #istitueExamsFeeDetails>
-      <div>
-        <app-shared-table 
-          [tableColumns]="studentExamsTableHeader" 
-          [tableData]="studentExamsTableData" 
-          [isHallTicket]="true" 
-          [removeTbodyColor]="true" 
-          [isPageable]="true"
-        ></app-shared-table>
-      </div>
-    </ng-template>  
+      </div> -->
+      <span class="ml2">
+        <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+          (selectedExamcycleId)="getExams($event)">
+        </app-shared-exam-cycle-select>
+      </span>
+    <span>
+      <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+        (selectedCourse)="getDispatches($event)">
+      </app-shared-course-select>
+    </span>
+
+   
+    <span class=" ml2">
+      <mat-form-field appearance="outline" class="exam-form">
+        <mat-label>Status </mat-label>
+        <mat-select (selectionChange)="onDispatchStatusChange($event)">
+          <ng-container *ngFor="let elem of statusList">
+            <mat-option [value]="elem.status">
+              {{elem.status}}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+    </span>
   </div>
+  <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
+    <div>
+      <app-shared-table [tableColumns]="instituteTableHeader" [tableData]="instituteTableData" [isHallTicket]="true"
+        [removeTbodyColor]="true" [isPageable]="true" (cellClickAction)="downloadProof($event)"></app-shared-table>
+    </div>
+  </ng-container>
+  <ng-template #istitueExamsFeeDetails>
+    <div>
+      <app-shared-table [tableColumns]="studentExamsTableHeader" [tableData]="studentExamsTableData"
+        [isHallTicket]="true" [removeTbodyColor]="true" [isPageable]="true"></app-shared-table>
+    </div>
+  </ng-template>
+</div>

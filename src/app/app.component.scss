@@ -1,0 +1,14 @@
+::ng-deep .exam-form {
+    width: 300px;
+    .mat-mdc-text-field-wrapper {
+        background-color: white;
+     }
+
+     .exam-container {
+        display: flex; 
+        flex-direction: row; 
+        justify-content: space-between; 
+        margin-top: 24px;
+     }
+
+}
