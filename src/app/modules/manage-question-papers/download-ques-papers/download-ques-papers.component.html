@@ -4,15 +4,15 @@
         <div class="certificate-header">
             <h2>Download Question Papers</h2>
         </div>
+        <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+        (selectedExamcycleId)="examCycleSelected($event)">
+      </app-shared-exam-cycle-select>
         <app-shared-ques-paper
-        [examCycleControl]="examCycleControl"
-         [examCycleList]="examCycleList" 
          [cctvVerified]="cctvVerified"
         [questionPapersList]="questionPapersList"
         (viewQuestionPaper)="downloadQuestionPaper($event)"
         (downloadQuestionPaper)="downloadQuestionPaper($event)"
         [showCardDetails]="true"
-        (examCycleSelection)="examCycleSelected($event)"
         >
         
       </app-shared-ques-paper>
