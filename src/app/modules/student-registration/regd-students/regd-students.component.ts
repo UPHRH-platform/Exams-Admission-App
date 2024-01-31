@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthServiceService } from 'src/app/core/services';
-import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
+import { Course, RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { Location } from '@angular/common';
 import { FormControl, Validators } from '@angular/forms';
@@ -22,7 +22,10 @@ export class RegdStudentsComponent {
   examName: string;
   examCycle: string;
   examCycleList:any[] = [];
-  examCycleControl: any;
+  examCycleControl = new FormControl()
+  courseFormControl= new FormControl()
+  courses: Course[]=[]
+  years: string[] = [];
 
   constructor(
     private baseService: BaseService, private route: ActivatedRoute, 
@@ -39,13 +42,44 @@ export class RegdStudentsComponent {
   viewStudentsTableColumns: TableColumn[] = [];
   isDataLoading: boolean = false;
   regdStudents : RegdStudentsTableData[] = [];
+  selectedAcademicYear: any;
+  filtersNotSet = true;
   
   ngOnInit(): void {
     this.examCycleControl = new FormControl('', [Validators.required]);
     this.getExamCycleData();
+    this.getCourseList()
     this.getFilters();
     this.initializeColumns();
     this.getInstituteDetailByUserId();
+    this.getAdmissionSessionList();
+  }
+
+  getAdmissionSessionList() {
+    this.years = this.baseService.getAdmissionSessionList()
+    if (this.filtersNotSet) {
+      this.selectedAcademicYear = this.years[4];
+    }
+  }
+
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  getSelectedAcademicYear(event: any) {
+    this.selectedAcademicYear = event.value;
   }
 
   getFilters() {
@@ -55,7 +89,13 @@ export class RegdStudentsComponent {
     }
   }
 
+  onExamCycleChange(e : any){
 
+  }
+
+  onCourseChange(e : any){
+
+  }
 
   getExamCycleData() {
     // this.isDataLoading = true;

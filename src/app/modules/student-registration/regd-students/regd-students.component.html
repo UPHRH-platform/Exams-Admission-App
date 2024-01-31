@@ -10,9 +10,34 @@
 <!--     <div class="footer">
         <button class="cancel-btn" (click)="cancel()">Cancel</button>
     </div> -->
-----------------+++-------------
-    <app-shared-ques-paper >
-    </app-shared-ques-paper>
+<div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
+
+
+    <span class="ml2">
+      <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+        (selectedExamcycleId)="onExamCycleChange($event)">
+      </app-shared-exam-cycle-select>
+    </span>
+  <span>
+    <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+      (selectedCourse)="onCourseChange($event)">
+    </app-shared-course-select>
+  </span>
+
+ 
+  <span class=" ml2">
+     <mat-form-field class="exam-form" appearance="outline">
+      <mat-label>Select Academic Year</mat-label>
+      <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+      </mat-form-field>
+  </span>
+</div>
+  <!--   <app-shared-ques-paper >
+    </app-shared-ques-paper> -->
    
     <app-shared-skeleton-loading [isLoading]="isDataLoading">
     </app-shared-skeleton-loading>
