@@ -22,14 +22,18 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <!-- <mat-form-field class="exam-form-enrollment" appearance="outline">
+ <!--    <app-shared-course-select [courseFormControl]="courseFormControl" 
+  [courseList]="courses"
+    (selectedCourse)="getSelectedCourse($event)"> 
+  </app-shared-course-select> -->
+    <mat-form-field class="exam-form-enrollment" appearance="outline">
       <mat-label>Select Academic Year</mat-label>
       <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
         <mat-option *ngFor="let year of years" [value]="year">
           {{ year }}
         </mat-option>
       </mat-select>
-      </mat-form-field> -->
+      </mat-form-field>
     </div>
       <div class="mt1"  *ngIf="loggedInUserRole === 'exams_institute'">
         <button class="btn-1 mr2" (click)="downLoadStudentList()">Download List</button>

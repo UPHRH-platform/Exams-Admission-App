@@ -85,9 +85,12 @@ export class LoginComponent {
         }
         ,
         error: (err) => {
-          // Handle the error here in case of login failure
-          console.log(err)
-          this.toastrService.showToastr(err, 'Error', 'error');
+          // To-do 
+          //Backend should not send this text as a plain taext rather it should be json
+          err?.error?.text === "Sending OTP to user mail" ?     this.isOtpForm = true:    this.toastrService.showToastr(err, 'Error', 'error');
+
+         // this.toastrService.showToastr(err, 'Error', 'error');
+        
         }
        })
       }

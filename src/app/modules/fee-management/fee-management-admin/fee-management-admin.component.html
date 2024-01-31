@@ -16,9 +16,22 @@
                     <mat-option style="display: none;" value="">Select here</mat-option>
                 </mat-select>
             </mat-form-field> -->
-          <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
+
+  <div style="display: flex; flex-direction: row;">
+    <span>
+      <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+      (selectedCourse)="onCourseChange($event)">
+    </app-shared-course-select>
+    </span>
+  
+    <span class="ml2">
+      <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
             (selectedExamcycleId)="getSelectedExamcycleId($event)">
           </app-shared-exam-cycle-select>
+    </span>
+
+
+  </div>
         </div>
         <!-- <div class="sm-col md-col-6">
           <div class="flex right">
