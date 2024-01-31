@@ -4,7 +4,9 @@ import { AuthServiceService } from 'src/app/core/services';
 import { RegdStudentsTableData, TableColumn } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { Location } from '@angular/common';
-
+import { FormControl, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 @Component({
   selector: 'app-regd-students',
   templateUrl: './regd-students.component.html',
@@ -18,10 +20,15 @@ export class RegdStudentsComponent {
     { label: 'Register Students to Exam cycles and Exams', url: '' }
   ] 
   examName: string;
+  examCycle: string;
+  examCycleList:any[] = [];
+  examCycleControl: any;
+
   constructor(
     private baseService: BaseService, private route: ActivatedRoute, 
     private authService: AuthServiceService,
-    private location: Location
+    private location: Location,
+    private toasterService: ToastrServiceService
     ){
       this.route.params.subscribe((param => {
         this.examCycleId = param['id'];
@@ -34,10 +41,44 @@ export class RegdStudentsComponent {
   regdStudents : RegdStudentsTableData[] = [];
   
   ngOnInit(): void {
+    this.examCycleControl = new FormControl('', [Validators.required]);
+    this.getExamCycleData();
+    this.getFilters();
     this.initializeColumns();
     this.getInstituteDetailByUserId();
   }
 
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.registerSudent) {
+      this.examCycleControl.setValue(filters.registerSudent.examCycle);
+    }
+  }
+
+
+
+  getExamCycleData() {
+    // this.isDataLoading = true;
+    this.baseService.getExamCycleList$().subscribe({
+    next: (res) => {
+      // this.isDataLoading = false;
+      this.examCycleList = res.responseData;
+      if (!this.examCycleControl.value) {
+        this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
+      }
+      this.examCycle= this.examCycleControl.value;
+      // this.getQuestionPapersByExamCycle()
+ 
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.examCycleList = [];
+      this.toasterService.showToastr('Something went wrong. Please try later.', 'Error', 'error', '');
+    }
+  })
+  }
+
+  
   getInstituteDetailByUserId() {
     const loggedInUserId = this.authService.getUserRepresentation().id;
     this.baseService.getInstituteDetailsByUser(loggedInUserId).subscribe({
