@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegdStudentsTableData, TableColumn, Course, Year } from 'src/app/interfaces/interfaces';
 import { ConfirmStudentRegistrationComponent } from '../dialogs/confirm-student-registration/confirm-student-registration.component';
@@ -8,7 +7,8 @@ import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormControl } from '@angular/forms';
+
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-new-regn',
@@ -26,6 +26,9 @@ export class AddNewRegnComponent {
   examCycleId: any;
   enrollmentData: any[] = [];
   examName: string;
+  examCycle: string;
+  examCycleList:any[] = [];
+  examCycleControl: any;
   finalRegistrationRequest: any[] = [];
   examId: string;
   selectedCourse: any;
@@ -57,12 +60,47 @@ export class AddNewRegnComponent {
   regdStudents : RegdStudentsTableData[] = [];
   ngOnInit(): void {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
+    this.examCycleControl = new FormControl('', [Validators.required]);
+    this.getExamCycleData();
+    this.getFilters();
     this.initializeColumns();
     this.getInstituteDetails();
     this.getExamCycles();
     this.getAdmissionSessionList();
     this.getCoursesList()
     // this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
+  }
+
+
+
+  getFilters() {
+    const filters = this.baseService.getFilter;
+    if (filters && filters.registerSudent) {
+      this.examCycleControl.setValue(filters.registerSudent.examCycle);
+    }
+  }
+
+
+
+  getExamCycleData() {
+    // this.isDataLoading = true;
+    this.baseService.getExamCycleList$().subscribe({
+    next: (res) => {
+      // this.isDataLoading = false;
+      this.examCycleList = res.responseData;
+      if (!this.examCycleControl.value) {
+        this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
+      }
+      this.examCycle= this.examCycleControl.value;
+      // this.getQuestionPapersByExamCycle()
+ 
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.examCycleList = [];
+      this.toastr.showToastr('Something went wrong. Please try later.', 'Error', 'error', '');
+    }
+  })
   }
   // get institute detail
   getInstituteDetails() {

@@ -19,6 +19,22 @@
             </div>
         </div>
     </div>
+
+
+    <app-shared-ques-paper [examCycleList]="examCycleList" 
+    [examCycleControl]="examCycleControl">
+    </app-shared-ques-paper>
+
+    
+    <app-shared-skeleton-loading [isLoading]="isDataLoading">
+    </app-shared-skeleton-loading>
+    <app-shared-table *ngIf="!isDataLoading" 
+    [tableColumns]="viewStudentsTableColumns" 
+    [tableData]="enrollmentData"
+    [isPageable]="true" 
+    (checkBoxAction)="onSelectedRows($event)">
+    </app-shared-table>
+
     <div class="flex" style="justify-content: space-between;">
         <div class="flex selector">
             <app-shared-exam-cycle-select [examCycleFormControl]="examCycleFormControl" [examCycleList]="examCycleList"
@@ -59,5 +75,6 @@
             [isPageable]="true" (checkBoxAction)="onSelectedRows($event)">
         </app-shared-table>
     </div>
+
 
 </div>
