@@ -7,6 +7,7 @@ import { UploadFileComponent } from 'src/app/modules/manage-exams/upload-file/up
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+import { FormControl } from '@angular/forms';
 
 interface Course {
   value: string;
@@ -33,10 +34,10 @@ export class ManageExamCycleListComponent {
   ];
   constructor(private router: Router, private dialog: MatDialog,
      private baseService: BaseService, private toastrService: ToastrServiceService){}
-  courses: Course[] = [
-    {value: 'bsc', viewValue: 'BSc'},
-    {value: 'msc', viewValue: 'MSc'},
-  ];
+  courses: Course[] = [];
+  courseFormControl = new FormControl();
+  examCycleControl = new FormControl();
+  examCycleList = []
   years: Year[] = [
     {value: 'sem-1', viewValue: '2020'},
     {value: 'sem-2', viewValue: '2021'},
@@ -46,6 +47,47 @@ export class ManageExamCycleListComponent {
   ngOnInit() {
     this.initializeColumns();
     this.getExamCycleData();
+    this.getCoursesList();
+    this.getExamCycles()
+  }
+
+  getExamCycles() {
+    this.baseService.getExamCycleList$()
+      .subscribe({
+        next: (res: any) => {
+          this.examCycleList = res.responseData;
+          const lastIndexSelected: any = this.examCycleList[this.examCycleList.length - 1];
+          this.examCycleControl.setValue(lastIndexSelected.id)
+        },
+        error: (error: HttpErrorResponse) => {
+          
+          console.log(error);
+           this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+    
+        }
+      })
+  }
+
+  onExamcycleIdSelect(e: any) {
+    console.log("onExamcycleIdSelect---",e)
+  }
+
+  getCoursesList() {
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        this.isDataLoading = false;
+        this.courses = res.responseData;
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(em:any) {
+   console.log("-----onCourseChange--------",em)
   }
 
   goToCreate() {
