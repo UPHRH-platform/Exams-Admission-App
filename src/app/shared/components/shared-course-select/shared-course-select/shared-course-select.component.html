@@ -1,0 +1,29 @@
+<div>
+   <!--  <div class="mb1">
+        <span class="exam-lable">Course</span>
+    </div> -->
+
+    <mat-form-field class="exam-form" appearance="outline">
+        <mat-label class="label">Select Course</mat-label>
+        <mat-select [formControl]="courseFormControl" (selectionChange)="onCourseChangeSelected($event)"
+        >
+
+         <!--    <mat-option style="display: none;" value="">Select here</mat-option> -->
+            
+            <mat-option *ngFor="let course of courseList" [value]="course.id">
+                {{ course.courseCode }} - {{course.courseName}}
+            </mat-option>
+
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<!-- 
+<mat-form-field class="exam-form-enrollment" appearance="outline">
+    <mat-label class="label">Select Course</mat-label>
+    <mat-select (selectionChange)="getSelectedCourse($event)" [(ngModel)]="selectedCourse">
+      <mat-option *ngFor="let course of courses" [value]="course.course_id">
+        {{course.courseCode}} - {{ course.courseName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->
