@@ -24,6 +24,8 @@ export class AttendanceRecordListComponent {
     private toasterService: ToastrServiceService) { }
 
   examCycleList: any = [];
+  courseFormControl= new FormControl()
+  courses: Course[]=[]
 
   examTableHeader = [
     {
@@ -118,6 +120,7 @@ export class AttendanceRecordListComponent {
   examCycleFormControl = new FormControl();
   ngOnInit() {
     this.getFilters()
+    this.getCourseList()
     this.getExamCycles();
   }
   getFilters() {
@@ -125,6 +128,26 @@ export class AttendanceRecordListComponent {
     if (filters && filters.attendanceRecord) {
       this.examCycleFormControl.setValue(filters.attendanceRecord.examCycle);
     }
+  }
+
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e : any){
+
   }
 
   getExamCycles() {

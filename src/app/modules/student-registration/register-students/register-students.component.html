@@ -10,7 +10,7 @@
 
         </span> -->
         
-        <div style="display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: row;gap: 16px">
           <!--   <span>
               <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
               (selectedCourse)="onCourseChange($event)">
@@ -21,6 +21,12 @@
               <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
                     (selectedExamcycleId)="examCycleSelected($event)">
                   </app-shared-exam-cycle-select>
+            </span>
+
+            <span>
+              <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+              (selectedCourse)="onCourseChange($event)">
+            </app-shared-course-select>
             </span>
         
         

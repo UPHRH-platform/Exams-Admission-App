@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { QuestionPaper } from 'src/app/interfaces/interfaces';
+import { Course, QuestionPaper } from 'src/app/interfaces/interfaces';
 import { Router } from '@angular/router';
 import { FormControl,  Validators } from '@angular/forms';
 
@@ -21,6 +21,8 @@ export class RegisterStudentsComponent {
   questionPapersList: QuestionPaper[]=[];
   examCycleList:any[] = [];
   examCycleControl: any;
+  courseFormControl= new FormControl()
+  courses: Course[]=[]
 
 
   constructor(
@@ -35,6 +37,7 @@ export class RegisterStudentsComponent {
   ngOnInit(): void {
     this.examCycleControl = new FormControl('', [Validators.required]);
     this.getExamCycleData();
+    this.getCourseList()
     this.getFilters()
   }
 
@@ -52,6 +55,25 @@ export class RegisterStudentsComponent {
       }
     }
     this.baseService.setFilter(filter);
+  }
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e : any){
+
   }
 
   examCycleSelected(e: any) {

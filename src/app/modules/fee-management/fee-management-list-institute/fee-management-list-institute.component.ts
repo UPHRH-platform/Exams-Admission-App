@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { LoadingDialogComponent } from '../loading-dialog/loading-dialog.component';
 import { BaseService } from 'src/app/service/base.service';
@@ -7,6 +7,9 @@ import { Tabs } from 'src/app/shared';
 import { mergeMap, of } from 'rxjs';
 import { AuthServiceService } from 'src/app/core/services';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+
 
 interface Course {
   value: string;
@@ -146,11 +149,17 @@ export class FeeManagementListInstituteComponent implements OnInit {
   isDataLoading: boolean;
   loggedInUserId: any;
   instituteId: any;
+  examName: string;
+  examCycle: string;
+  examCycleList:any[] = [];
+  examCycleControl = new FormControl()
+  courseFormControl= new FormControl()
   constructor(
     private dialog: MatDialog,
     private baseService: BaseService,
     private authService: AuthServiceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toasterService: ToastrServiceService
   ) {
     this.filterForm = new FormGroup({
       search: new FormControl(''),
@@ -160,6 +169,9 @@ export class FeeManagementListInstituteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.examCycleControl = new FormControl('', [Validators.required]);
+    this.getExamCycleData();
+    this.getCourseList()
     this.intialisation();
   }
 
@@ -170,6 +182,50 @@ export class FeeManagementListInstituteComponent implements OnInit {
 
     this.examCycleId = this?.route?.snapshot?.paramMap?.get('id') || '0';
     this.getInstituteDetailsByUser()
+  }
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e : any){
+
+  }
+
+  getExamCycleData() {
+    // this.isDataLoading = true;
+    this.baseService.getExamCycleList$().subscribe({
+    next: (res) => {
+      // this.isDataLoading = false;
+      this.examCycleList = res.responseData;
+      if (!this.examCycleControl.value) {
+        this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
+      }
+      this.examCycle= this.examCycleControl.value;
+      // this.getQuestionPapersByExamCycle()
+ 
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error);
+      this.examCycleList = [];
+      this.toasterService.showToastr('Something went wrong. Please try later.', 'Error', 'error', '');
+    }
+  })
+  }
+
+  onExamCycleChange(e : any){
+
   }
 
   getInstituteDetailsByUser() {

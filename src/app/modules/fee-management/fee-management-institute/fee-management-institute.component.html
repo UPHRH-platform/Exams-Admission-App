@@ -1,6 +1,12 @@
 <app-breadcrumb  [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 <div class="secondary-container">
     <h2 class="title-header">{{'Fee Management'}}</h2>
+
+    <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+        (selectedExamcycleId)="onExamCycleChange($event)">
+    </app-shared-exam-cycle-select>
+
+
     <div class="cards-boxes">
         <mat-card class="example-card" *ngFor="let item of examCycleData">
             <mat-card-content class="content-container">

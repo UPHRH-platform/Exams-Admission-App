@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AuthServiceService } from 'src/app/core/services';
+import { Course } from 'src/app/interfaces/interfaces';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 
@@ -19,6 +20,8 @@ export class DownloadQuesPapersComponent {
   examCycleList:any = [];
   questionPapersList: any[] = [];
   examCycleValue: any;
+  courseFormControl= new FormControl()
+  courses: Course[]=[]
   instituteId: string;
   breadcrumbItems = [
     {label: 'Download Question Papers', url: ''}
@@ -33,6 +36,26 @@ export class DownloadQuesPapersComponent {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
     this.getExamCycleData();
     this.getInstituteData();
+    this.getCourseList()
+  }
+
+  getCourseList(){
+    this.baseService.getAllCourses$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.courses = res.responseData;
+
+        const lastIndexSelected: any = this.courses[this.courses.length - 1];
+        this.courseFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onCourseChange(e : any){
+
   }
 
   getInstituteData() {

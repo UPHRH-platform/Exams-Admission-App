@@ -4,9 +4,26 @@
         <div class="certificate-header">
             <h2>Download Question Papers</h2>
         </div>
+
+        <div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
+        <span class="ml2">
         <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
         (selectedExamcycleId)="examCycleSelected($event)">
-      </app-shared-exam-cycle-select>
+        </app-shared-exam-cycle-select>
+        </span>
+        
+        <span>
+        <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+        (selectedCourse)="onCourseChange($event)">
+        </app-shared-course-select>
+        </span>
+        </div>
+
+
+
+
+
+
         <app-shared-ques-paper
          [cctvVerified]="cctvVerified"
         [questionPapersList]="questionPapersList"
