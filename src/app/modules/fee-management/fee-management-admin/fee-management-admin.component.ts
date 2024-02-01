@@ -46,16 +46,39 @@ export class FeeManagementAdminComponent implements OnInit {
 
   constructor(
     private baseService : BaseService,
-    private toastrService: ToastrServiceService
   ) {}
 
   examCycleFormControl = new FormControl();
   courseFormControl = new FormControl();
+  instituteSelectFormControl= new FormControl();
+
+  instituteList=[]
 
   ngOnInit(): void {
     this.intialisation()
     this.getExamCycles();
     this.getCoursesList();
+    this.getAllInstitutesList();
+  }
+
+  getAllInstitutesList(){
+    this.baseService.getAllInstitutes$().subscribe({
+      next: (res: any) => {
+        console.log( res.responseData)
+        this.instituteList = res.responseData;
+
+        const lastIndexSelected: any = this.instituteList[this.instituteList.length - 1];
+        console.log(lastIndexSelected)
+        this.instituteSelectFormControl.setValue(lastIndexSelected.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message)
+      }
+    })
+  }
+
+  onInstituteChange(e: any){
+console.log ("onInstituteChange",e)
   }
 
   getCoursesList() {
@@ -333,7 +356,8 @@ let r = response.examFees
         error: (error: HttpErrorResponse) => {
           
           console.log(error);
-           this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+          // err handled at interceptor level
+         //  this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
     
         }
       })

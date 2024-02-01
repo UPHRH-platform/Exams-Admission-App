@@ -4,19 +4,23 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { finalize, catchError } from 'rxjs/operators';
 import { SpinnerService } from './spinner.service';
+import {  } from 'rxjs/operators';
+import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
+
 
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
-  constructor(private spinnerService: SpinnerService) {}
+  constructor(private spinnerService: SpinnerService,
+    private toastrService: ToastrServiceService) {}
   private totalRequests = 0;
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log('caught')
     this.totalRequests++;
     this.spinnerService.setLoading(true);
     return next.handle(request).pipe(
@@ -26,6 +30,19 @@ export class SpinnerInterceptor implements HttpInterceptor {
           this.spinnerService.setLoading(false);
         }
       })
-    );
-  }
+    )
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMsg = '';
+         (error.error instanceof ErrorEvent) ?
+          errorMsg = `Error: ${error.error.message}`
+        :   errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
+        
+        console.log(errorMsg);
+        this.toastrService.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
+    
+        return throwError(errorMsg);
+      })
+    )
 }
+  }
