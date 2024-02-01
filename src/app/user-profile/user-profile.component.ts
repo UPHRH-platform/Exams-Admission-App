@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {  Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {Location} from '@angular/common';
 import { BaseService } from '../service/base.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -19,20 +19,23 @@ export class UserProfileComponent {
   roleList: any[] = ['Institute', 'Candidate', 'Admin']
   editDataObject: any;
   isEditData:boolean = false;
+  loggedInRole: string=""
 
   userObject={
-    name: '',
-    enrollmentNumber: '',
-    emailId : '' ,
-    phoneNumber : '',
-    role: 'Candidate',
-    activeStatus: 'Active'
+    name: '-',
+    enrollmentNumber: this.loggedInRole === "exams_student" ? '' : '-',
+    emailId : '-' ,
+    phoneNumber : '-',
+    role: this.loggedInRole === "exams_student" ? 'Candidate' : 'Institute',
+    activeStatus: 'Active',
+    address: '-'
   }
   userData: any;
 
   constructor(private router: Router,
     private _location: Location,
     private authService: AuthServiceService,
+    private route: ActivatedRoute,
     private baseService: BaseService) {
     this.userForm = new FormGroup({
       firstName: new FormControl('', Validators.required),
@@ -41,6 +44,10 @@ export class UserProfileComponent {
       phoneNumber: new FormControl('', Validators.required),
       role: new FormControl('', Validators.required),
       activeStatus: new FormControl('', Validators.required)
+    })
+
+    this.route.params.subscribe(param => {
+      this.loggedInRole = param['role'];
     })
   }
 

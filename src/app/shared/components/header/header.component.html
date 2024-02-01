@@ -6,7 +6,7 @@
         <div class="flex flex-column">
             <button class="action-btn" [matMenuTriggerFor]="menu">{{userName}}</button>
              <mat-menu #menu="matMenu">
-            <button *ngIf="studentRole" mat-menu-item claas="profile-cls"  (click)="navigateToProfilePage()">
+            <button *ngIf="enableProfile" mat-menu-item claas="profile-cls"  (click)="navigateToProfilePage()">
                 <mat-icon>person</mat-icon>
                 <span>Profile</span>
             </button>

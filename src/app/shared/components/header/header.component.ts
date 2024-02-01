@@ -13,7 +13,7 @@ export class HeaderComponent {
   showProfileNavBar = false;
   private userData: any;
   userName: string;
-  studentRole: boolean;
+  enableProfile: boolean;
   constructor(private router: Router, private authService: AuthServiceService) {
   }
 
@@ -22,10 +22,10 @@ export class HeaderComponent {
     if (token) {
       this.showProfileNavBar = true;
       this.userData = this.authService.getUserRepresentation();
-      if (this.userData.attributes.Role[0] === 'exams_student') {
-        this.studentRole = true
+      if (this.userData.attributes.Role[0] === 'exams_student' || this.userData.attributes.Role[0] === 'exams_institute') {
+        this.enableProfile = true
       } else {
-        this.studentRole = false
+        this.enableProfile = false
       }
       this.generateUserName();
     }
@@ -44,6 +44,8 @@ export class HeaderComponent {
   }
 
   navigateToProfilePage() {
-    this.router.navigate(['/user-profile']);
+    console.log(this.userData.attributes.Role[0])
+    this.router.navigate([`/user-profile/${this.userData.attributes.Role[0]}`]);
   }
 }
+//['/msg', {my_object: JSON.stringify(row)}]
