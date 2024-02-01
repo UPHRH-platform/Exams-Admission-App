@@ -26,6 +26,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.0",
     "material-icons": "^1.13.10",
+    "ng2-pdf-viewer": "^9.1.5",
     "ngx-cookie-service": "^15.0.0",
     "ngx-toastr": "^15.2.2",
     "rxjs": "~7.5.0",

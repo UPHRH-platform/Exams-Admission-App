@@ -83,7 +83,7 @@ const routes: Routes = [
         loadChildren: () => import('../app/modules/manage-attendance-record/manage-attendance-record.module').then(m => m.ManageAttendanceRecordModule)
       },
       {
-        path: 'user-profile', 
+        path: 'user-profile/:role', 
         component: UserProfileComponent, 
         // canActivate: [AuthGuard],
         // data: {

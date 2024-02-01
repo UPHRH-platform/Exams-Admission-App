@@ -20,8 +20,8 @@ import { SharedNoResultCardComponent } from './components/shared-no-result-card/
 import { SharedCourseSelectComponent } from './components/shared-course-select/shared-course-select/shared-course-select.component';
 import { SharedInstituteSelectComponent } from './components/shared-institute-select/shared-institute-select.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-
-
+import { PdfViewerModalComponent } from './components/pdf-viewer-modal/pdf-viewer-modal.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -39,6 +39,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     SharedCourseSelectComponent,
     SharedInstituteSelectComponent,
     SpinnerComponent,
+    PdfViewerModalComponent,
   ],
   imports: [
     CommonModule,
@@ -46,6 +47,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     ReactiveFormsModule,
     RouterModule,
     HttpClientModule,
+    PdfViewerModule
   ],
   exports :
   [
@@ -61,7 +63,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     SharedNoResultCardComponent,
     SharedCourseSelectComponent,
     SharedInstituteSelectComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PdfViewerModalComponent
   ],
   providers: [ConfigService,
   

@@ -161,7 +161,7 @@
               </button>
             </div>
           </div>
-          <div class="form-container">
+          <div class="form-container" *ngIf="loggedInRole === 'exams_student'">
             <div class="form-internal-wrapper">
               <!-- <h1>{{'Amit Kumar'}}</h1> -->
               <div class="wrapper-form">
@@ -198,6 +198,51 @@
                       <h3 class="textData">{{ userObject.activeStatus }}</h3>
                     </div>
                   </div>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <div class="form-container" *ngIf="loggedInRole === 'exams_institute'">
+            <div class="form-internal-wrapper">
+              <div class="wrapper-form">
+                <div class="first-row-container mt4">
+                  <div class="first-container">
+                    <mat-label class="label-text">Name</mat-label>
+                    <h3 class="textData">{{ userObject.name }}</h3>
+                  </div>
+                  <div class="first-container">
+                    <mat-label class="label-text">Institute ID</mat-label>
+                    <h3 class="textData">{{ userObject.enrollmentNumber }}</h3>
+                  </div>
+                </div>
+
+                <div class="first-row-container mt3">
+                  <div class="first-container">
+                    <mat-label class="label-text">Email Id</mat-label>
+                    <h3 class="textData">{{ userObject.emailId }}</h3>
+                  </div>
+                  <div class="first-container">
+                    <mat-label class="label-text">Phone Number</mat-label>
+                    <h3 class="textData">{{ userObject.phoneNumber }}</h3>
+                  </div>
+                </div>
+
+                <div class="first-row-container mt3">
+                  <div class="first-container">
+                    <mat-label class="label-text">Role</mat-label>
+                    <h3 class="textData">{{ userObject.role }}</h3>
+                  </div>
+                  <div class="first-container">
+                    <mat-label class="label-text">Active Status</mat-label>
+                    <div class="first-container">
+                      <h3 class="textData">{{ userObject.activeStatus }}</h3>
+                    </div>
+                  </div>
+                
                 </div>
               </div>
             </div>
