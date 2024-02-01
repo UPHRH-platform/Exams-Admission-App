@@ -25,10 +25,9 @@
                 (selectedExamcycleId)="getSelectedExamcycleId($event)">
             </app-shared-exam-cycle-select>
             <div class="ml3">
-                <div class="mb1">
-                    <span class="exam-lable"> Course </span>
-                </div>
-                <mat-form-field appearance="outline">
+              
+                <mat-form-field appearance="outline" class="exam-form">
+                    <mat-label class="exam-lable"> Course </mat-label>
                     <mat-select [formControl]="courseFormControl" (selectionChange)="getSelectedCourse($event)">
                         <mat-option *ngFor="let course of courses" [value]="course.id">
                             {{ course.courseCode }} - {{course.courseName}}
@@ -37,10 +36,9 @@
                 </mat-form-field>
             </div>
             <div class="ml3">
-                <div class="mb1">
-                    <span class="exam-lable">Academic Year</span>
-                </div>
-                <mat-form-field appearance="outline">
+             
+                <mat-form-field appearance="outline" class="exam-form">
+                    <mat-label>Academic Year</mat-label>
                     <mat-select (selectionChange)="getSelectedAcademicYear($event)" [(ngModel)]="selectedAcademicYear">
                         <mat-option *ngFor="let year of years" [value]="year" >
                             {{ year }}

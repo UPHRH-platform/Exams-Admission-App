@@ -51,6 +51,7 @@ export class AddNewRegnComponent {
           this.examId = params['examID'];
         }))
   }
+  
  
   viewStudentsTableColumns: TableColumn[] = [];
   isDataLoading: boolean = false;
