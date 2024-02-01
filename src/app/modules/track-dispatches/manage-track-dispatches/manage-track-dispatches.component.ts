@@ -26,24 +26,7 @@ export class ManageTrackDispatchesComponent implements OnInit  {
     examCycleName: string; 
     courseId: string; 
     status: string; 
-  }[] = [
-    {
-      examCycleName: 'Exam Cycle 1',
-      id: 1,
-      courseId: '',
-      status: '',
-    },{
-      examCycleName: 'Exam Cycle 2',
-      id: 2,
-      courseId: '',
-      status: '',
-    },{
-      examCycleName: 'Exam Cycle 3',
-      id: 3,
-      courseId: '',
-      status: '',
-    },
-  ]
+  }[] = []
 
   instituteTableHeader = [
     {
@@ -104,8 +87,11 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   
   examCycleControl = new FormControl();
   courseFormControl = new FormControl();
+  instituteSelectFormControl= new FormControl();
   statusList= []
+  instituteList = [];
   filtersNotSet = true;
+  isDataLoading=false;
 
   // searcControl = '';
   // searchKey = ''
@@ -133,22 +119,31 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   intialisation() {
     this.getExamCycles()
    // this.getCourseList()
+   this.getAllInstitutesList()
     this.getDispatchesStatusList()
   }
 
-  getCourseList(){
-    this.baseService.getAllCourses$().subscribe({
+
+  getAllInstitutesList(){
+    this.isDataLoading = true
+    this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
         console.log( res.responseData)
-        this.courses = res.responseData;
+        this.instituteList = res.responseData;
 
-        const lastIndexSelected: any = this.courses[this.courses.length - 1];
-        this.courseFormControl.setValue(lastIndexSelected.id)
+        const lastIndexSelected: any = this.instituteList[this.instituteList.length - 1];
+        console.log(lastIndexSelected)
+        this.instituteSelectFormControl.setValue(lastIndexSelected.id)
+        this.isDataLoading = false
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message)
       }
     })
+  }
+
+  onInstituteChange(e: any){
+
   }
 
 
