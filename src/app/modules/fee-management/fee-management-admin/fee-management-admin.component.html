@@ -31,6 +31,12 @@
     </span>
 
 
+    <span class=" ml2">
+      <app-shared-institute-select [instituteSelectFormControl]="instituteSelectFormControl" [instituteList]="instituteList"
+      (selectedInstitute)="onInstituteChange($event)"></app-shared-institute-select>
+      </span>
+
+
   </div>
         </div>
         <!-- <div class="sm-col md-col-6">

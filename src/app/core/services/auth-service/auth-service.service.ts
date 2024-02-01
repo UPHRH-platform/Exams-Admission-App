@@ -139,7 +139,7 @@ export class AuthServiceService extends HttpService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_DATA);
     localStorage.removeItem(this.ALL_ROLES);
-    this.cookieService.deleteAll('/');
+    this.cookieService.deleteAll();
   }
 
   isLoggedIn(): boolean{
