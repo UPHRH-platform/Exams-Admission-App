@@ -18,6 +18,7 @@ import { SharedQuestionPaperComponent } from './components/shared-ques-paper/sha
 import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-select/shared-exam-cycle-select.component';
 import { SharedNoResultCardComponent } from './components/shared-no-result-card/shared-no-result-card.component';
 import { SharedCourseSelectComponent } from './components/shared-course-select/shared-course-select/shared-course-select.component';
+import { SharedInstituteSelectComponent } from './components/shared-institute-select/shared-institute-select.component';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { SharedCourseSelectComponent } from './components/shared-course-select/s
     SharedExamCycleSelectComponent,
     SharedNoResultCardComponent,
     SharedCourseSelectComponent,
+    SharedInstituteSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -55,8 +57,11 @@ import { SharedCourseSelectComponent } from './components/shared-course-select/s
     SharedQuestionPaperComponent,
     SharedExamCycleSelectComponent,
     SharedNoResultCardComponent,
-    SharedCourseSelectComponent
+    SharedCourseSelectComponent,
+    SharedInstituteSelectComponent,
   ],
-  providers: [ConfigService]
+  providers: [ConfigService,
+  
+  ]
 })
 export class SharedModule { }
