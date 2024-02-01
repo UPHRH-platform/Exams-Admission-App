@@ -1,5 +1,7 @@
+
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+ 
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegdStudentsTableData, TableColumn, Course, Year } from 'src/app/interfaces/interfaces';
 import { ConfirmStudentRegistrationComponent } from '../dialogs/confirm-student-registration/confirm-student-registration.component';
@@ -7,9 +9,8 @@ import { AuthServiceService } from 'src/app/core/services';
 import { BaseService } from 'src/app/service/base.service';
 import { ToastrServiceService } from 'src/app/shared/services/toastr/toastr.service';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { FormControl, Validators } from '@angular/forms';
-
+import { FormControl } from '@angular/forms';
+ 
 @Component({
   selector: 'app-add-new-regn',
   templateUrl: './add-new-regn.component.html',
@@ -26,9 +27,6 @@ export class AddNewRegnComponent {
   examCycleId: any;
   enrollmentData: any[] = [];
   examName: string;
-  examCycle: string;
-  examCycleList:any[] = [];
-  examCycleControl: any;
   finalRegistrationRequest: any[] = [];
   examId: string;
   selectedCourse: any;
@@ -54,54 +52,18 @@ export class AddNewRegnComponent {
           this.examId = params['examID'];
         }))
   }
-  
  
   viewStudentsTableColumns: TableColumn[] = [];
   isDataLoading: boolean = false;
   regdStudents : RegdStudentsTableData[] = [];
   ngOnInit(): void {
     this.loggedInUserId = this.authService.getUserRepresentation().id;
-    this.examCycleControl = new FormControl('', [Validators.required]);
-    this.getExamCycleData();
-    this.getFilters();
     this.initializeColumns();
     this.getInstituteDetails();
     this.getExamCycles();
     this.getAdmissionSessionList();
     this.getCoursesList()
     // this.getRegdStudents(this.stateData?.examId, this.stateData?.examCycle);
-  }
-
-
-
-  getFilters() {
-    const filters = this.baseService.getFilter;
-    if (filters && filters.registerSudent) {
-      this.examCycleControl.setValue(filters.registerSudent.examCycle);
-    }
-  }
-
-
-
-  getExamCycleData() {
-    // this.isDataLoading = true;
-    this.baseService.getExamCycleList$().subscribe({
-    next: (res) => {
-      // this.isDataLoading = false;
-      this.examCycleList = res.responseData;
-      if (!this.examCycleControl.value) {
-        this.examCycleControl.setValue(this.examCycleList[this.examCycleList.length-1].id)
-      }
-      this.examCycle= this.examCycleControl.value;
-      // this.getQuestionPapersByExamCycle()
- 
-    },
-    error: (error: HttpErrorResponse) => {
-      console.log(error);
-      this.examCycleList = [];
-      this.toastr.showToastr('Something went wrong. Please try later.', 'Error', 'error', '');
-    }
-  })
   }
   // get institute detail
   getInstituteDetails() {
@@ -127,17 +89,17 @@ export class AddNewRegnComponent {
       }
     })
     }
-
+ 
   onSelectedRows(value: any) {
     console.log("value ===>", value);
     this.studentsToRegister = value;
     console.log("studentstoregister =>", this.studentsToRegister);
   }
-
+ 
   getSelectedExamcycleId(e: any) {
     //this.getFeeDetailsByExamCycle(e)
   }
-
+ 
   getExamCycles() {
     this.baseService.getExamCycleList$()
       .subscribe({
@@ -148,16 +110,16 @@ export class AddNewRegnComponent {
          // this.getFeeDetailsByExamCycle(lastIndexSelected.id)
         },
         error: (error: HttpErrorResponse) => {
-          
+         
           console.log(error);
            this.toastr.showToastr('Something went wrong. Please try again later', 'Error', 'error', '');
-    
+   
         }
       })
   }
-
+ 
   initializeColumns(): void {
-    
+   
     this.viewStudentsTableColumns = [
       {
         columnDef: 'select',
@@ -165,7 +127,7 @@ export class AddNewRegnComponent {
         isSortable: false,
         isCheckBox: true,
         cell: (element: Record<string, any>) => ``
-      }, 
+      },
       {
         columnDef: 'firstName',
         header: 'Applicant Name',
@@ -213,17 +175,17 @@ export class AddNewRegnComponent {
       //   isCheckBox: false,
       //   isDropdown: true,
       //   cell: (element: Record<string, any>) => ``
-      // }, 
-
+      // },
+ 
     ];
   }
-
+ 
   getSelectedCourse(event: any) {
     this.selectedCourse = event.value
    // this.loggedInUserRole === 'exams_secretary' ? this.getLongPendingStudentEnrollmentList(event.value,this.selectedAcademicYear) : this.getEnrollmentData();
-    
+   
   }
-
+ 
   getCoursesList() {
     this.baseService.getAllCourses$().subscribe({
       next: (res: any) => {
@@ -232,7 +194,7 @@ export class AddNewRegnComponent {
         console.log(this.courses[this.courses.length - 1]['id'])
         if (this.filtersNotSet) {
           this.courseFormControl.patchValue(this.courses[this.courses.length - 1]['id']);
-      
+     
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -240,32 +202,32 @@ export class AddNewRegnComponent {
       }
     })
   }
-
+ 
   getSelectedAcademicYear(event: any) {
     this.selectedAcademicYear = event.value;
    // this.getEnrollmentData();
   }
-
+ 
   getAdmissionSessionList() {
     this.years = this.baseService.getAdmissionSessionList()
-  
+ 
     if (this.filtersNotSet) {
       console.log( this.selectedAcademicYear)
       this.selectedAcademicYear = this.years[4];
       //this.yearFormControl.patchValue(this.years[4]);
       console.log( this.selectedAcademicYear)
-      
+     
     }
   }
-
-
+ 
+ 
   openRegistrationPopup() {
     const registrationPopupData = {
       examDetails: this.stateData,
       tableColumns: this.initializeRegistrationTableColumns(),
       StudentsToRegister: this.getStudentsToRegister(),
     }
-
+ 
     if (registrationPopupData.StudentsToRegister.length > 0) {
       const dialogRef = this.dialog.open(ConfirmStudentRegistrationComponent, {
         data: registrationPopupData,
@@ -273,7 +235,7 @@ export class AddNewRegnComponent {
         maxWidth: '90vw',
         maxHeight: '90vh'
       })
-
+ 
       dialogRef.afterClosed().subscribe((response: any) => {
         if(response) {
           if(response === true) {
@@ -289,7 +251,7 @@ export class AddNewRegnComponent {
             }
             requestObjArray.push(request);
           })
-        
+       
           this.baseService.registerStudentsToExams(requestObjArray).subscribe({
             next: (res) => {
               this.toastr.showToastr(res.statusInfo.statusMessage, 'Success', 'success', '');
@@ -305,7 +267,7 @@ export class AddNewRegnComponent {
       })
     }
   }
-
+ 
   initializeRegistrationTableColumns() {
     const tableColumns = [
       {
@@ -371,7 +333,7 @@ export class AddNewRegnComponent {
     ]
     return tableColumns;
   }
-
+ 
   getStudentsToRegister() {
     this.finalRegistrationRequest = [];
     const StudentsToRegisterList: any[] = []
@@ -400,4 +362,5 @@ export class AddNewRegnComponent {
     return StudentsToRegisterList
   }
 }
-
+ 
+ 
