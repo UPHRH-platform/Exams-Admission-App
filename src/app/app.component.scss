@@ -1,4 +1,4 @@
-::ng-deep .exam-form {
+/* ::ng-deep .exam-form {
     width: 300px;
     .mat-mdc-text-field-wrapper {
         background-color: white;
@@ -11,4 +11,16 @@
         margin-top: 24px;
      }
 
+} */
+
+ ::ng-deep .exam-form {
+   margin-top: 5px;
+   width: 300px;
+   .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+   padding: 13px 0px;
 }
+.mat-mdc-text-field-wrapper {
+   background-color: white;
+   }
+
+ }
