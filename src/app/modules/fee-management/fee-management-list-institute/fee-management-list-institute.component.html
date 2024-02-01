@@ -3,6 +3,21 @@
     <div class="mb3">
       <mat-label class="title-header"> {{tabHeader}} </mat-label>
     </div>
+
+    <div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
+
+    <span class="ml2">
+      <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
+        (selectedExamcycleId)="onExamCycleChange($event)">
+      </app-shared-exam-cycle-select>
+    </span>
+  <span>
+    <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+      (selectedCourse)="onCourseChange($event)">
+    </app-shared-course-select>
+  </span>
+  </div>
+
     <div>
       <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="selectTab($event)">
         <mat-tab label="Pending">

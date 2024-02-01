@@ -1,6 +1,6 @@
 <app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 <div class="secondary-container">
-  <mat-label class="title-header"> Attendance Record </mat-label>
+  <mat-label class="title-header"> Attendance Record</mat-label>
   <div
     style="
       display: flex;
@@ -17,11 +17,23 @@
         </mat-option>
       </mat-select>
     </mat-form-field> -->
+    <div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
+    <span>
     <app-shared-exam-cycle-select
     [examCycleFormControl]="examCycleFormControl"
     [examCycleList]="examCycleList"
     (selectedExamcycleId)="getSelectedExamcycleId($event)" >
     </app-shared-exam-cycle-select>
+    </span>
+
+    <span>
+    <app-shared-course-select [courseFormControl]="courseFormControl" [courseList]="courses"
+      (selectedCourse)="onCourseChange($event)">
+    </app-shared-course-select>
+    </span>
+    </div>
+
+
     <div class="buttons">
       <div>
         <button class="btn-2" (click)="goToUpload()">
