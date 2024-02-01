@@ -19,6 +19,7 @@ import { SharedExamCycleSelectComponent } from './components/shared-exam-cycle-s
 import { SharedNoResultCardComponent } from './components/shared-no-result-card/shared-no-result-card.component';
 import { SharedCourseSelectComponent } from './components/shared-course-select/shared-course-select/shared-course-select.component';
 import { SharedInstituteSelectComponent } from './components/shared-institute-select/shared-institute-select.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { SharedInstituteSelectComponent } from './components/shared-institute-se
     SharedNoResultCardComponent,
     SharedCourseSelectComponent,
     SharedInstituteSelectComponent,
+    SpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +61,7 @@ import { SharedInstituteSelectComponent } from './components/shared-institute-se
     SharedNoResultCardComponent,
     SharedCourseSelectComponent,
     SharedInstituteSelectComponent,
+    SpinnerComponent
   ],
   providers: [ConfigService,
   

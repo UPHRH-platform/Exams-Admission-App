@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthModulesModule } from './modules/auth-modules/auth-modules.module';
 import { ToastrModule } from 'ngx-toastr';
 import { MaterialModule } from 'src/material/material.module';
@@ -25,6 +25,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 // import { UserModulesModule } from './modules/user-modules/user-modules.module';
 import { UserModuleModule } from './modules/user-module/user-module.module';
 import { PaymentComponent } from './payment/payment.component';
+import { SpinnerService } from './service/spinner.service';
+import { SpinnerInterceptor } from './service/spinner.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +59,11 @@ import { PaymentComponent } from './payment/payment.component';
     UserModuleModule,
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+    SpinnerService,
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
+  
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
