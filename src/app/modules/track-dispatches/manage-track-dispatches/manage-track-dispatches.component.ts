@@ -91,7 +91,6 @@ export class ManageTrackDispatchesComponent implements OnInit  {
   statusList= []
   instituteList = [];
   filtersNotSet = true;
-  isDataLoading=false;
 
   // searcControl = '';
   // searchKey = ''
@@ -125,7 +124,6 @@ export class ManageTrackDispatchesComponent implements OnInit  {
 
 
   getAllInstitutesList(){
-    this.isDataLoading = true
     this.baseService.getAllInstitutes$().subscribe({
       next: (res: any) => {
         console.log( res.responseData)
@@ -134,7 +132,6 @@ export class ManageTrackDispatchesComponent implements OnInit  {
         const lastIndexSelected: any = this.instituteList[this.instituteList.length - 1];
         console.log(lastIndexSelected)
         this.instituteSelectFormControl.setValue(lastIndexSelected.id)
-        this.isDataLoading = false
       },
       error: (error: HttpErrorResponse) => {
         console.log(error.message)
