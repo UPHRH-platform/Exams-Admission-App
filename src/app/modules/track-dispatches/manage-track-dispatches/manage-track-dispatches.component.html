@@ -1,6 +1,10 @@
 <app-breadcrumb [breadcrumbItems]="breadcrumbItems"></app-breadcrumb>
 <div class="secondary-container">
   <mat-label class="title-header"> Manage Track Dispatches </mat-label>
+  <ng-container>
+    <app-shared-skeleton-loading [isLoading]="isDataLoading">
+    </app-shared-skeleton-loading>
+  </ng-container>
   <div style="display: flex; flex-direction: row; margin-top: 24px; gap: 16px">
 
 
@@ -16,18 +20,7 @@
           </mat-select>
         </mat-form-field>
       </div> -->
-    <!--   <div>
-        <div class="mb1">
-          <label class="examCycleLable">Exam </label>
-        </div>
-        <mat-form-field class="exam-form" appearance="outline">
-          <mat-select [formControl]="examControl" (ngModelChange)="getDispatches($event)">
-            <mat-option *ngFor="let course of courses" [value]="course.value">
-              {{ course.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div> -->
+    <!--    -->
       <span class="ml2">
         <app-shared-exam-cycle-select [examCycleFormControl]="examCycleControl" [examCycleList]="examCycleList"
           (selectedExamcycleId)="getExams($event)">
@@ -40,7 +33,7 @@
     </span>
 
    
-    <span class=" ml2">
+ <!--    <span class=" ml2">
       <mat-form-field appearance="outline" class="exam-form">
         <mat-label>Status </mat-label>
         <mat-select (selectionChange)="onDispatchStatusChange($event)">
@@ -51,7 +44,12 @@
           </ng-container>
         </mat-select>
       </mat-form-field>
-    </span>
+    </span> -->
+
+      <span class=" ml2">
+      <app-shared-institute-select [instituteSelectFormControl]="instituteSelectFormControl" [instituteList]="instituteList"
+      (selectedInstitute)="onInstituteChange($event)"></app-shared-institute-select>
+      </span>
   </div>
   <ng-container *ngIf="showInstitutesTable; else istitueExamsFeeDetails">
     <div>
@@ -65,4 +63,5 @@
         [isHallTicket]="true" [removeTbodyColor]="true" [isPageable]="true"></app-shared-table>
     </div>
   </ng-template>
+
 </div>
