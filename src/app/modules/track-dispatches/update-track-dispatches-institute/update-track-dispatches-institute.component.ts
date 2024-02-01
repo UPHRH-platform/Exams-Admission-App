@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { mergeMap, of } from 'rxjs';
 import { BaseService } from 'src/app/service/base.service';
+import { PdfViewerModalComponent } from 'src/app/shared/components/pdf-viewer-modal/pdf-viewer-modal.component';
 import { ConformationDialogComponent } from 'src/app/shared/components/conformation-dialog/conformation-dialog.component';
 import { UploadDialogComponent } from 'src/app/shared/components/upload-dialog/upload-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -259,6 +260,7 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
 
   downloadProof(dispatch: any) {
     const fileLocation = dispatch.dispatchProofFileLocation;
+    console.log("...."+fileLocation.toString())
     this.baseService.downloadPdf$(fileLocation)
     .subscribe(blob => {
       const downloadLink = document.createElement('a');
@@ -288,5 +290,22 @@ export class UpdateTrackDispatchesInstituteComponent implements OnInit {
       })
     });
   }
+
+
+  viewDispatchProof(dispatch: any){
+    const fileLocation = dispatch.dispatchProofFileLocation;
+      const pdfViewerModalRef = this.dialog.open(PdfViewerModalComponent, {
+        data: {src: fileLocation},
+        height: '700px',
+        width: '700px',
+        maxWidth: '90vw',
+        maxHeight: '90vh'
+      },
+    );
+  
+      pdfViewerModalRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed',result);
+      });
+    }
 
 }
