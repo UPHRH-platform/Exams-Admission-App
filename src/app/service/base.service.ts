@@ -1077,7 +1077,11 @@ updateExamsForExamCycle(id: string | number, request: any): Observable<ServerRes
     let Dob = new Date(date);
     return Dob.getDate() + "-" + `${Dob.getMonth() + 1}` + "-" + Dob.getFullYear()
   }
+ 
+  checkStudentExist(){
+    return of(null)
 
+  }
   getResultsStatusList$() {
     const response = [
       {
